@@ -14,11 +14,15 @@ export const testSets: ISet[] = [
         services: [
           {
             name: 'redis',
-            image: 'redis:latest'
+            data: {
+              image: 'redis:latest'
+            }
           },
           {
             name: 'front',
-            build: '.'
+            data: {
+              build: '.'
+            }
           }
         ]
       }

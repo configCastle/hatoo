@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { EditorElementComponent } from './editor-element/editor-element.component';
 import { EditorComponent } from './editor.component';
 import { UIModule } from '../ui.module';
+import { SetsService } from '../sets-service/sets.service';
 
 @NgModule({
   imports: [
@@ -12,6 +13,8 @@ import { UIModule } from '../ui.module';
     EditorComponent,
     EditorElementComponent
   ],
-  providers: [],
+  providers: [
+    SetsService
+  ],
 })
 export class EditorModule { }

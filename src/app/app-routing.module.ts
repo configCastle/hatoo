@@ -5,7 +5,7 @@ import { EditorComponent } from './editor/editor.component';
 
 const routes: Routes = [
   {
-    path: 'editor',
+    path: 'editor/:id',
     component: EditorComponent
   }
 ];

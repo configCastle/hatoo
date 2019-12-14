@@ -20,7 +20,7 @@ export interface ISet {
 })
 export class SetsService {
   currentUserSets$: Observable<ISet[]> = of([]);
-  getById$(): Observable<ISet> {
+  getById$(id: string): Observable<ISet> {
     return of(testSets[0]);
   }
   createSet$() { }
