@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { EditorModule } from './editor/editor.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { DataService } from './date-service/data.service';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AppRoutingModule,
     BrowserAnimationsModule
   ],
-  providers: [],
+  providers: [DataService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
