@@ -1,25 +1,42 @@
 import { Injectable } from '@angular/core';
-import { SetsService } from 'src/app/sets-service/sets.service';
-import { ActivatedRouteSnapshot } from '@angular/router';
+import { SetsService, ISet, IConfigFile } from 'src/app/sets-service/sets.service';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { YAMLParserService } from 'src/app/Parser/yaml-parser.service';
+import { FormGroupParserService } from 'src/app/Parser/FormGroupParser/form-group-parser.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EditorService {
-  
-  formGroup$: Observable<FormGroup>;
-  yaml$: Observable<string>;
-  
+  plain$: Observable<ISet>;
+  asFormGroup$: Observable<IConfigFile<FormGroup>[]>;
+  asYamlString$: Observable<string[]>;
   constructor(
-    private _setsService: SetsService,
-    private _routeSnapshot: ActivatedRouteSnapshot
+    _yamlParser: YAMLParserService,
+    _formParser: FormGroupParserService,
+    _setsService: SetsService,
+    _route: ActivatedRoute
   ) {
-    const id = _routeSnapshot.params.id;
-    _setsService.getById$(id).pipe(
-      
-    )
+    const id = _route.snapshot.params.id;
+    this.plain$ = _setsService.getById$(id);
+    this.asFormGroup$ = this.plain$.pipe(
+      map((set: ISet) => {
+        return set.config_files.map(f => ({
+          name: f.name,
+          global: _formParser.objectToFormGroup(f.global),
+          services: f.services.map(s => _formParser.objectToFormGroup(s))
+        }))
+      })
+    );
+    this.asYamlString$ = this.plain$.pipe(
+      map((set: ISet) => {
+        return set.config_files.map(f => {
+          return _yamlParser.objectToYAML({ ...f.global, services: f.services })
+        })
+      })
+    );
   }
-
 }

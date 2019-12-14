@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import * as YAML from 'yaml';
+import { parse, stringify } from 'yaml';
 
 @Injectable({
   providedIn: 'root'
@@ -7,11 +7,11 @@ import * as YAML from 'yaml';
 export class YAMLParserService  {
 
   parse(YAMLString: string): any {
-    return YAML.parse(YAMLString);
+    return parse(YAMLString);
   }
 
   objectToYAML(object: any): string {
-    return YAML.stringify(object);
+    return stringify(object);
   }
 
 }

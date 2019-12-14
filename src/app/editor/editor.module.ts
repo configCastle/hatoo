@@ -1,20 +1,27 @@
 import { NgModule } from '@angular/core';
-import { EditorElementComponent } from './editor-element/editor-element.component';
 import { EditorComponent } from './editor.component';
 import { UIModule } from '../ui.module';
-import { SetsService } from '../sets-service/sets.service';
+import { ReactiveFormsModule } from '@angular/forms';
+import { EditorFormComponent } from './editor-form/editor-form.component';
+import { CommonModule } from '@angular/common';
+import { YAMLParserService } from '../Parser/yaml-parser.service';
+import { FormGroupParserService } from '../Parser/FormGroupParser/form-group-parser.service';
+import { ActivatedRouteSnapshot } from '@angular/router';
 
 @NgModule({
   imports: [
+    CommonModule,
+    ReactiveFormsModule,
     UIModule
   ],
   exports: [],
   declarations: [
     EditorComponent,
-    EditorElementComponent
+    EditorFormComponent
   ],
   providers: [
-    SetsService
-  ],
+    YAMLParserService,
+    FormGroupParserService
+  ]
 })
 export class EditorModule { }

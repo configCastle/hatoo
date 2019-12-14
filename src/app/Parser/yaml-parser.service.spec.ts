@@ -24,14 +24,14 @@ describe('YAMLParserService', () => {
 
   describe('parse', () => {
     it('should return parsed yaml as object', () => {
-      console.log(subject.parse(testYaml));
+      // console.log(subject.parse(testYaml));
       expect(subject.parse(testYaml)).toEqual(testObject);
     });
   });
   
   describe('objectToYAML', () => {
     it('should return yaml from passed object', () => {
-      console.log(subject.objectToYAML(testObject));
+      // console.log(subject.objectToYAML(testObject));
       expect(subject.objectToYAML(testObject).trim()).toBe(testYaml.trim());
     });
   });

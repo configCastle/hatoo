@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { DataService } from './date-service/data.service';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,18 @@ import { Component } from '@angular/core';
   styleUrls: ['app.component.scss']
 })
 export class AppComponent {
-
+  constructor(data: DataService) {
+    // data.getComponents$().subscribe(e => {
+    //   console.log('Components: ', e);
+    // })
+    // data.getComponent$('1').subscribe(e => {
+    //   console.log('Component 1: ', e);
+    // })
+    // data.getSets$().subscribe(e => {
+    //   console.log('Sets : ', e);
+    // })
+    // data.getSet$('1').subscribe(e => {
+    //   console.log('Set 1: ', e);
+    // })
+  }
 }
