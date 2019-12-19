@@ -6,7 +6,6 @@ import { EditorFormComponent } from './editor-form/editor-form.component';
 import { CommonModule } from '@angular/common';
 import { YAMLParserService } from '../Parser/yaml-parser.service';
 import { FormGroupParserService } from '../Parser/FormGroupParser/form-group-parser.service';
-import { ActivatedRouteSnapshot } from '@angular/router';
 
 @NgModule({
   imports: [

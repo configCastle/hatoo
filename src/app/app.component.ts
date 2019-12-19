@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { DataService } from './date-service/data.service';
 
 @Component({
   selector: 'app-root',
@@ -7,7 +6,7 @@ import { DataService } from './date-service/data.service';
   styleUrls: ['app.component.scss']
 })
 export class AppComponent {
-  constructor(data: DataService) {
+  constructor() {
     // data.getComponents$().subscribe(e => {
     //   console.log('Components: ', e);
     // })
