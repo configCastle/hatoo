@@ -2,10 +2,11 @@ import { NgModule } from '@angular/core';
 import { EditorComponent } from './editor.component';
 import { UIModule } from '../ui.module';
 import { ReactiveFormsModule } from '@angular/forms';
-import { EditorFormComponent } from './editor-form/editor-form.component';
+import { EditorNodeComponent } from './editor-node/editor-node.component';
 import { CommonModule } from '@angular/common';
 import { YAMLParserService } from '../Parser/yaml-parser.service';
 import { FormGroupParserService } from '../Parser/FormGroupParser/form-group-parser.service';
+import { EditorFormComponent } from './editor-form/editor-form.component';
 
 @NgModule({
   imports: [
@@ -13,9 +14,9 @@ import { FormGroupParserService } from '../Parser/FormGroupParser/form-group-par
     ReactiveFormsModule,
     UIModule
   ],
-  exports: [],
   declarations: [
     EditorComponent,
+    EditorNodeComponent,
     EditorFormComponent
   ],
   providers: [

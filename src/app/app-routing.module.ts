@@ -5,8 +5,17 @@ import { EditorComponent } from './editor/editor.component';
 
 const routes: Routes = [
   {
-    path: 'editor/:id',
-    component: EditorComponent
+    path: 'editor',
+    children: [
+      {
+        path: '',
+        redirectTo: '1'
+      },
+      {
+        path: ':id',
+        component: EditorComponent
+      }
+    ]
   }
 ];
 

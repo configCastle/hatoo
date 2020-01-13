@@ -14,6 +14,7 @@ export class EditorComponent {
   formGroups$: Observable<IConfigFile<FormGroup>[]>;
 
   constructor(_editorService: EditorService) {
-    this.formGroups$ = _editorService.asFormGroup$;
+    this.formGroups$ = _editorService.asFormGroups$;
+    this.formGroups$.subscribe(console.log);
   }
 }

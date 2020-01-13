@@ -1,21 +1,11 @@
 <h2>Editor</h2>
 <div *ngIf="(formGroups$ | async) as groups" class="editor">
-    <!-- <div class="global">
-        <p>Global</p>
-        <editor-form [form]="groups[0]"></editor-form>
-    </div> -->
-    <div class="services">
-        <p>Services</p>
-        <div >
-            <editor-form [form]="groups[0]" [name]=""></editor-form>
-        </div>
-    </div>
+  <!-- <div class="global">
+    <p>Global</p>
+    <editor-form [form]="groups[0]"></editor-form>
+  </div> -->
+  <div class="services">
+    <p>Services</p>
+    <editor-form [form]="groups[0]" [name]=""></editor-form>
+  </div>
 </div>
-
-
-<!-- 
-  1. Переименовать editor-form в form-node
-  2. Создать компонент editor-form-root
-  3. Методы is... из form-node должны быть в сервисе (form-service) 
-
- -->

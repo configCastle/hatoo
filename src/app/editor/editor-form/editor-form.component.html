@@ -1,11 +1,1 @@
-<div *ngIf="isGroup" formGroupName="name">
-  <editor-form *ngFor="let name of isGroup" [form]="form" [name]="name"></editor-form>
-</div>
-
-<div *ngIf="isArray" formArrayName="name">
-  <input *ngFor="let control of isArray" [formControl]="control">
-</div>
-
-<div *ngIf="isControl">
-  <input formControlName="name">
-</div>
+<h1>EditorFormComponent</h1>

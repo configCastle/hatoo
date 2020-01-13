@@ -1,5 +1,7 @@
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, FormArray } from '@angular/forms';
 import { Injectable } from '@angular/core';
+
+type Form = FormControl | FormGroup | FormArray;
 
 @Injectable()
 export class FormGroupParserService {
@@ -16,29 +18,35 @@ export class FormGroupParserService {
     return this._formToObject(formGroup);
   }
 
-  private _formToObject(form: FormGroup | FormControl): any {
+  private _formToObject(form: Form): any {
     if (form instanceof FormControl) {
       return form.value;
+    }
+    if (form instanceof FormArray) {
+      return form.controls.map(c => this._formToObject(c as Form));
     }
     const group = {};
     for (const key in form.controls) {
       if (form.controls.hasOwnProperty(key)) {
-        group[key] = this._formToObject(form.controls[key] as  FormGroup | FormControl);
+        group[key] = this._formToObject(form.controls[key] as  Form);
       }
     }
     return group;
   }
 
-  private _objectToForm(object: any): FormGroup | FormControl {
+  private _objectToForm(object: any): Form {
     if (typeof object === 'string' || typeof object === 'number') {
       return new FormControl(object);
     }
-    const group = {};
+    if (Array.isArray(object)) {
+      return new FormArray(object.map(e => this._objectToForm(e)));
+    }
+    const result = {};
     for (const key in object) {
       if (object.hasOwnProperty(key)) {
-        group[key] = this._objectToForm(object[key]);
+        result[key] = this._objectToForm(object[key]);
       }
     }
-    return new FormGroup(group);
+    return new FormGroup(result);
   }
 }

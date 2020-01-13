@@ -12,7 +12,7 @@ import { FormGroupParserService } from 'src/app/Parser/FormGroupParser/form-grou
 })
 export class EditorService {
   plain$: Observable<ISet>;
-  asFormGroup$: Observable<IConfigFile<FormGroup>[]>;
+  asFormGroups$: Observable<IConfigFile<FormGroup>[]>;
   asYamlString$: Observable<string[]>;
   constructor(
     _yamlParser: YAMLParserService,
@@ -20,9 +20,8 @@ export class EditorService {
     _setsService: SetsService,
     _route: ActivatedRoute
   ) {
-    const id = _route.snapshot.params.id;
-    this.plain$ = _setsService.getById$(id);
-    this.asFormGroup$ = this.plain$.pipe(
+    this.plain$ = _setsService.getById$(_route.snapshot.params.id);
+    this.asFormGroups$ = this.plain$.pipe(
       map((set: ISet) => {
         return set.config_files.map(f => ({
           name: f.name,
