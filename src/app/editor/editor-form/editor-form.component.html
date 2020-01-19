@@ -1,1 +1,6 @@
-<h1>EditorFormComponent</h1>
+<div *ngIf="isGroup as controls">
+  <editor-element *ngFor="let key of controls" [form]="form.controls[key]" [name]="key"></editor-element>
+</div>
+<div *ngIf="isArray as array">
+  <editor-element *ngFor="let control of array" [form]="control"></editor-element>
+</div>

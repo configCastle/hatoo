@@ -1,13 +1,14 @@
 import { ISet } from './sets.service';
 
-export const testSets: ISet[] = [
+export const testSets: ISet<any>[] = [
   {
+    
     name: 'abra kadabra',
     create: new Date(),
     update: new Date(),
     config_files: [
       {
-        name: 'string',
+        name: 'some name',
         global: {
           version: '3'
         },
@@ -21,7 +22,13 @@ export const testSets: ISet[] = [
           {
             name: 'front',
             data: {
-              build: '.'
+              build: '.',
+              array: [
+                'fuck',
+                'this',
+                'shit',
+                '!'
+              ]
             }
           }
         ]

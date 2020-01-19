@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { SetsService, ISet, IConfigFile } from 'src/app/sets-service/sets.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, FormArray } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { YAMLParserService } from 'src/app/Parser/yaml-parser.service';
 import { FormGroupParserService } from 'src/app/Parser/FormGroupParser/form-group-parser.service';
@@ -11,9 +11,9 @@ import { FormGroupParserService } from 'src/app/Parser/FormGroupParser/form-grou
   providedIn: 'root'
 })
 export class EditorService {
-  plain$: Observable<ISet>;
-  asFormGroups$: Observable<IConfigFile<FormGroup>[]>;
-  asYamlString$: Observable<string[]>;
+  plain$: Observable<ISet<any>>;
+  asFormGroup$: Observable<ISet<FormGroup>>;
+  asYamlString$: Observable<ISet<string>>;
   constructor(
     _yamlParser: YAMLParserService,
     _formParser: FormGroupParserService,
@@ -21,20 +21,34 @@ export class EditorService {
     _route: ActivatedRoute
   ) {
     this.plain$ = _setsService.getById$(_route.snapshot.params.id);
-    this.asFormGroups$ = this.plain$.pipe(
-      map((set: ISet) => {
-        return set.config_files.map(f => ({
-          name: f.name,
-          global: _formParser.objectToFormGroup(f.global),
-          services: f.services.map(s => _formParser.objectToFormGroup(s))
-        }))
+    this.asFormGroup$ = this.plain$.pipe(
+      map((set: ISet<any>) => {
+        return {
+          name: set.name,
+          create: set.create,
+          update: set.update,
+          config_files: set.config_files.map(f => ({
+            name: f.name,
+            global: _formParser.objectToFormGroup(f.global),
+            services: new FormArray((f.services as any[]).map(s => _formParser.objectToFormGroup(s)))
+          }))
+        }
       })
     );
     this.asYamlString$ = this.plain$.pipe(
-      map((set: ISet) => {
-        return set.config_files.map(f => {
-          return _yamlParser.objectToYAML({ ...f.global, services: f.services })
-        })
+      map((set: ISet<any>) => {
+        return {
+          name: set.name,
+          create: set.create,
+          update: set.update,
+          config_files: set.config_files.map(f => {
+            return {
+              name: f.name,
+              global: _yamlParser.objectToYAML(f.global),
+              services: [_yamlParser.objectToYAML({ services: f.services })]
+            }
+          })
+        }  
       })
     );
   }

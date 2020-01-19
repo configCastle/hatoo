@@ -1,11 +1,23 @@
-<h2>Editor</h2>
-<div *ngIf="(formGroups$ | async) as groups" class="editor">
-  <!-- <div class="global">
-    <p>Global</p>
-    <editor-form [form]="groups[0]"></editor-form>
-  </div> -->
-  <div class="services">
-    <p>Services</p>
-    <editor-form [form]="groups[0]" [name]=""></editor-form>
-  </div>
+<ng-container *ngIf="set$ | async as set; else noSet">
+  <h2>{{set.name}}</h2>
+  <div class="grid">
+    <section class="graphic-editor">
+
+    <div class="global">
+      <p>Global</p>
+      <editor-form [form]="selectedConfigFile.global"></editor-form>
+    </div>
+
+    <div class="services">
+      <p>Services</p>
+      <editor-form  [form]="selectedConfigFile.services"></editor-form>
+    </div>
+
+  </section>
+  <section class="text-editor"></section>
 </div>
+</ng-container>
+
+<ng-template #noSet>
+  No chosen set
+</ng-template>
