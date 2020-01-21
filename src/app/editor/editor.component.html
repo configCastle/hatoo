@@ -2,22 +2,18 @@
   <h2>{{set.name}}</h2>
   <div class="grid">
     <section class="graphic-editor">
-
     <div class="global">
       <p>Global</p>
       <editor-form [form]="selectedConfigFile.global"></editor-form>
     </div>
-
     <div class="services">
       <p>Services</p>
       <editor-form  [form]="selectedConfigFile.services"></editor-form>
     </div>
-
   </section>
   <section class="text-editor"></section>
 </div>
 </ng-container>
-
 <ng-template #noSet>
   No chosen set
 </ng-template>

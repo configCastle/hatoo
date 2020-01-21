@@ -1,5 +1,4 @@
 import { Component, Input } from "@angular/core";
-import { EditorNode } from '../editor-node/editor-node';
 import { FormGroup, FormControl, FormArray } from '@angular/forms';
 
 @Component({
@@ -13,7 +12,6 @@ export class EditorFormComponent {
 
   get isArray() {
     if (this.form instanceof FormArray) {
-      // console.log('FormArray', this.form.controls);
       return this.form.controls;
     }
   }
@@ -24,7 +22,6 @@ export class EditorFormComponent {
       for (const o in (this.form as FormGroup).controls) {
         arr.push(o);
       }
-      // console.log('FormGroup', arr);
       return arr;
     }
   }

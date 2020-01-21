@@ -2,7 +2,6 @@ import { ISet } from './sets.service';
 
 export const testSets: ISet<any>[] = [
   {
-    
     name: 'abra kadabra',
     create: new Date(),
     update: new Date(),

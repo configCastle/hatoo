@@ -12,7 +12,6 @@ export class EditorElementComponent {
 
   get isArray() {
     if (this.form instanceof FormArray) {
-      console.log('FormArray', this.form.controls);
       return this.form.controls;
     }
   }
@@ -22,15 +21,11 @@ export class EditorElementComponent {
       for (const o in (this.form as FormGroup).controls) {
         arr.push(o);
       }
-      // console.log('FormGroup', arr);
       return arr;
     }
   }
   get isControl() {
-    // console.log(this.form);
-    
     if (this.form instanceof FormControl) {
-      // console.log('FormControl', this.form);
       return this.form;
     }
   }

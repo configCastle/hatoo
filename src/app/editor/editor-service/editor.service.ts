@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { SetsService, ISet, IConfigFile } from 'src/app/sets-service/sets.service';
+import { SetsService, ISet } from 'src/app/sets-service/sets.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { FormGroup, FormArray } from '@angular/forms';
