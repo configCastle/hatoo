@@ -3,7 +3,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
-import { DataService } from './date-service/data.service';
+import { DataService } from './data-service/data.service';
 
 @NgModule({
   imports: [
