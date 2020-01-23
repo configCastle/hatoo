@@ -1,0 +1,11 @@
+<div class="wr">
+  <div *ngIf="isGroup as group">
+    {{name || ''}}<editor-element *ngFor="let key of group" [form]="form.controls[key]" [name]="key"></editor-element>
+  </div>
+  <div *ngIf="isArray as array">
+    {{name || ''}}<editor-element *ngFor="let control of array" [form]="control"></editor-element>
+  </div>
+  <div *ngIf="isControl">
+    {{name || ''}}<input [formControl]="form">
+  </div>  
+</div>

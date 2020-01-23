@@ -1,5 +1,5 @@
 import { FormGroupParserService } from './form-group-parser.service';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, FormArray } from '@angular/forms';
 
 describe('FormGroupParserService', () => {
   let subject: FormGroupParserService;
@@ -10,13 +10,23 @@ describe('FormGroupParserService', () => {
     subject = new FormGroupParserService();
     testObject = {
       foo: {
-        bar: 'buzz'
+        bar: 'buzz',
+        array: [
+          '111',
+          '222',
+          '333'
+        ]
       },
       johnDou: 'lol'
     };
     testFormGroup = new FormGroup({
       foo: new FormGroup({
-        bar: new FormControl('buzz')
+        bar: new FormControl('buzz'),
+        array: new FormArray([
+          new FormControl('111'),
+          new FormControl('222'),
+          new FormControl('333'),
+        ])
       }),
       johnDou: new FormControl('lol')
     });
@@ -39,6 +49,14 @@ describe('FormGroupParserService', () => {
           .controls.foo as FormGroup)
             .controls.bar.value
       ).toBe('buzz');
+
+      expect(
+        ((subject.objectToFormGroup(testObject)
+          .controls.foo as FormGroup)
+          .controls.array as FormArray)
+          .controls[1].value
+      ).toBe('222');
+
       expect(
         subject.objectToFormGroup(testObject)
           .controls.johnDou
@@ -48,7 +66,6 @@ describe('FormGroupParserService', () => {
 
     it('should warn if passed value is not an object', () => {
       const spy = spyOn(console, 'warn');
-
       subject.objectToFormGroup(1);
       expect(console.warn).toHaveBeenCalled();
       spy.calls.reset();
