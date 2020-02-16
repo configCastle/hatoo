@@ -1,40 +1,54 @@
-import { Component, Input, Output, EventEmitter, OnChanges, OnInit } from '@angular/core';
-import { FormArray } from '@angular/forms';
-import { Form } from 'src/app/Parser/FormGroupParser/form-group-parser.service';
+import { Component } from '@angular/core';
+import { Subject, combineLatest, Observable } from 'rxjs';
+import { takeUntil, map } from 'rxjs/operators';
 import { IConfigFile } from 'src/app/sets-service/sets.service';
-import { Subject, combineLatest } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Form, FormGroupParserService } from 'src/app/Parser/FormGroupParser/form-group-parser.service';
+import { EditorService } from '../editor-service/editor.service';
 
 @Component({
 	selector: 'app-graphic-editor',
 	templateUrl: 'graphic-editor.component.html',
 	styleUrls: ['graphic-editor.component.scss']
 })
-export class GraphicEditorComponent implements OnInit {
-	private _destroySubject = new Subject<void>();
-	private _globalData: any;
-	private _services: any;
+export class GraphicEditorComponent {
+	private _completeSubject = new Subject<void>();
 
-	@Input() file: IConfigFile<Form>;
-	@Output() fileChanged = new EventEmitter<IConfigFile<any>>();
+  file$: Observable<IConfigFile<Form>>;
 
-	ngOnInit() {
-		combineLatest(
-			this.file.global.valueChanges,
-			(this.file.services as FormArray).valueChanges
-		)
-		.pipe(takeUntil(this._destroySubject))
-		.subscribe(([g, s]) => {
-			console.log(this.file);
-			this.fileChanged.emit({
-				name: this.file.name,
-				global: g,
-				services: s
-			})
-		})
+	constructor(
+    _editorService: EditorService,
+    _formParser: FormGroupParserService
+  ) {
+    this.file$ = _editorService.selectedFile$
+      .pipe(
+        map(f => {
+          const id = f.id;
+          const name = f.name;
+          const global = _formParser.objectToFormGroup(f.global);
+          const services = _formParser.objectToFormGroup(f.services);
+          
+          this._completeSubject.next();
+          
+          combineLatest(
+            global.valueChanges,
+            services.valueChanges
+          ).pipe(
+            takeUntil(this._completeSubject)
+          ).subscribe(([g, s]) => {
+            _editorService.updateFile({
+              id,
+              name,
+              global: g,
+              services: s
+            })
+          })
+          
+          return { id, name, global, services }
+        })
+      )
 	}
 
 	ngOnDestroy() {
-		this._destroySubject.next();
+		this._completeSubject.next();
 	}
 }

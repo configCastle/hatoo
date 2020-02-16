@@ -1,8 +1,10 @@
-<div class="global">
-	<p>Global</p>
-	<editor-form [form]="file.global"></editor-form>
-</div>
-<div class="services">
-	<p>Services</p>
-	<editor-form  [form]="file.services"></editor-form>
-</div>
+<ng-container *ngIf="file$ | async as file; else noFile">
+  <h3>Global</h3>
+  <editor-form [form]="file.global"></editor-form>
+  <h3>Services</h3>
+  <editor-form  [form]="file.services"></editor-form>
+</ng-container>
+
+<ng-template #noFile>
+  No file selected
+</ng-template>

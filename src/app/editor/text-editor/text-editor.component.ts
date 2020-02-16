@@ -10,6 +10,13 @@ import { map } from 'rxjs/operators';
 export class TextEditorComponent implements OnChanges {
   @Input() file: IConfigFile<string>;
 
+
+
+  // global: _yamlParser.objectToYAML(f.global),
+  // services: [_yamlParser.objectToYAML({ services: f.services })]
+
+
+
   code: string;
   // get code() {
   //   return this._code;

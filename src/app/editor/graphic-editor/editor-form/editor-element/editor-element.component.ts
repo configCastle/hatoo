@@ -1,6 +1,6 @@
 import { Component, Input } from "@angular/core";
 import { FormControl } from '@angular/forms';
-import { EditorFormComponent } from '../editor-form/editor-form.component';
+import { EditorFormComponent } from '../editor-form.component';
 
 @Component({
   selector: 'editor-element',

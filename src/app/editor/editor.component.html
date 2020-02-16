@@ -1,16 +1,8 @@
-<ng-container *ngIf="set$ | async as set; else noSet">
-  <h2>{{set.name}}</h2>  
+<ng-container *ngIf="setName$ | async as name; else noSet">
+  <h2>{{ name }}</h2>  
   <div class="grid">
-    
-    <section *ngIf="asForm$ | async as file" class="graphic-editor">
-      <app-graphic-editor [file]="file" (fileChanged)="setWithPlainObj($event)"></app-graphic-editor>
-    </section>
-    
-    <section *ngIf="selectedFileAsYaml$ | async as file" class="text-editor">
-      <app-text-editor [file]="file"></app-text-editor>
-      <!-- <app-text-editor [file]="file" (fileChanged)="setWithString($event)"></app-text-editor> -->
-    </section>
-
+    <app-graphic-editor></app-graphic-editor>    
+    <!-- <app-text-editor></app-text-editor> -->
   </div>
 </ng-container>
 

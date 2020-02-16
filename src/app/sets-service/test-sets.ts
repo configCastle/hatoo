@@ -2,11 +2,13 @@ import { ISet } from './sets.service';
 
 export const testSets: ISet<any>[] = [
   {
+    id: 0,
     name: 'abra kadabra',
     create: new Date(),
     update: new Date(),
     config_files: [
       {
+        id: 0,
         name: 'some name',
         global: {
           version: '3'

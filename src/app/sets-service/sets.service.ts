@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
 import { testSets } from './test-sets';
-import { FormArray } from '@angular/forms';
 
 export interface IConfigFile<T> {
+  id: number;
   name: string;
   global: T;
   services: T | T[];
 }
 
 export interface ISet<T> {
+  id: number;
   name: string;
   create: Date;
   update: Date;
@@ -20,7 +20,7 @@ export interface ISet<T> {
   providedIn: 'root'
 })
 export class SetsService {
-  getById$(id: string): ISet<any> {
+  getById$(id: number): ISet<any> | undefined {
     return testSets[0];
   }
 }
