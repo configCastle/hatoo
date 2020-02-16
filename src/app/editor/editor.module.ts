@@ -7,21 +7,29 @@ import { CommonModule } from '@angular/common';
 import { YAMLParserService } from '../Parser/yaml-parser.service';
 import { FormGroupParserService } from '../Parser/FormGroupParser/form-group-parser.service';
 import { EditorFormComponent } from './editor-form/editor-form.component';
+import { MonacoEditorModule } from 'ngx-monaco-editor';
+import { TextEditorComponent } from './text-editor/text-editor.component';
+import { EditorService } from './editor-service/editor.service';
+import { GraphicEditorComponent } from './graphic-editor/graphic-editor.component'
 
 @NgModule({
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    UIModule
+    UIModule,
+    MonacoEditorModule.forRoot()
   ],
   declarations: [
     EditorComponent,
     EditorElementComponent,
-    EditorFormComponent
+    EditorFormComponent,
+    GraphicEditorComponent,
+    TextEditorComponent
   ],
   providers: [
     YAMLParserService,
-    FormGroupParserService
+    FormGroupParserService,
+    EditorService
   ]
 })
 export class EditorModule { }

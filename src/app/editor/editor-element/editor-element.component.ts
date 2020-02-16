@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { FormControl } from '@angular/forms';
 import { EditorFormComponent } from '../editor-form/editor-form.component';
 
@@ -8,6 +8,7 @@ import { EditorFormComponent } from '../editor-form/editor-form.component';
   styleUrls: ['editor-element.component.scss']
 })
 export class EditorElementComponent extends EditorFormComponent {
+  @Input() name: string;
   get isControl() {
     if (this.form instanceof FormControl) {
       return this.form;

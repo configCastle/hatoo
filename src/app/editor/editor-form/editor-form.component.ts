@@ -8,7 +8,6 @@ import { FormGroup, FormControl, FormArray } from '@angular/forms';
 })
 export class EditorFormComponent {
   @Input() form: FormGroup | FormControl | FormArray;
-  @Input() name: string;
 
   get isArray() {
     if (this.form instanceof FormArray) {

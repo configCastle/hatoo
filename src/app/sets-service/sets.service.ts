@@ -6,7 +6,7 @@ import { FormArray } from '@angular/forms';
 export interface IConfigFile<T> {
   name: string;
   global: T;
-  services: T[] | FormArray;
+  services: T | T[];
 }
 
 export interface ISet<T> {
@@ -20,7 +20,7 @@ export interface ISet<T> {
   providedIn: 'root'
 })
 export class SetsService {
-  getById$(id: string): Observable<ISet<any>> {
-    return of(testSets[0]);
+  getById$(id: string): ISet<any> {
+    return testSets[0];
   }
 }
