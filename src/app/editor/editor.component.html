@@ -1,8 +1,8 @@
 <ng-container *ngIf="setName$ | async as name; else noSet">
   <h2>{{ name }}</h2>  
   <div class="grid">
-    <app-graphic-editor></app-graphic-editor>    
-    <!-- <app-text-editor></app-text-editor> -->
+    <app-graphic-editor class="graphic-editor"></app-graphic-editor>    
+    <app-text-editor class="text-editor"></app-text-editor>
   </div>
 </ng-container>
 

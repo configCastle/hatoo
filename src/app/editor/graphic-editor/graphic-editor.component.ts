@@ -29,12 +29,16 @@ export class GraphicEditorComponent {
           
           this._completeSubject.next();
           
+          // Replace combineLatest by ones that emits if even one of args has emitted.
+          // Now it emits only when both were changed, and it at ones replases by new objects
+          // If no such operator use pipe(startWith(undefined)) and take raw value of FG's (not [g, s])
           combineLatest(
             global.valueChanges,
             services.valueChanges
           ).pipe(
             takeUntil(this._completeSubject)
           ).subscribe(([g, s]) => {
+            g && s &&
             _editorService.updateFile({
               id,
               name,
