@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
+import { FormArray, FormGroup } from '@angular/forms';
 import { Subject, combineLatest, Observable } from 'rxjs';
-import { takeUntil, map } from 'rxjs/operators';
+import { takeUntil, map, tap, startWith, skip } from 'rxjs/operators';
 import { IConfigFile } from 'src/app/sets-service/sets.service';
 import { Form, FormGroupParserService } from 'src/app/Parser/FormGroupParser/form-group-parser.service';
-import { EditorService } from '../editor-service/editor.service';
+import { GraphicEditorService } from './graphic-editor.service';
 
 @Component({
 	selector: 'app-graphic-editor',
@@ -16,34 +17,27 @@ export class GraphicEditorComponent {
   file$: Observable<IConfigFile<Form>>;
 
 	constructor(
-    _editorService: EditorService,
+    _editorService: GraphicEditorService,
     _formParser: FormGroupParserService
   ) {
-    this.file$ = _editorService.selectedFile$
+    this.file$ = _editorService.file$
       .pipe(
         map(f => {
           const id = f.id;
           const name = f.name;
           const global = _formParser.objectToFormGroup(f.global);
           const services = _formParser.objectToFormGroup(f.services);
-          
           this._completeSubject.next();
-          
-          // Replace combineLatest by ones that emits if even one of args has emitted.
-          // Now it emits only when both were changed, and it at ones replases by new objects
-          // If no such operator use pipe(startWith(undefined)) and take raw value of FG's (not [g, s])
-          combineLatest(
-            global.valueChanges,
-            services.valueChanges
-          ).pipe(
-            takeUntil(this._completeSubject)
-          ).subscribe(([g, s]) => {
-            g && s &&
+
+          new FormGroup({global, services}).valueChanges
+          .pipe(
+            takeUntil(this._completeSubject),
+          ).subscribe(({g, s}) => {
             _editorService.updateFile({
               id,
               name,
-              global: g,
-              services: s
+              global: g || global.value,
+              services: s || services.value
             })
           })
           

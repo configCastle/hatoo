@@ -11,6 +11,8 @@ import { MonacoEditorModule } from 'ngx-monaco-editor';
 import { TextEditorComponent } from './text-editor/text-editor.component';
 import { EditorService } from './editor-service/editor.service';
 import { GraphicEditorComponent } from './graphic-editor/graphic-editor.component'
+import { TextEditorService } from './text-editor/text-editor.service';
+import { GraphicEditorService } from './graphic-editor/graphic-editor.service';
 
 @NgModule({
   imports: [
@@ -29,7 +31,9 @@ import { GraphicEditorComponent } from './graphic-editor/graphic-editor.componen
   providers: [
     YAMLParserService,
     FormGroupParserService,
-    EditorService
+    EditorService,
+    GraphicEditorService,
+    TextEditorService
   ]
 })
 export class EditorModule { }

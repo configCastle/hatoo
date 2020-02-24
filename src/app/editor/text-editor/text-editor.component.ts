@@ -1,9 +1,9 @@
 import { Component, OnDestroy } from '@angular/core';
-import { EditorService } from '../editor-service/editor.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { YAMLParserService } from 'src/app/Parser/yaml-parser.service';
 import { IConfigFile } from 'src/app/sets-service/sets.service';
+import { TextEditorService } from './text-editor.service';
  
 @Component({
   selector: 'app-text-editor',
@@ -19,6 +19,7 @@ export class TextEditorComponent implements OnDestroy {
   }
   
   set code(value: string) {
+    if (this._code === value) { return; }
     this._code = value;
     const converted = this._yamlParser.parse(value);
     let global = {};
@@ -39,19 +40,15 @@ export class TextEditorComponent implements OnDestroy {
   };
 
   constructor(
-    private _editorService: EditorService,
+    private _editorService: TextEditorService,
     private _yamlParser: YAMLParserService
   ) {
-    _editorService.selectedFile$
+    _editorService.file$
       .pipe(takeUntil(this._destroySubject))
       .subscribe(file => {
         this._file = file;
         const global = _yamlParser.objectToYAML(file.global);
         const services = _yamlParser.objectToYAML({ services: file.services });
-        // let servicesString = '';
-        // for (let i = 0; i < services.length; i++) {
-        //   servicesString += `${services[i]}\n`;
-        // }
         this._code = `${global}\n${services}`;
       });
   }

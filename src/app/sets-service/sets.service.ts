@@ -20,7 +20,7 @@ export interface ISet<T> {
   providedIn: 'root'
 })
 export class SetsService {
-  getById$(id: number): ISet<any> | undefined {
+  getById(id: number): ISet<any> | undefined {
     return testSets[0];
   }
 }

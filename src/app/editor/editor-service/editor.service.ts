@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { SetsService, ISet, IConfigFile } from 'src/app/sets-service/sets.service';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -13,19 +13,19 @@ export class EditorService {
   
   set$: Observable<ISet<any>>;
   index$: Observable<number>;
-  selectedFile$: Observable<IConfigFile<any>>;
+  file$: Observable<IConfigFile<any>>;
 
   constructor(
     _setsService: SetsService,
     _route: ActivatedRoute
   ) {
     const id = +_route.snapshot.params.id;
-    const set = _setsService.getById$(id);
+    const set = _setsService.getById(id);
     this._setSubject = new BehaviorSubject(set);
     
     this.set$ = this._setSubject.asObservable();
     this.index$ = this._selectedIndexSubject.asObservable();
-    this.selectedFile$ = combineLatest(
+    this.file$ = combineLatest(
       this.index$,
       this.set$
     ).pipe(
