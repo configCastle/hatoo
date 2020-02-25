@@ -1,0 +1,12 @@
+.grid {
+	display: flex;
+
+	.graphic-editor {
+		flex-basis: 50%;
+	}
+
+	.text-editor {
+		flex-basis: 50%;
+		height: 500px;
+	}
+}

@@ -1,19 +1,11 @@
-<ng-container *ngIf="set$ | async as set; else noSet">
-  <h2>{{set.name}}</h2>
+<ng-container *ngIf="setName$ | async as name; else noSet">
+  <h2>{{ name }}</h2>  
   <div class="grid">
-    <section class="graphic-editor">
-    <div class="global">
-      <p>Global</p>
-      <editor-form [form]="selectedConfigFile.global"></editor-form>
-    </div>
-    <div class="services">
-      <p>Services</p>
-      <editor-form  [form]="selectedConfigFile.services"></editor-form>
-    </div>
-  </section>
-  <section class="text-editor"></section>
-</div>
+    <app-graphic-editor class="graphic-editor"></app-graphic-editor>    
+    <app-text-editor class="text-editor"></app-text-editor>
+  </div>
 </ng-container>
+
 <ng-template #noSet>
   No chosen set
 </ng-template>

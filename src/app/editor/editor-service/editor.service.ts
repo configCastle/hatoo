@@ -1,55 +1,48 @@
 import { Injectable } from '@angular/core';
-import { SetsService, ISet } from 'src/app/sets-service/sets.service';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { FormGroup, FormArray } from '@angular/forms';
+import { SetsService, ISet, IConfigFile } from 'src/app/sets-service/sets.service';
+import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { YAMLParserService } from 'src/app/Parser/yaml-parser.service';
-import { FormGroupParserService } from 'src/app/Parser/FormGroupParser/form-group-parser.service';
+import { map, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EditorService {
-  plain$: Observable<ISet<any>>;
-  asFormGroup$: Observable<ISet<FormGroup>>;
-  asYamlString$: Observable<ISet<string>>;
+  private _selectedIndexSubject = new BehaviorSubject<number>(0);
+  private _setSubject: BehaviorSubject<ISet<any> | undefined>;
+  
+  set$: Observable<ISet<any>>;
+  index$: Observable<number>;
+  file$: Observable<IConfigFile<any>>;
+
   constructor(
-    _yamlParser: YAMLParserService,
-    _formParser: FormGroupParserService,
     _setsService: SetsService,
     _route: ActivatedRoute
   ) {
-    this.plain$ = _setsService.getById$(_route.snapshot.params.id);
-    this.asFormGroup$ = this.plain$.pipe(
-      map((set: ISet<any>) => {
-        return {
-          name: set.name,
-          create: set.create,
-          update: set.update,
-          config_files: set.config_files.map(f => ({
-            name: f.name,
-            global: _formParser.objectToFormGroup(f.global),
-            services: new FormArray((f.services as any[]).map(s => _formParser.objectToFormGroup(s)))
-          }))
-        }
-      })
-    );
-    this.asYamlString$ = this.plain$.pipe(
-      map((set: ISet<any>) => {
-        return {
-          name: set.name,
-          create: set.create,
-          update: set.update,
-          config_files: set.config_files.map(f => {
-            return {
-              name: f.name,
-              global: _yamlParser.objectToYAML(f.global),
-              services: [_yamlParser.objectToYAML({ services: f.services })]
-            }
-          })
-        }  
-      })
-    );
+    const id = +_route.snapshot.params.id;
+    const set = _setsService.getById(id);
+    this._setSubject = new BehaviorSubject(set);
+    
+    this.set$ = this._setSubject.asObservable();
+    this.index$ = this._selectedIndexSubject.asObservable();
+    this.file$ = combineLatest(
+      this.index$,
+      this.set$
+    ).pipe(
+      map(([i, set]) => set.config_files[i])
+    )
+  }
+
+  updateFile(file: IConfigFile<any>): void {
+    const newSet = this._setSubject.value;
+    const index = newSet.config_files.findIndex(f => f.id === file.id);
+    if (index > -1) {
+      newSet.config_files[index] = file;
+      this._setSubject.next(newSet);
+    }
+  }
+
+  selectFileIndex(index: number): void {
+    this._selectedIndexSubject.next(index);
   }
 }

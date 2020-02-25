@@ -1,20 +1,21 @@
 import { FormGroup, FormControl, FormArray } from '@angular/forms';
 import { Injectable } from '@angular/core';
 
-type Form = FormControl | FormGroup | FormArray;
+export type Form = FormControl | FormGroup | FormArray;
 
 @Injectable()
 export class FormGroupParserService {
 
-  objectToFormGroup(object: any): FormGroup | undefined {
-    if (new Object(object).constructor.name !== 'Object') {
+  objectToFormGroup(object: any): Form | undefined {
+    const type = new Object(object).constructor.name;
+    if (type !== 'Object' && type !== 'Array') {
       console.warn('Attempt to parse value that is not actually an object');
       return;
     }
     return this._objectToForm(object) as FormGroup;
   }
 
-  parse(formGroup: FormGroup): any {
+  parse(formGroup: Form): any {
     return this._formToObject(formGroup);
   }
 
