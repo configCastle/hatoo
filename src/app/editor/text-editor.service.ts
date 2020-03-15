@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { IConfigFile } from 'src/app/sets-service/sets.service';
 import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { EditorService } from '../../editor-service/editor.service';
+import { EditorService } from './editor.service';
 
 @Injectable({ providedIn: 'root' })
 export class TextEditorService {

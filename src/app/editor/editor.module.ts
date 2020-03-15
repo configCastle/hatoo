@@ -9,10 +9,10 @@ import { FormGroupParserService } from '../Parser/FormGroupParser/form-group-par
 import { EditorFormComponent } from './docker-compose/graphic-editor/editor-form/editor-form.component';
 import { MonacoEditorModule } from 'ngx-monaco-editor';
 import { TextEditorComponent } from './docker-compose/text-editor/text-editor.component';
-import { EditorService } from './editor-service/editor.service';
+import { EditorService } from './editor.service';
 import { GraphicEditorComponent } from './docker-compose/graphic-editor/graphic-editor.component'
-import { TextEditorService } from './docker-compose/text-editor/text-editor.service';
-import { GraphicEditorService } from './docker-compose/graphic-editor/graphic-editor.service';
+import { TextEditorService } from './text-editor.service';
+import { GraphicEditorService } from './graphic-editor.service';
 
 @NgModule({
   imports: [
