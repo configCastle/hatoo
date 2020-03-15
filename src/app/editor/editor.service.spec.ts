@@ -1,6 +1,6 @@
 import { EditorService } from "./editor.service";
 import { of } from 'rxjs';
-import { ISet } from 'src/app/sets-service/sets.service';
+import { ISet, FileTypes } from 'src/app/sets-service/sets.service';
 import { FormGroup, FormControl } from '@angular/forms';
 
 describe('EditorService', () => {
@@ -13,11 +13,14 @@ describe('EditorService', () => {
    
   beforeEach(() => {
     testSet  = {
+      id: 0,
       name: 'foo',
       create: new Date(),
       update: new Date(),
       config_files: [
         {
+          id: 0,
+          type: FileTypes.DOCKER_COMPOSE,
           name: 'first file',
           global: {
             version: '3'
@@ -31,12 +34,6 @@ describe('EditorService', () => {
         }
       ]
     }
-    yamlParserStub = {
-      objectToYAML() {}
-    };
-    formParserStub = {
-      objectToFormGroup() {}
-    };
     setsServiceStub = {
       getById$() {
         return of(testSet);
@@ -49,8 +46,6 @@ describe('EditorService', () => {
     };
 
     target = new EditorService(
-      yamlParserStub,
-      formParserStub,
       setsServiceStub,
       routeStub
     );
@@ -75,8 +70,6 @@ describe('EditorService', () => {
       spyOn(setsServiceStub, 'getById$').and.returnValue(of(testSet));
       spyOn(formParserStub, 'objectToFormGroup').and.returnValue({});
       target = new EditorService(
-        yamlParserStub,
-        formParserStub,
         setsServiceStub,
         routeStub
       );

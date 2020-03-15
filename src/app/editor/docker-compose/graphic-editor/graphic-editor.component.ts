@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
 import { Subject, combineLatest, Observable } from 'rxjs';
 import { takeUntil, map, tap, startWith, skip } from 'rxjs/operators';
-import { IConfigFile } from 'src/app/sets-service/sets.service';
+import { IConfigFile, FileTypes } from 'src/app/sets-service/sets.service';
 import { Form, FormGroupParserService } from 'src/app/Parser/FormGroupParser/form-group-parser.service';
-import { GraphicEditorService } from './graphic-editor.service';
+import { GraphicEditorService } from '../../graphic-editor.service';
 
 @Component({
 	selector: 'app-graphic-editor',
@@ -25,6 +25,7 @@ export class GraphicEditorComponent {
         map(f => {
           const id = f.id;
           const name = f.name;
+          const type = f.type;
           const global = _formParser.objectToFormGroup(f.global);
           const services = _formParser.objectToFormGroup(f.services);
           this._completeSubject.next();
@@ -35,13 +36,14 @@ export class GraphicEditorComponent {
           ).subscribe(({g, s}) => {
             _editorService.updateFile({
               id,
+              type,
               name,
               global: g || global.value,
               services: s || services.value
             })
           })
           
-          return { id, name, global, services }
+          return { id, type, name, global, services }
         })
       )
 	}
