@@ -9,6 +9,7 @@ export const testSets: ISet<any>[] = [
     config_files: [
       {
         id: 0,
+        type: 1,
         name: 'some name',
         global: {
           version: '3'

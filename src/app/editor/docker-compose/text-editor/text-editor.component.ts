@@ -2,8 +2,8 @@ import { Component, OnDestroy } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { YAMLParserService } from 'src/app/Parser/yaml-parser.service';
-import { IConfigFile } from 'src/app/sets-service/sets.service';
-import { TextEditorService } from './text-editor.service';
+import { IConfigFile, FileTypes } from 'src/app/sets-service/sets.service';
+import { TextEditorService } from '../../text-editor.service';
  
 @Component({
   selector: 'app-text-editor',
@@ -28,6 +28,7 @@ export class TextEditorComponent implements OnDestroy {
     }
     this._editorService.updateFile({
       id: this._file.id,
+      type: FileTypes.DOCKER_COMPOSE,
       name: this._file.name,
       global: global,
       services: converted.services || []

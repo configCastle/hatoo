@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { EditorService } from './editor-service/editor.service';
+import { EditorService } from './editor.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 

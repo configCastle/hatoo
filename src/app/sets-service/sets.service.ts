@@ -1,9 +1,17 @@
 import { Injectable } from '@angular/core';
 import { testSets } from './test-sets';
 
+export enum FileTypes {
+  DOCKER_COMPOSE = 1,
+  YAML = 2,
+  JSON = 3,
+  UNKNOWN = 4,
+}
+
 export interface IConfigFile<T> {
   id: number;
   name: string;
+  type: FileTypes;
   global: T;
   services: T | T[];
 }
