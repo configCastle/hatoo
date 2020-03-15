@@ -1,4 +1,4 @@
-import { ISet, FileTypes } from './sets.service';
+import { ISet } from './sets.service';
 
 export const testSets: ISet<any>[] = [
   {
@@ -9,7 +9,7 @@ export const testSets: ISet<any>[] = [
     config_files: [
       {
         id: 0,
-        type: FileTypes.DOCKER_COMPOSE,
+        type: 1,
         name: 'some name',
         global: {
           version: '3'
