@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 import { YAMLParserService } from 'src/app/Parser/yaml-parser.service';
 import { IConfigFile, FileTypes } from 'src/app/sets-service/sets.service';
 import { TextEditorService } from '../../text-editor.service';
+import { DockerComposeParserService } from '../docker-compose-parser/docker-compose-parser.service';
  
 @Component({
   selector: 'app-text-editor',
@@ -21,18 +22,13 @@ export class TextEditorComponent implements OnDestroy {
   set code(value: string) {
     if (this._code === value) { return; }
     this._code = value;
-    const converted = this._yamlParser.parse(value);
-    let global = {};
-    for (const key in converted) {
-      if (key !== 'services') { global[key] = converted[key] }
-    }
+
     this._editorService.updateFile({
       id: this._file.id,
       type: FileTypes.DOCKER_COMPOSE,
       name: this._file.name,
-      global: global,
-      services: converted.services || []
-    })
+      data: this._dockerComposeParserService.stringToModel(value);
+    }) 
   }
 
   readonly editorOptions = {
@@ -42,15 +38,13 @@ export class TextEditorComponent implements OnDestroy {
 
   constructor(
     private _editorService: TextEditorService,
-    private _yamlParser: YAMLParserService
+    private _dockerComposeParserService: DockerComposeParserService
   ) {
     _editorService.file$
       .pipe(takeUntil(this._destroySubject))
       .subscribe(file => {
         this._file = file;
-        const global = _yamlParser.objectToYAML(file.global);
-        const services = _yamlParser.objectToYAML({ services: file.services });
-        this._code = `${global}\n${services}`;
+        this._code = _dockerComposeParserService.modelToString(file.data);
       });
   }
 

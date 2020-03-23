@@ -11,27 +11,42 @@ export const testSets: ISet<any>[] = [
         id: 0,
         type: 1,
         name: 'some name',
-        global: {
-          version: '3'
-        },
-        services: [
+        data: [
           {
-            name: 'redis',
-            data: {
-              image: 'redis:latest'
-            }
+            key: 'version',
+            value: 3,
+            required: true
           },
           {
-            name: 'front',
-            data: {
-              build: '.',
-              array: [
-                'fuck',
-                'this',
-                'shit',
-                '!'
-              ]
-            }
+            key: 'services',
+            value: [
+              {
+                key: 'redis',
+                value: [
+                  {
+                    key: 'build',
+                    value: '.'
+                  },
+                  {
+                    key: 'port',
+                    value: 8080
+                  }
+                ]
+              },
+              {
+                key: 'mongo',
+                value: [
+                  {
+                    key: 'user',
+                    value: 'lol'
+                  },
+                  {
+                    key: 'pass',
+                    value: 'kek'
+                  }
+                ]
+              }
+            ]
           }
         ]
       }

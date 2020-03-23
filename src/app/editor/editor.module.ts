@@ -13,6 +13,7 @@ import { EditorService } from './editor.service';
 import { GraphicEditorComponent } from './docker-compose/graphic-editor/graphic-editor.component'
 import { TextEditorService } from './text-editor.service';
 import { GraphicEditorService } from './graphic-editor.service';
+import { AddButtonComponent } from './docker-compose/graphic-editor/editor-form/editor-element/add-button/add-button.component';
 
 @NgModule({
   imports: [
@@ -26,7 +27,8 @@ import { GraphicEditorService } from './graphic-editor.service';
     EditorElementComponent,
     EditorFormComponent,
     GraphicEditorComponent,
-    TextEditorComponent
+    TextEditorComponent,
+    AddButtonComponent
   ],
   providers: [
     YAMLParserService,
