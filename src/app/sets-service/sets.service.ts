@@ -1,12 +1,19 @@
 import { Injectable } from '@angular/core';
 import { testSets } from './test-sets';
 
-export interface IKeyValue {
-  key?: string;
-  value?: any;
+export enum InputTypes {
+  TEXT = 0,
+  SELECT = 1
 }
 
-export type IModel = IKeyValue | IKeyValue[];
+export interface IKeyValue<T> {
+  key?: T;
+  value?: any;
+  required?: boolean;
+  type?: InputTypes;
+}
+
+export type IModel = IKeyValue<string> | IKeyValue<string>[];
 
 export enum FileTypes {
   DOCKER_COMPOSE = 1,
@@ -19,7 +26,7 @@ export interface IConfigFile<T> {
   id: number;
   name: string;
   type: FileTypes;
-  data: T
+  data: T;
 }
 
 export interface ISet<T> {

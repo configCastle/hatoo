@@ -10,7 +10,7 @@ import { map, tap } from 'rxjs/operators';
 export class EditorService {
   private _selectedIndexSubject = new BehaviorSubject<number>(0);
   private _setSubject: BehaviorSubject<ISet<any> | undefined>;
-  
+
   set$: Observable<ISet<any>>;
   index$: Observable<number>;
   file$: Observable<IConfigFile<any>>;
@@ -22,15 +22,13 @@ export class EditorService {
     const id = +_route.snapshot.params.id;
     const set = _setsService.getById(id);
     this._setSubject = new BehaviorSubject(set);
-    
+
     this.set$ = this._setSubject.asObservable();
     this.index$ = this._selectedIndexSubject.asObservable();
     this.file$ = combineLatest(
       this.index$,
       this.set$
-    ).pipe(
-      map(([i, set]) => set.config_files[i])
-    )
+    ).pipe(map(([i, s]) => s.config_files[i]));
   }
 
   updateFile(file: IConfigFile<any>): void {

@@ -1,4 +1,4 @@
-import { ISet } from './sets.service';
+import { ISet, InputTypes } from './sets.service';
 
 export const testSets: ISet<any>[] = [
   {
@@ -38,7 +38,11 @@ export const testSets: ISet<any>[] = [
                 value: [
                   {
                     key: 'user',
-                    value: 'lol'
+                    value: [
+                      { value: 'l' },
+                      { value: 'o' },
+                      { value: 'l' },
+                    ]
                   },
                   {
                     key: 'pass',

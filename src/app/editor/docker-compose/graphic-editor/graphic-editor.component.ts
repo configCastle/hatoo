@@ -1,22 +1,21 @@
-import { Component } from '@angular/core';
-import { FormArray, FormGroup } from '@angular/forms';
-import { Subject, combineLatest, Observable } from 'rxjs';
-import { takeUntil, map, tap, startWith, skip } from 'rxjs/operators';
-import { IConfigFile, FileTypes } from 'src/app/sets-service/sets.service';
+import { Component, OnDestroy } from '@angular/core';
+import { Subject, Observable } from 'rxjs';
+import { takeUntil, map } from 'rxjs/operators';
+import { IConfigFile } from 'src/app/sets-service/sets.service';
 import { Form, FormGroupParserService } from 'src/app/Parser/FormGroupParser/form-group-parser.service';
 import { GraphicEditorService } from '../../graphic-editor.service';
 
 @Component({
-	selector: 'app-graphic-editor',
-	templateUrl: 'graphic-editor.component.html',
-	styleUrls: ['graphic-editor.component.scss']
+  selector: 'app-graphic-editor',
+  templateUrl: 'graphic-editor.component.html',
+  styleUrls: ['graphic-editor.component.scss']
 })
-export class GraphicEditorComponent {
-	private _completeSubject = new Subject<void>();
+export class GraphicEditorComponent implements OnDestroy {
+  private _completeSubject = new Subject<void>();
 
   file$: Observable<IConfigFile<Form>>;
 
-	constructor(
+  constructor(
     _editorService: GraphicEditorService,
     _formParser: FormGroupParserService
   ) {
@@ -26,29 +25,28 @@ export class GraphicEditorComponent {
           const id = f.id;
           const name = f.name;
           const type = f.type;
-          const global = _formParser.objectToFormGroup(f.global);
-          const services = _formParser.objectToFormGroup(f.services);
-          this._completeSubject.next();
+          const data =
 
-          new FormGroup({global, services}).valueChanges
-          .pipe(
-            takeUntil(this._completeSubject),
-          ).subscribe(({g, s}) => {
-            _editorService.updateFile({
-              id,
-              type,
-              name,
-              global: g || global.value,
-              services: s || services.value
-            })
-          })
-          
-          return { id, type, name, global, services }
+            this._completeSubject.next();
+
+          data.valueChanges
+            .pipe(
+              takeUntil(this._completeSubject),
+            ).subscribe(e => {
+              _editorService.updateFile({
+                id,
+                type,
+                name,
+                data: e
+              });
+            });
+
+          return { id, type, name, data };
         })
-      )
-	}
+      );
+  }
 
-	ngOnDestroy() {
-		this._completeSubject.next();
-	}
+  ngOnDestroy() {
+    this._completeSubject.next();
+  }
 }

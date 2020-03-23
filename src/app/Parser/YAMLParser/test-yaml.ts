@@ -1,4 +1,4 @@
-import { IKeyValue } from '../sets-service/sets.service';
+import { IKeyValue } from '../../sets-service/sets.service';
 
 export const testYaml = `
 version: 3.1
@@ -11,7 +11,7 @@ services:
       - h
       - n`;
 
-const testModel: IKeyValue[] = [
+const testModel: IKeyValue<string>[] = [
   { key: 'version', value: 3.1 },
   {
     key: 'services',
@@ -33,4 +33,4 @@ const testModel: IKeyValue[] = [
       }
     ]
   }
-]
+];

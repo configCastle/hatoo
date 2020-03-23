@@ -1,24 +1,23 @@
 import { Component, OnDestroy } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { YAMLParserService } from 'src/app/Parser/yaml-parser.service';
 import { IConfigFile, FileTypes } from 'src/app/sets-service/sets.service';
 import { TextEditorService } from '../../text-editor.service';
-import { DockerComposeParserService } from '../docker-compose-parser/docker-compose-parser.service';
- 
+import { DCTextParserService } from '../dc-text-parser.service';
+
 @Component({
   selector: 'app-text-editor',
   templateUrl: './text-ditor.component.html'
 })
 export class TextEditorComponent implements OnDestroy {
   private _destroySubject = new Subject<void>();
-  private _code: string = '';
+  private _code = '';
   private _file: IConfigFile<any>;
 
   get code() {
     return this._code;
   }
-  
+
   set code(value: string) {
     if (this._code === value) { return; }
     this._code = value;
@@ -27,8 +26,8 @@ export class TextEditorComponent implements OnDestroy {
       id: this._file.id,
       type: FileTypes.DOCKER_COMPOSE,
       name: this._file.name,
-      data: this._dockerComposeParserService.stringToModel(value);
-    }) 
+      data: this._dockerComposeParserService.stringToModel(value)
+    });
   }
 
   readonly editorOptions = {
@@ -38,7 +37,7 @@ export class TextEditorComponent implements OnDestroy {
 
   constructor(
     private _editorService: TextEditorService,
-    private _dockerComposeParserService: DockerComposeParserService
+    private _dockerComposeParserService: DCTextParserService
   ) {
     _editorService.file$
       .pipe(takeUntil(this._destroySubject))
