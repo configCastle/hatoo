@@ -1,13 +1,14 @@
 <div class="wr">
-  <div *ngIf="isGroup as group">
-    {{name || ''}}<editor-element *ngFor="let key of group" [form]="form.controls[key]" [name]="key"></editor-element>
-    <app-add-button></app-add-button>
+  <div *ngIf="form">
+    <input *ngIf="form.key" [formControl]="form.key">
+
+    <div *ngIf="isArray(); else control">
+      <app-editor-element *ngFor="let element of form.value" [form]="element"></app-editor-element>
+      <app-add-button></app-add-button>
+    </div>
+    <ng-template #control>
+      <input *ngIf="form.value" [formControl]="form.value">
+    </ng-template>
+
   </div>
-  <div *ngIf="isArray as array">
-    {{name || ''}}<editor-element *ngFor="let control of array" [form]="control"></editor-element>
-    <app-add-button></app-add-button>
-  </div>
-  <div *ngIf="isControl">
-    {{name || ''}}<input [formControl]="form">
-  </div>  
 </div>

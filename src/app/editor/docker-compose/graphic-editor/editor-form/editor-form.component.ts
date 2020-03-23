@@ -1,29 +1,12 @@
-import { Component, Input } from "@angular/core";
-import { FormGroup, FormControl, FormArray } from '@angular/forms';
+import { Component, Input, OnInit } from '@angular/core';
+import { IKeyValue } from 'src/app/sets-service/sets.service';
+import { Form } from 'src/app/Parser/FormGroupParser/form-group-parser.service';
 
 @Component({
-  selector: 'editor-form',
+  selector: 'app-editor-form',
   templateUrl: 'editor-form.component.html',
   styleUrls: ['editor-form.component.scss']
 })
 export class EditorFormComponent {
-  @Input() form: FormGroup | FormControl | FormArray;
-
-
-  get isArray() {
-    if (this.form instanceof FormArray) {
-      return this.form.controls;
-    }
-  }
-
-  get isGroup() {
-    if (this.form instanceof FormGroup) {
-      const arr = [];
-      for (const o in (this.form as FormGroup).controls) {
-        arr.push(o);
-      }
-      return arr;
-    }
-  }
-
+  @Input() form: any;
 }
