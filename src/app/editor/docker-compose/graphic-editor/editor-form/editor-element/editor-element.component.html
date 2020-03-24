@@ -6,7 +6,7 @@
       <app-editor-element (changed)="changeIntentedElement($event)" *ngFor="let element of form.value" [form]="element"
         [id]="element._id">
       </app-editor-element>
-      <app-add-button></app-add-button>
+      <button (click)="add()">+</button>
     </div>
     <ng-template #control>
       <input *ngIf="form.value" [formControl]="form.value">

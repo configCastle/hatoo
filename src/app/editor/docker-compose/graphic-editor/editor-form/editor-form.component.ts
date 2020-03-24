@@ -4,6 +4,8 @@ export interface IChangeList {
   id: string;
   subtree?: IChangeList;
   change?: { key?: any; value?: any };
+  add?: boolean;
+  remove?: boolean;
 }
 
 @Component({

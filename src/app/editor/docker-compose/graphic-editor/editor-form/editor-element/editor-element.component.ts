@@ -41,27 +41,32 @@ export class EditorElementComponent implements OnDestroy {
   }
 
   changeKey(value: any) {
-    const result: IChangeList = {
+    this.changed.emit({
       id: this.id,
       change: { key: value }
-    };
-    this.changed.emit(result);
+    });
   }
 
   changeValue(value: any) {
-    const result: IChangeList = {
+    this.changed.emit({
       id: this.id,
       change: { value }
-    };
-    this.changed.emit(result);
+    });
   }
 
   changeIntentedElement(value: any) {
-    const result: IChangeList = {
+    this.changed.emit({
       id: this.id,
       subtree: value
-    };
-    this.changed.emit(result);
+    });
+  }
+
+  add() {
+    if (!this.isArray()) { return; }
+    this.changed.emit({
+      id: this.id,
+      add: true
+    });
   }
 
   ngOnDestroy() {

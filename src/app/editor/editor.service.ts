@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { SetsService, ISet, IConfigFile } from 'src/app/sets-service/sets.service';
+import { SetsService, ISet, IConfigFile, IKeyValue } from 'src/app/sets-service/sets.service';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { map, tap } from 'rxjs/operators';
@@ -36,21 +36,24 @@ export class EditorService {
     const set = this._setSubject.value;
     const index = set.config_files.findIndex(f => f.id === id);
     if (index > -1) {
-      let change = changes;
-      let data = set.config_files[index].data;
-      while (
-        change.subtree != null &&
-        Array.isArray(data)
-      ) {
-        data = data.find(e => e._id === change.id).value;
-        change = change.subtree;
-      }
-      if (change.change.value) {
-        data.find(e => e._id === change.id).value = change.change.value;
-      } else {
-        data.find(e => e._id === change.id).key = change.change.key;
-      }
+      const data = set.config_files[index].data;
+      this._makeChange(changes, data);
       this._setSubject.next(set);
+    }
+  }
+
+  private _makeChange(changes: IChangeList, data: IKeyValue<string>) {
+    while (
+      changes.subtree != null &&
+      Array.isArray(data)
+    ) {
+      data = data.find(e => e._id === changes.id).value;
+      changes = changes.subtree;
+    }
+    if (changes.change.value) {
+      data.find(e => e._id === changes.id).value = changes.change.value;
+    } else {
+      data.find(e => e._id === changes.id).key = changes.change.key;
     }
   }
 

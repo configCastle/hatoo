@@ -1,6 +1,6 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input } from '@angular/core';
+import { IKeyValue } from 'src/app/sets-service/sets.service';
 import { Form } from 'src/app/Parser/FormGroupParser/form-group-parser.service';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-add-button',
@@ -8,14 +8,9 @@ import { FormArray, FormControl, FormGroup } from '@angular/forms';
   styleUrls: ['add-button.component.scss']
 })
 export class AddButtonComponent {
-  @Input() control: Form;
+  @Input() control: IKeyValue<Form>;
 
   add() {
-    if (this.control instanceof FormArray) {
-      this.control.push(new FormControl(''));
-    } else if (this.control instanceof FormGroup) {
-      // Короче. Надо думать над ткм, как будет редактироваться ключ 
-      // this.control.addControl()
-    }
+    console.log(this.control);
   }
 }
