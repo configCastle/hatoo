@@ -3,7 +3,9 @@
     <input *ngIf="form.key" [formControl]="form.key">
 
     <div *ngIf="isArray(); else control">
-      <app-editor-element *ngFor="let element of form.value" [form]="element"></app-editor-element>
+      <app-editor-element (changed)="changeIntentedElement($event)" *ngFor="let element of form.value" [form]="element"
+        [id]="element._id">
+      </app-editor-element>
       <app-add-button></app-add-button>
     </div>
     <ng-template #control>

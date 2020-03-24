@@ -1,5 +1,10 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { IKeyValue } from 'src/app/sets-service/sets.service';
+
+export interface IChangeList {
+  id: string;
+  subtree?: IChangeList;
+  change?: { key?: any; value?: any };
+}
 
 @Component({
   selector: 'app-editor-form',
@@ -8,6 +13,9 @@ import { IKeyValue } from 'src/app/sets-service/sets.service';
 })
 export class EditorFormComponent {
   @Input() form: any;
-  @Output() changed = new EventEmitter<IKeyValue<string>>();
+  @Output() changed = new EventEmitter<IChangeList>();
 
+  change(value: any) {
+    this.changed.emit(value);
+  }
 }

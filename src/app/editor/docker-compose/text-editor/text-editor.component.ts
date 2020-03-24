@@ -22,17 +22,21 @@ export class TextEditorComponent implements OnDestroy {
     if (this._code === value) { return; }
     this._code = value;
 
-    this._editorService.updateFile({
-      id: this._file.id,
-      type: FileTypes.DOCKER_COMPOSE,
-      name: this._file.name,
-      data: this._dockerComposeParserService.stringToModel(value)
-    });
+    const data = this._dockerComposeParserService.stringToModel(value);
+    if (data) {
+      this._editorService.updateFile({
+        id: this._file.id,
+        type: FileTypes.DOCKER_COMPOSE,
+        name: this._file.name,
+        data
+      });
+    }
   }
 
   readonly editorOptions = {
     theme: 'vs-dark',
-    language: 'yaml'
+    language: 'yaml',
+    tabSize: 2
   };
 
   constructor(

@@ -11,7 +11,13 @@ export class DCTextParserService {
   ) { }
 
   stringToModel(yaml: string): IKeyValue<string>[] {
-    const plainObject = this._yamlParser.parse(yaml);
+    let plainObject;
+    try {
+      plainObject = this._yamlParser.parse(yaml);
+    } catch (err) {
+      console.error('Invalid YAML has been inserted');
+      // TODO: we must somehow display to user status "INVALID"
+    }
     return this._modelParser.plainObjectToModel(plainObject);
   }
 

@@ -1,4 +1,4 @@
 <div *ngIf="form">
-  <app-editor-element *ngFor="let element of form" [form]="element">
+  <app-editor-element (changed)="change($event)" *ngFor="let element of form" [form]="element" [id]="element._id">
   </app-editor-element>
 </div>

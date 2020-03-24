@@ -5,6 +5,7 @@ import { IConfigFile } from 'src/app/sets-service/sets.service';
 import { Form } from 'src/app/Parser/FormGroupParser/form-group-parser.service';
 import { GraphicEditorService } from '../../graphic-editor.service';
 import { DCFormParserService } from '../dc-form-parser.service';
+import { IChangeList } from './editor-form/editor-form.component';
 
 @Component({
   selector: 'app-graphic-editor',
@@ -16,34 +17,22 @@ export class GraphicEditorComponent implements OnDestroy {
   file$: Observable<IConfigFile<Form>>;
 
   constructor(
-    _editorService: GraphicEditorService,
+    private _editorService: GraphicEditorService,
     _formParser: DCFormParserService
   ) {
     this.file$ = _editorService.file$
       .pipe(
         map(f => {
-          const id = f.id;
-          const name = f.name;
-          const type = f.type;
-          const data = _formParser.modelToFormGroup(f.data);
-
-
-          // this._completeSubject.next();
-          // data.valueChanges
-          //   .pipe(
-          //     takeUntil(this._completeSubject),
-          //   ).subscribe(e => {
-          //     _editorService.updateFile({
-          //       id,
-          //       type,
-          //       name,
-          //       data: e
-          //     });
-          //   });
-
-          return { id, type, name, data };
+          return {
+            ...f,
+            data: _formParser.modelToFormGroup(f.data)
+          };
         })
       );
+  }
+
+  change(id: number, value: IChangeList) {
+    this._editorService.changeFileData(id, value);
   }
 
   ngOnDestroy() {
