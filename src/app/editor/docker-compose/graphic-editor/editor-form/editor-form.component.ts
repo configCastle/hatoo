@@ -1,6 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { IKeyValue } from 'src/app/sets-service/sets.service';
-import { Form } from 'src/app/Parser/FormGroupParser/form-group-parser.service';
 
 @Component({
   selector: 'app-editor-form',
@@ -9,4 +8,6 @@ import { Form } from 'src/app/Parser/FormGroupParser/form-group-parser.service';
 })
 export class EditorFormComponent {
   @Input() form: any;
+  @Output() changed = new EventEmitter<IKeyValue<string>>();
+
 }

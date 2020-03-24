@@ -16,7 +16,7 @@ export class DCFormParserService {
 
   private _toForm(model: any) {
     return model.map(e => {
-      const formElement: IKeyValue<FormControl> = {};
+      const formElement = {} as IKeyValue<FormControl>;
       if (e.key != null) {
         formElement.key = new FormControl(e.key);
       }
@@ -31,7 +31,7 @@ export class DCFormParserService {
 
   private _toModel(form: any) {
     return form.map(e => {
-      const modelElement: IKeyValue<string> = {};
+      const modelElement = {} as IKeyValue<string>;
       if (e.key != null) {
         modelElement.key = e.key.value;
       }

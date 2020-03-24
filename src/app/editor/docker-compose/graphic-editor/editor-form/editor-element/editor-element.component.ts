@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { EditorFormComponent } from '../editor-form.component';
 
 @Component({
@@ -6,15 +6,7 @@ import { EditorFormComponent } from '../editor-form.component';
   templateUrl: 'editor-element.component.html',
   styleUrls: ['editor-element.component.scss']
 })
-export class EditorElementComponent extends EditorFormComponent implements OnInit {
-  constructor() {
-    super();
-  }
-
-  ngOnInit() {
-    console.log(this.form.value);
-  }
-
+export class EditorElementComponent extends EditorFormComponent {
   isArray() {
     return Array.isArray(this.form.value);
   }

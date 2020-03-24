@@ -12,21 +12,23 @@ services:
       - n`;
 
 const testModel: IKeyValue<string>[] = [
-  { key: 'version', value: 3.1 },
+  { _id: '0', key: 'version', value: 3.1 },
   {
+    _id: '1',
     key: 'services',
     value: [
       {
+        _id: '10',
         key: 'redis',
         value: [
-          { key: 'foo', value: 'bar:buzz' },
+          { _id: '100', key: 'foo', value: 'bar:buzz' },
           {
             key: 'john_dou',
             value: [
-              { value: 'j' },
-              { value: 'o' },
-              { value: 'h' },
-              { value: 'n' }
+              { _id: '1000', value: 'j' },
+              { _id: '1001', value: 'o' },
+              { _id: '1002', value: 'h' },
+              { _id: '1003', value: 'n' }
             ]
           }
         ]
