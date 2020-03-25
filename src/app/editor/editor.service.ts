@@ -3,7 +3,7 @@ import { SetsService, ISet, IConfigFile, IKeyValue } from 'src/app/sets-service/
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { map, tap } from 'rxjs/operators';
-import { IChangeList } from './docker-compose/graphic-editor/editor-form/editor-form.component';
+import { IChangeList, ChangeType } from './docker-compose/graphic-editor/editor-form/editor-form.component';
 
 @Injectable({
   providedIn: 'root'
@@ -42,18 +42,33 @@ export class EditorService {
     }
   }
 
-  private _makeChange(changes: IChangeList, data: IKeyValue<string>) {
+  private _makeChange(changes: IChangeList, data: IKeyValue<string>[]) {
+    let pointer = data;
     while (
       changes.subtree != null &&
-      Array.isArray(data)
+      Array.isArray(pointer)
     ) {
-      data = data.find(e => e._id === changes.id).value;
-      changes = changes.subtree;
+      pointer = pointer.find(e => e.id === changes.id).value;
+      changes = changes.subtree as IChangeList;
     }
-    if (changes.change.value) {
-      data.find(e => e._id === changes.id).value = changes.change.value;
-    } else {
-      data.find(e => e._id === changes.id).key = changes.change.key;
+    switch (changes.type) {
+      case ChangeType.UPDATE:
+        const index = pointer.findIndex(e => e.id === changes.id);
+        pointer[index] = { ...pointer[index], ...changes.newValues };
+
+        break;
+      case ChangeType.ADD:
+        pointer = pointer.find(e => e.id === changes.id).value;
+        const newElement = { ...pointer[0] };
+        const newId = `${changes.id}_${pointer}`;
+        if (newElement.key) { newElement.key = ''; }
+        if (newElement.value) { newElement.value = ''; }
+        newElement.id = newId;
+        pointer.push(newElement);
+
+        break;
+      case ChangeType.REMOVE:
+        break;
     }
   }
 

@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { IChangeList } from '../editor-form.component';
+import { IChangeList, ChangeType } from '../editor-form.component';
 import { FormControl } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -13,7 +13,6 @@ export class EditorElementComponent implements OnDestroy {
 
   private _stopSubject = new Subject<void>();
   private _form: any;
-  @Input() id: string;
   @Input()
   set form(value: any) {
     if (this._form === value) { return; }
@@ -42,30 +41,33 @@ export class EditorElementComponent implements OnDestroy {
 
   changeKey(value: any) {
     this.changed.emit({
-      id: this.id,
-      change: { key: value }
+      id: this.form.id,
+      newValues: { key: value },
+      type: ChangeType.UPDATE
     });
   }
 
   changeValue(value: any) {
     this.changed.emit({
-      id: this.id,
-      change: { value }
+      id: this.form.id,
+      newValues: { value },
+      type: ChangeType.UPDATE
     });
   }
 
-  changeIntentedElement(value: any) {
+  changeIndentedElement(value: IChangeList) {
     this.changed.emit({
-      id: this.id,
-      subtree: value
+      id: this.form.id,
+      subtree: value,
+      type: value.type
     });
   }
 
   add() {
     if (!this.isArray()) { return; }
     this.changed.emit({
-      id: this.id,
-      add: true
+      id: this.form.id,
+      type: ChangeType.ADD
     });
   }
 

@@ -35,16 +35,16 @@ export class ModelParserService {
 
     if (type === 'Object') {
       result = new Array<IKeyValue<string>>();
-      let counter = 0;
+      let i = 0;
       for (const key in object) {
         if (object.hasOwnProperty(key)) {
-          const index = indentKey + counter;
+          const index = `${indentKey}_${i}`;
           result.push({
-            _id: index,
+            id: index,
             key,
             value: this._toKeyValue(object[key], index)
           });
-          counter++;
+          i++;
         }
       }
       return result.length ? result : object;
@@ -52,8 +52,8 @@ export class ModelParserService {
 
     if (type === 'Array') {
       result = object.map((e, i) => {
-        const index = indentKey + i;
-        return { _id: index, value: this._toKeyValue(e, index) };
+        const index = `${indentKey}_${i}`;
+        return { id: index, value: this._toKeyValue(e, index) };
       });
       return result.length ? result : null;
     }

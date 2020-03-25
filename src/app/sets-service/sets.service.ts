@@ -7,7 +7,7 @@ export enum InputTypes {
 }
 
 export interface IKeyValue<T> {
-  _id: string;
+  id: string;
   key?: T;
   value?: any;
   required?: boolean;

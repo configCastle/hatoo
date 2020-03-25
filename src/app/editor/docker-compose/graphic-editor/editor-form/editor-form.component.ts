@@ -3,9 +3,14 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 export interface IChangeList {
   id: string;
   subtree?: IChangeList;
-  change?: { key?: any; value?: any };
-  add?: boolean;
-  remove?: boolean;
+  newValues?: { key?: any; value?: any };
+  type: ChangeType;
+}
+
+export enum ChangeType {
+  UPDATE = 0,
+  ADD = 1,
+  REMOVE = 2
 }
 
 @Component({

@@ -3,7 +3,7 @@ import { IConfigFile } from 'src/app/sets-service/sets.service';
 import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { EditorService } from './editor.service';
-import { IChangeList } from './docker-compose/graphic-editor/editor-form/editor-form.component';
+import { IChangeList, ChangeType } from './docker-compose/graphic-editor/editor-form/editor-form.component';
 
 @Injectable({ providedIn: 'root' })
 export class GraphicEditorService {
@@ -17,7 +17,9 @@ export class GraphicEditorService {
   }
 
   changeFileData(id: number, change: IChangeList) {
-    this._skip = true;
+    if (change.type === ChangeType.UPDATE) {
+      this._skip = true;
+    }
     this._editorService.changeFileData(id, change);
   }
 

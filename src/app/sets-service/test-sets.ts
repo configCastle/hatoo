@@ -13,46 +13,46 @@ export const testSets: ISet<any>[] = [
         name: 'some name',
         data: [
           {
-            _id: '0',
+            id: '_0',
             key: 'version',
             value: 3,
             required: true
           },
           {
-            _id: '1',
+            id: '_1',
             key: 'services',
             value: [
               {
-                _id: '10',
+                id: '_1_0',
                 key: 'redis',
                 value: [
                   {
-                    _id: '100',
+                    id: '_1_0_0',
                     key: 'build',
                     value: '.'
                   },
                   {
-                    _id: '101',
+                    id: '_1_0_1',
                     key: 'port',
                     value: 8080
                   }
                 ]
               },
               {
-                _id: '11',
+                id: '_1_1',
                 key: 'mongo',
                 value: [
                   {
-                    _id: '110',
+                    id: '_1_1_0',
                     key: 'user',
                     value: [
-                      { _id: '1100', value: 'l' },
-                      { _id: '1001', value: 'o' },
-                      { _id: '1002', value: 'l' },
+                      { id: '_1_1_0_0', value: 'l' },
+                      { id: '_1_0_0_1', value: 'o' },
+                      { id: '_1_0_0_2', value: 'l' },
                     ]
                   },
                   {
-                    _id: '111',
+                    id: '_1_1_1',
                     key: 'pass',
                     value: 'kek'
                   }
