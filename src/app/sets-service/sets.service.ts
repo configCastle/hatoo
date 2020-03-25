@@ -42,7 +42,7 @@ export interface ISet<T> {
   providedIn: 'root'
 })
 export class SetsService {
-  getById(id: number): ISet<any> | undefined {
+  getById(id: number): ISet<IKeyValue<string>[]> | undefined {
     return testSets[0];
   }
 }

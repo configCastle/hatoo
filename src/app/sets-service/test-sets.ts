@@ -1,6 +1,6 @@
-import { ISet } from './sets.service';
+import { ISet, IKeyValue } from './sets.service';
 
-export const testSets: ISet<any>[] = [
+export const testSets: ISet<IKeyValue<string>[]>[] = [
   {
     id: 0,
     name: 'abra kadabra',

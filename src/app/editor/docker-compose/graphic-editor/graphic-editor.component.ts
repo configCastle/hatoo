@@ -1,11 +1,11 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { IConfigFile } from 'src/app/sets-service/sets.service';
-import { Form } from 'src/app/Parser/FormGroupParser/form-group-parser.service';
+import { IConfigFile, IKeyValue } from 'src/app/sets-service/sets.service';
 import { GraphicEditorService } from '../../graphic-editor.service';
 import { DCFormParserService } from '../dc-form-parser.service';
 import { IChangeList } from './editor-form/editor-form.component';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-graphic-editor',
@@ -14,7 +14,7 @@ import { IChangeList } from './editor-form/editor-form.component';
 })
 export class GraphicEditorComponent implements OnDestroy {
   private _completeSubject = new Subject<void>();
-  file$: Observable<IConfigFile<Form>>;
+  file$: Observable<IConfigFile<IKeyValue<FormControl>[]>>;
 
   constructor(
     private _editorService: GraphicEditorService,

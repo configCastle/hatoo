@@ -1,4 +1,5 @@
 <div *ngIf="form">
   <app-editor-element (changed)="change($event)" *ngFor="let element of form" [form]="element">
   </app-editor-element>
+  <button class="add-button" (click)="add()">+</button>
 </div>

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { SetsService, ISet, IConfigFile, IKeyValue } from 'src/app/sets-service/sets.service';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { IChangeList, ChangeType } from './docker-compose/graphic-editor/editor-form/editor-form.component';
 
 @Injectable({
@@ -10,11 +10,11 @@ import { IChangeList, ChangeType } from './docker-compose/graphic-editor/editor-
 })
 export class EditorService {
   private _selectedIndexSubject = new BehaviorSubject<number>(0);
-  private _setSubject: BehaviorSubject<ISet<any> | undefined>;
+  private _setSubject: BehaviorSubject<ISet<IKeyValue<string>[]> | undefined>;
 
-  set$: Observable<ISet<any>>;
+  set$: Observable<ISet<IKeyValue<string>[]>>;
   index$: Observable<number>;
-  file$: Observable<IConfigFile<any>>;
+  file$: Observable<IConfigFile<IKeyValue<string>[]>>;
 
   constructor(
     _setsService: SetsService,
@@ -58,7 +58,8 @@ export class EditorService {
 
         break;
       case ChangeType.ADD:
-        pointer = pointer.find(e => e.id === changes.id).value;
+        const element = pointer.find(e => e.id === changes.id);
+        if (element) { pointer = element.value; }
         const newElement = { ...pointer[0] };
         const newId = `${changes.id}_${pointer}`;
         if (newElement.key) { newElement.key = ''; }
@@ -68,6 +69,10 @@ export class EditorService {
 
         break;
       case ChangeType.REMOVE:
+        console.log(changes);
+        console.log(pointer);
+        const removeIndex = pointer.findIndex(e => e.id === changes.id);
+        pointer.splice(removeIndex, 1);
         break;
     }
   }

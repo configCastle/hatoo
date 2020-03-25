@@ -3,6 +3,7 @@ import { IChangeList, ChangeType } from '../editor-form.component';
 import { FormControl } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { IKeyValue } from 'src/app/sets-service/sets.service';
 
 @Component({
   selector: 'app-editor-element',
@@ -12,9 +13,9 @@ import { Subject } from 'rxjs';
 export class EditorElementComponent implements OnDestroy {
 
   private _stopSubject = new Subject<void>();
-  private _form: any;
+  private _form: IKeyValue<FormControl>;
   @Input()
-  set form(value: any) {
+  set form(value: IKeyValue<FormControl>) {
     if (this._form === value) { return; }
     this._form = value;
     this._stopSubject.next();
@@ -29,17 +30,17 @@ export class EditorElementComponent implements OnDestroy {
         .subscribe(v => this.changeValue(v));
     }
   }
-  get form() {
+  get form(): IKeyValue<FormControl> {
     return this._form;
   }
 
   @Output() changed = new EventEmitter<IChangeList>();
 
-  isArray() {
+  isArray(): boolean {
     return Array.isArray(this.form.value);
   }
 
-  changeKey(value: any) {
+  changeKey(value: string) {
     this.changed.emit({
       id: this.form.id,
       newValues: { key: value },
@@ -68,6 +69,13 @@ export class EditorElementComponent implements OnDestroy {
     this.changed.emit({
       id: this.form.id,
       type: ChangeType.ADD
+    });
+  }
+
+  remove() {
+    this.changed.emit({
+      id: this.form.id,
+      type: ChangeType.REMOVE
     });
   }
 

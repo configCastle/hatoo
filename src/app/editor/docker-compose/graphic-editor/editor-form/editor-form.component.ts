@@ -25,4 +25,12 @@ export class EditorFormComponent {
   change(value: any) {
     this.changed.emit(value);
   }
+
+  add() {
+    if (!Array.isArray(this.form)) { return; }
+    this.changed.emit({
+      id: '',
+      type: ChangeType.ADD
+    });
+  }
 }

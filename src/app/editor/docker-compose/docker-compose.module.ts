@@ -5,7 +5,6 @@ import { GraphicEditorComponent } from './graphic-editor/graphic-editor.componen
 import { TextEditorComponent } from './text-editor/text-editor.component';
 import { DCTextParserService } from './dc-text-parser.service';
 import { DCFormParserService } from './dc-form-parser.service';
-import { AddButtonComponent } from './graphic-editor/editor-form/editor-element/add-button/add-button.component';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MonacoEditorModule } from 'ngx-monaco-editor';
@@ -22,14 +21,12 @@ import { MonacoEditorModule } from 'ngx-monaco-editor';
     EditorFormComponent,
     GraphicEditorComponent,
     TextEditorComponent,
-    AddButtonComponent
   ],
   declarations: [
     EditorElementComponent,
     EditorFormComponent,
     GraphicEditorComponent,
     TextEditorComponent,
-    AddButtonComponent
   ],
   providers: [
     DCTextParserService,

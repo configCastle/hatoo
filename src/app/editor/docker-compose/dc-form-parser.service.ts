@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
 import { IKeyValue } from 'src/app/sets-service/sets.service';
 import { FormControl } from '@angular/forms';
-import { Form } from 'src/app/Parser/FormGroupParser/form-group-parser.service';
 
 @Injectable({ providedIn: 'root' })
 export class DCFormParserService {
 
-  modelToFormGroup(model: IKeyValue<string>[]) {
+  modelToFormGroup(model: IKeyValue<string>[]): IKeyValue<FormControl>[] {
     return this._toForm(model);
   }
 
-  formGroupToModel(form: IKeyValue<Form>[]) {
+  formGroupToModel(form: IKeyValue<FormControl>[]): IKeyValue<string>[] {
     return this._toModel(form);
   }
 
