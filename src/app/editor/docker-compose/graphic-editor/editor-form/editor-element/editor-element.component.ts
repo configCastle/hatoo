@@ -43,7 +43,7 @@ export class EditorElementComponent implements OnDestroy {
   changeKey(value: string) {
     this.changed.emit({
       id: this.form.id,
-      newValues: { key: value },
+      data: { key: value },
       type: ChangeType.UPDATE
     });
   }
@@ -51,7 +51,7 @@ export class EditorElementComponent implements OnDestroy {
   changeValue(value: any) {
     this.changed.emit({
       id: this.form.id,
-      newValues: { value },
+      data: { value },
       type: ChangeType.UPDATE
     });
   }
@@ -68,7 +68,13 @@ export class EditorElementComponent implements OnDestroy {
     if (!this.isArray()) { return; }
     this.changed.emit({
       id: this.form.id,
-      type: ChangeType.ADD
+      type: ChangeType.ADD,
+      data: {
+        key: '',
+        value: [
+          { key: '', value: '' }
+        ]
+      } 
     });
   }
 

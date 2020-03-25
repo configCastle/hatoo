@@ -4,6 +4,7 @@ import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { IChangeList, ChangeType } from './docker-compose/graphic-editor/editor-form/editor-form.component';
+import { ModelParserService } from '../Parser/ModelParser/model-parser.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,8 @@ export class EditorService {
 
   constructor(
     _setsService: SetsService,
-    _route: ActivatedRoute
+    _route: ActivatedRoute,
+    private _modelParser: ModelParserService
   ) {
     const id = +_route.snapshot.params.id;
     const set = _setsService.getById(id);
@@ -54,17 +56,16 @@ export class EditorService {
     switch (changes.type) {
       case ChangeType.UPDATE:
         const index = pointer.findIndex(e => e.id === changes.id);
-        pointer[index] = { ...pointer[index], ...changes.newValues };
+        pointer[index] = { ...pointer[index], ...changes.data };
 
         break;
       case ChangeType.ADD:
         const element = pointer.find(e => e.id === changes.id);
         if (element) { pointer = element.value; }
-        const newElement = { ...pointer[0] };
+        
         const newId = `${changes.id}_${pointer}`;
-        if (newElement.key) { newElement.key = ''; }
-        if (newElement.value) { newElement.value = ''; }
-        newElement.id = newId;
+        this._modelParser.index(changes.data, newId)
+        const newElement: IKeyValue<string> = changes.data;
         pointer.push(newElement);
 
         break;

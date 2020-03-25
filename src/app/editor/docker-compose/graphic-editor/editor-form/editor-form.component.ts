@@ -3,7 +3,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 export interface IChangeList {
   id: string;
   subtree?: IChangeList;
-  newValues?: { key?: any; value?: any };
+  data?: { key?: any; value?: any };
   type: ChangeType;
 }
 
