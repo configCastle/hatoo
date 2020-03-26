@@ -6,7 +6,13 @@
     <div *ngIf="isArray(); else control">
       <app-editor-element (changed)="changeIndentedElement($event)" *ngFor="let element of form.value" [form]="element">
       </app-editor-element>
-      <button class="add-button" (click)="add()">+</button>
+      <select class="add-button" #selectType>
+        <option value="0" selected>Свойство объекта</option>
+        <option value="1">Элемент массива</option>
+        <option value="2">Объект</option>
+        <option value="3">Массив</option>
+      </select>
+      <button (click)="add(selectType.value)">+</button>
     </div>
     <ng-template #control>
       <input *ngIf="form.value" [formControl]="form.value">

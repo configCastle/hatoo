@@ -38,47 +38,46 @@ export class EditorService {
     const set = this._setSubject.value;
     const index = set.config_files.findIndex(f => f.id === id);
     if (index > -1) {
-      const data = set.config_files[index].data;
-      this._makeChange(changes, data);
+      this._makeChange(changes, set.config_files[index].data);
       this._setSubject.next(set);
     }
   }
 
   private _makeChange(changes: IChangeList, data: IKeyValue<string>[]) {
     let pointer = data;
-    while (
-      changes.subtree != null &&
-      Array.isArray(pointer)
-    ) {
-      pointer = pointer.find(e => e.id === changes.id).value;
-      changes = changes.subtree as IChangeList;
+    let index: number;
+    if (changes.id) {
+      while (changes.subtree && Array.isArray(pointer)) {
+        pointer = pointer.find(e => e.id === changes.id).value;
+        changes = changes.subtree as IChangeList;
+      }
+      index = pointer.findIndex(e => e.id === changes.id);
     }
+
+
     switch (changes.type) {
       case ChangeType.UPDATE:
-        const index = pointer.findIndex(e => e.id === changes.id);
         pointer[index] = { ...pointer[index], ...changes.data };
-
         break;
+
       case ChangeType.ADD:
-        const element = pointer.find(e => e.id === changes.id);
-        if (element) { pointer = element.value; }
-        
-        const newId = `${changes.id}_${pointer}`;
-        this._modelParser.index(changes.data, newId)
-        const newElement: IKeyValue<string> = changes.data;
-        pointer.push(newElement);
-
+        if (index != null) {
+          const newId = `${changes.id}_${pointer[index].value.length}`;
+          this._modelParser.index(changes.data, newId);
+          pointer[index].value.push(changes.data);
+        } else {
+          this._modelParser.index(changes.data, `_${pointer.length}`);
+          pointer.push(changes.data);
+        }
         break;
+
       case ChangeType.REMOVE:
-        console.log(changes);
-        console.log(pointer);
-        const removeIndex = pointer.findIndex(e => e.id === changes.id);
-        pointer.splice(removeIndex, 1);
+        pointer.splice(index, 1);
         break;
     }
   }
 
-  updateFile(file: IConfigFile<any>): void {
+  updateFile(file: IConfigFile<IKeyValue<string>[]>): void {
     const set = this._setSubject.value;
     const index = set.config_files.findIndex(f => f.id === file.id);
     if (index > -1) {

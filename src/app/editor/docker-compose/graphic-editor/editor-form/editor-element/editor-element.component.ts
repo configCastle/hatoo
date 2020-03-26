@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { IChangeList, ChangeType } from '../editor-form.component';
+import { IChangeList, ChangeType, EditorFormComponent } from '../editor-form.component';
 import { FormControl } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -10,7 +10,8 @@ import { IKeyValue } from 'src/app/sets-service/sets.service';
   templateUrl: 'editor-element.component.html',
   styleUrls: ['editor-element.component.scss']
 })
-export class EditorElementComponent implements OnDestroy {
+export class EditorElementComponent extends EditorFormComponent implements OnDestroy {
+
 
   private _stopSubject = new Subject<void>();
   private _form: IKeyValue<FormControl>;
@@ -64,17 +65,12 @@ export class EditorElementComponent implements OnDestroy {
     });
   }
 
-  add() {
+  add(type: number) {
     if (!this.isArray()) { return; }
     this.changed.emit({
       id: this.form.id,
       type: ChangeType.ADD,
-      data: {
-        key: '',
-        value: [
-          { key: '', value: '' }
-        ]
-      } 
+      data: JSON.parse(this.objectTypeDefs[type])
     });
   }
 

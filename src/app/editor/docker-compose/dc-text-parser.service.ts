@@ -18,7 +18,9 @@ export class DCTextParserService {
       console.error('Invalid YAML has been inserted');
       // TODO: we must somehow display to user status "INVALID"
     }
-    return this._modelParser.plainObjectToModel(plainObject);
+    const result = this._modelParser.plainObjectToModel(plainObject);
+    if (!Array.isArray(result)) { return []; }
+    return result;
   }
 
   modelToString(model: IKeyValue<string>[]): string {

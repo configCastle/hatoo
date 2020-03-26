@@ -14,18 +14,19 @@ export class ModelParserService {
 
   private _toPlainObject(model: any): any {
     if (Array.isArray(model)) {
-      const plainObject = {};
-      const plainArray = new Array();
-      for (const el of model) {
-        if (el.key != null) {
+      if (model.every(e => e.key != null)) {
+        const plainObject = {};
+        for (const el of model) {
           plainObject[el.key] = this._toPlainObject(el.value);
-        } else {
-          plainArray.push(
-            this._toPlainObject(el.value)
-          );
         }
+        return plainObject;
       }
-      return plainArray.length ? plainArray : plainObject;
+      return model.map(e => {
+        if (e.key) {
+          return { [e.key]: this._toPlainObject(e.value) };
+        }
+        return this._toPlainObject(e.value);
+      });
     }
     return model;
   }
