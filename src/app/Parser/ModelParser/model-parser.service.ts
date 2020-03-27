@@ -4,39 +4,43 @@ import { FormControl } from '@angular/forms';
 
 @Injectable({ providedIn: 'root' })
 export class ModelParserService {
+
   modelToPlainObject(model: IKeyValue<string>[]): any {
+    console.log(model);
     return this._toPlainObject(model);
   }
 
   plainObjectToModel(object: any): IKeyValue<string>[] {
+    console.log(this._toKeyValue(object, ''));
     return this._toKeyValue(object, '');
   }
 
   private _toPlainObject(model: any): any {
     if (Array.isArray(model)) {
-      if (model.every(e => e.key != null)) {
-        const plainObject = {};
-        for (const el of model) {
-          plainObject[el.key] = this._toPlainObject(el.value);
+      if (model.length) {
+        if (model.every(e => e.key != null)) {
+          const plainObject = {};
+          for (const el of model) {
+            plainObject[el.key] = this._toPlainObject(el.value);
+          }
+          return plainObject;
         }
-        return plainObject;
+        return model.map(e => {
+          if (e.key) {
+            return { [e.key]: this._toPlainObject(e.value) };
+          }
+          return this._toPlainObject(e.value);
+        });
       }
-      return model.map(e => {
-        if (e.key) {
-          return { [e.key]: this._toPlainObject(e.value) };
-        }
-        return this._toPlainObject(e.value);
-      });
+      return '';
     }
     return model;
   }
 
   private _toKeyValue(object: any, indentKey: string) {
     const type = new Object(object).constructor.name;
-    let result;
-
     if (type === 'Object') {
-      result = new Array<IKeyValue<string>>();
+      const result = new Array<IKeyValue<string>>();
       let i = 0;
       for (const key in object) {
         if (object.hasOwnProperty(key)) {
@@ -49,15 +53,21 @@ export class ModelParserService {
           i++;
         }
       }
-      return result.length ? result : object;
+      return result.length ? result : '';
     }
 
     if (type === 'Array') {
-      result = object.map((e, i) => {
+      const result = object.map((e, i) => {
         const index = `${indentKey}_${i}`;
-        return { id: index, value: this._toKeyValue(e, index) };
+        const next = this._toKeyValue(e, index);
+        const element: IKeyValue<string> = {
+          id: index,
+          value: next
+        };
+        if (next.key) { element.key = next.key; }
+        return element;
       });
-      return result.length ? result : null;
+      return result.length ? result : '';
     }
 
     return object;

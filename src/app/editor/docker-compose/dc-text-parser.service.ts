@@ -25,6 +25,7 @@ export class DCTextParserService {
 
   modelToString(model: IKeyValue<string>[]): string {
     const plainObject = this._modelParser.modelToPlainObject(model);
+    if (!plainObject) { return ''; }
     return this._yamlParser.objectToYAML(plainObject);
   }
 }

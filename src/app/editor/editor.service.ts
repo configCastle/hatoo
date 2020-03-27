@@ -65,9 +65,16 @@ export class EditorService {
           const newId = `${changes.id}_${pointer[index].value.length}`;
           this._modelParser.index(changes.data, newId);
           pointer[index].value.push(changes.data);
+
+          // enable-next-line: костыль
+          if (changes.data.key) { changes.data.key = changes.data.key + newId.split('_').join(''); }
         } else {
-          this._modelParser.index(changes.data, `_${pointer.length}`);
+          const newId = `_${pointer.length}`;
+          this._modelParser.index(changes.data, newId);
           pointer.push(changes.data);
+
+          // enable-next-line: костыль
+          if (changes.data.key) { changes.data.key = changes.data.key + newId.split('_').join(''); }
         }
         break;
 

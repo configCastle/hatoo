@@ -46,8 +46,6 @@ export class TextEditorComponent implements OnDestroy {
     _editorService.file$
       .pipe(takeUntil(this._destroySubject))
       .subscribe(file => {
-        console.log(file.data);
-
         this._file = file;
         this._code = _dockerComposeParserService.modelToString(file.data);
       });

@@ -30,10 +30,10 @@ export class EditorFormComponent {
   @Output() changed = new EventEmitter<IChangeList>();
 
   protected objectTypeDefs = {
-    [objectTypes.OBJECT_FIELD]: JSON.stringify({ key: '', value: '' }),
+    [objectTypes.OBJECT_FIELD]: JSON.stringify({ key: 'key', value: 'value' }),
     [objectTypes.ARRAY_ELEMENT]: JSON.stringify({ value: '' }),
-    [objectTypes.OBJECT]: JSON.stringify({ key: '', value: [{ key: '', value: '' }] }),
-    [objectTypes.ARRAY]: JSON.stringify({ key: '', value: [{ value: '' }] }),
+    [objectTypes.OBJECT]: JSON.stringify({ key: 'key', value: [{ key: 'key', value: 'value' }] }),
+    [objectTypes.ARRAY]: JSON.stringify({ key: 'key', value: [{ value: 'value' }] }),
   };
 
   change(value: any) {
