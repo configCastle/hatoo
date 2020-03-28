@@ -11,7 +11,16 @@ describe('YAMLParserService', () => {
       services: {
         redis: {
           foo: 'bar:buzz',
-          john_dou: [ 'j', 'o', 'h', 'n' ]
+          john_dou: [
+            'j',
+            'o',
+            { key: 'value' },
+            {
+              key2: {
+                key3: 'value'
+              }
+            }
+          ]
         }
       }
     }

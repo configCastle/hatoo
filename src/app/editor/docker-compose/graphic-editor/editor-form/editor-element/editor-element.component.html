@@ -1,7 +1,7 @@
 <div class="wr">
   <div *ngIf="form">
     <input *ngIf="form.key" [formControl]="form.key">
-    <button *ngIf="isArray()" (click)="remove()">x</button>
+    <button *ngIf="form.key && isArray()" (click)="remove()">x</button>
 
     <div *ngIf="isArray(); else control">
       <app-editor-element (changed)="changeIndentedElement($event)" *ngFor="let element of form.value" [form]="element">
@@ -16,7 +16,7 @@
     </div>
     <ng-template #control>
       <input *ngIf="form.value" [formControl]="form.value">
-      <button (click)="remove()">x</button>
+      <button *ngIf="form.value" (click)="remove()">x</button>
     </ng-template>
 
   </div>

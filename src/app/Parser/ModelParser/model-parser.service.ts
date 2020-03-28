@@ -6,12 +6,10 @@ import { FormControl } from '@angular/forms';
 export class ModelParserService {
 
   modelToPlainObject(model: IKeyValue<string>[]): any {
-    console.log(model);
     return this._toPlainObject(model);
   }
 
   plainObjectToModel(object: any): IKeyValue<string>[] {
-    console.log(this._toKeyValue(object, ''));
     return this._toKeyValue(object, '');
   }
 
@@ -59,13 +57,23 @@ export class ModelParserService {
     if (type === 'Array') {
       const result = object.map((e, i) => {
         const index = `${indentKey}_${i}`;
-        const next = this._toKeyValue(e, index);
-        const element: IKeyValue<string> = {
+        const type = new Object(e).constructor.name;
+        if (type === 'Object') {
+          for (const key in e) {
+            if (e.hasOwnProperty(key)) {
+              return {
+                id: index,
+                key,
+                value: this._toKeyValue(e[key], index)
+              }
+            }
+          }
+          return '';
+        }
+        return {
           id: index,
-          value: next
+          value: this._toKeyValue(e, index)
         };
-        if (next.key) { element.key = next.key; }
-        return element;
       });
       return result.length ? result : '';
     }
