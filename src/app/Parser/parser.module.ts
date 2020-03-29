@@ -1,11 +1,13 @@
 import { NgModule } from '@angular/core';
-import { YAMLParserService } from './yaml-parser.service';
+import { YAMLParserService } from './YAMLParser/yaml-parser.service';
+import { ModelParserService } from './ModelParser/model-parser.service';
 
 @NgModule({
   imports: [],
   declarations: [],
   exports: [
-    YAMLParserService
+    YAMLParserService,
+    ModelParserService
   ]
 })
-export class ParserModule {}
+export class ParserModule { }

@@ -4,7 +4,7 @@ import { parse, stringify } from 'yaml';
 @Injectable({
   providedIn: 'root'
 })
-export class YAMLParserService  {
+export class YAMLParserService {
 
   parse(YAMLString: string): any {
     return parse(YAMLString);

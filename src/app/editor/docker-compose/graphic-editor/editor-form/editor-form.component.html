@@ -1,6 +1,11 @@
-<div *ngIf="isGroup as controls">
-  <editor-element *ngFor="let key of controls" [form]="form.controls[key]" [name]="key"></editor-element>
-</div>
-<div *ngIf="isArray as array">
-  <editor-element *ngFor="let control of array" [form]="control"></editor-element>
+<div *ngIf="form">
+  <app-editor-element (changed)="change($event)" *ngFor="let element of form" [form]="element">
+  </app-editor-element>
+  <select class="add-button" #selectType>
+    <option value="0" selected>Свойство объекта</option>
+    <option value="1">Элемент массива</option>
+    <option value="2">Объект</option>
+    <option value="3">Массив</option>
+  </select>
+  <button (click)="add(selectType.value)">+</button>
 </div>

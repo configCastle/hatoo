@@ -1,3 +1,1 @@
-describe('EditorElementComponent', () => {
-    
-});
+describe('EditorElementComponent', () => { });
