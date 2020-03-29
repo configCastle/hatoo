@@ -29,7 +29,7 @@ export class FormGroupParserService {
     const group = {};
     for (const key in form.controls) {
       if (form.controls.hasOwnProperty(key)) {
-        group[key] = this._formToObject(form.controls[key] as  Form);
+        group[key] = this._formToObject(form.controls[key] as Form);
       }
     }
     return group;

@@ -1,11 +1,23 @@
 <div class="wr">
-  <div *ngIf="isGroup as group">
-    {{name || ''}}<editor-element *ngFor="let key of group" [form]="form.controls[key]" [name]="key"></editor-element>
+  <div *ngIf="form">
+    <input *ngIf="form.key" [formControl]="form.key">
+    <button *ngIf="form.key && isArray()" (click)="remove()">x</button>
+
+    <div *ngIf="isArray(); else control">
+      <app-editor-element (changed)="changeIndentedElement($event)" *ngFor="let element of form.value" [form]="element">
+      </app-editor-element>
+      <select class="add-button" #selectType>
+        <option value="0" selected>Свойство объекта</option>
+        <option value="1">Элемент массива</option>
+        <option value="2">Объект</option>
+        <option value="3">Массив</option>
+      </select>
+      <button (click)="add(selectType.value)">+</button>
+    </div>
+    <ng-template #control>
+      <input *ngIf="form.value" [formControl]="form.value">
+      <button *ngIf="form.value" (click)="remove()">x</button>
+    </ng-template>
+
   </div>
-  <div *ngIf="isArray as array">
-    {{name || ''}}<editor-element *ngFor="let control of array" [form]="control"></editor-element>
-  </div>
-  <div *ngIf="isControl">
-    {{name || ''}}<input [formControl]="form">
-  </div>  
 </div>

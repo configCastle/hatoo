@@ -21,8 +21,6 @@ import { FormsModule } from '@angular/forms';
     MatInputModule,
     MatSelectModule
   ],
-  providers: [
-    DataService
-  ]
+  providers: [DataService]
 })
 export class UIModule { }

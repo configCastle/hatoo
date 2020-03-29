@@ -45,20 +45,20 @@ describe('FormGroupParserService', () => {
   describe('objectToFormGroup', () => {
     it('should return form group from passed object', () => {
       expect(
-        (subject.objectToFormGroup(testObject)
+        ((subject.objectToFormGroup(testObject) as FormGroup)
           .controls.foo as FormGroup)
-            .controls.bar.value
+          .controls.bar.value
       ).toBe('buzz');
 
       expect(
-        ((subject.objectToFormGroup(testObject)
+        (((subject.objectToFormGroup(testObject) as FormGroup)
           .controls.foo as FormGroup)
           .controls.array as FormArray)
           .controls[1].value
       ).toBe('222');
 
       expect(
-        subject.objectToFormGroup(testObject)
+        (subject.objectToFormGroup(testObject) as FormGroup)
           .controls.johnDou
           .value
       ).toBe('lol');
