@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 import { IConfigFile, FileTypes } from 'src/app/sets-service/sets.service';
 import { TextEditorService } from '../../text-editor.service';
 import { DCTextParserService } from '../dc-text-parser.service';
+import * as YAML from 'yaml';
 
 @Component({
   selector: 'app-text-editor',
@@ -21,7 +22,6 @@ export class TextEditorComponent implements OnDestroy {
   set code(value: string) {
     if (this._code === value) { return; }
     this._code = value;
-
     const data = this._dockerComposeParserService.stringToModel(value);
     if (data) {
       this._editorService.updateFile({

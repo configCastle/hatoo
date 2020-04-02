@@ -8,25 +8,6 @@ describe('ModelParserService', () => {
 
   beforeEach(() => {
 
-    testPlainObject = {
-      version: 3.1,
-      services: {
-        redis: {
-          foo: 123
-        },
-        mongo: {
-          foo: [
-            '123',
-            {
-              zoo: {
-                too: ['loo']
-              }
-            }
-          ]
-        }
-      }
-    };
-
     testUnindexedModel = [
       { key: 'version', value: 3.1 },
       {
@@ -127,18 +108,6 @@ describe('ModelParserService', () => {
 
   it('should create', () => {
     expect(target).toBeTruthy();
-  });
-
-  describe('modelToPlainObject', () => {
-    it('should return plain object based on model structure', () => {
-      expect(target.modelToPlainObject(testModel)).toEqual(testPlainObject);
-    });
-  });
-
-  describe('plainObjectToModel', () => {
-    it('should return model based on plain object', () => {
-      expect(target.plainObjectToModel(testPlainObject)).toEqual(testModel);
-    });
   });
 
   describe('index', () => {
