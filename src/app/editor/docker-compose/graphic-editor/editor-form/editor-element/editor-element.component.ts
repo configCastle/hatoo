@@ -12,7 +12,6 @@ import { IKeyValue } from 'src/app/sets-service/sets.service';
 })
 export class EditorElementComponent extends EditorFormComponent implements OnDestroy {
 
-
   private _stopSubject = new Subject<void>();
   private _form: IKeyValue<FormControl>;
   @Input()
@@ -70,7 +69,7 @@ export class EditorElementComponent extends EditorFormComponent implements OnDes
     this.changed.emit({
       id: this.form.id,
       type: ChangeType.ADD,
-      data: JSON.parse(this.objectTypeDefs[type])
+      data: JSON.parse(this.defaultElementsDefs[type])
     });
   }
 
