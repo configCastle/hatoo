@@ -7,7 +7,7 @@ export interface IChangeList {
   type: ChangeType;
 }
 
-export enum objectTypes {
+export enum defaultElementTypes {
   OBJECT_FIELD = 0,
   ARRAY_ELEMENT = 1,
   OBJECT = 2,
@@ -29,12 +29,14 @@ export class EditorFormComponent {
   @Input() form: any;
   @Output() changed = new EventEmitter<IChangeList>();
 
-  protected objectTypeDefs = {
-    [objectTypes.OBJECT_FIELD]: JSON.stringify({ key: 'key', value: 'value' }),
-    [objectTypes.ARRAY_ELEMENT]: JSON.stringify({ value: '' }),
-    [objectTypes.OBJECT]: JSON.stringify({ key: 'key', value: [{ key: 'key', value: 'value' }] }),
-    [objectTypes.ARRAY]: JSON.stringify({ key: 'key', value: [{ value: 'value' }] }),
+  protected defaultElementsDefs = {
+    [defaultElementTypes.OBJECT_FIELD]: JSON.stringify({ key: 'key', value: 'value' }),
+    [defaultElementTypes.ARRAY_ELEMENT]: JSON.stringify({ value: '' }),
+    [defaultElementTypes.OBJECT]: JSON.stringify({ key: 'key', value: [{ key: 'key', value: 'value' }] }),
+    [defaultElementTypes.ARRAY]: JSON.stringify({ key: 'key', value: [{ value: 'value' }] }),
   };
+
+  
 
   change(value: any) {
     this.changed.emit(value);
@@ -45,7 +47,7 @@ export class EditorFormComponent {
     this.changed.emit({
       id: null,
       type: ChangeType.ADD,
-      data: JSON.parse(this.objectTypeDefs[type])
+      data: JSON.parse(this.defaultElementsDefs[type])
     });
   }
 }

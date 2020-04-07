@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { testSets } from './test-sets';
+import { DataService } from '../data-service/data.service';
 
 export enum InputTypes {
   TEXT = 0,
@@ -42,7 +43,16 @@ export interface ISet<T> {
   providedIn: 'root'
 })
 export class SetsService {
+  constructor(private _dataService: DataService) { }
   getById(id: number): ISet<IKeyValue<string>[]> | undefined {
     return testSets[0];
+  }
+
+  getServices() {
+    return this._dataService.getServices$();
+  }
+
+  getServiceById$(id: number) {
+    return this._dataService.getServices$();
   }
 }
