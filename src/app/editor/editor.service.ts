@@ -54,34 +54,42 @@ export class EditorService {
       index = pointer.findIndex(e => e.id === changes.id);
     }
 
-
     switch (changes.type) {
       case ChangeType.UPDATE:
         pointer[index] = { ...pointer[index], ...changes.data };
         break;
 
       case ChangeType.ADD:
-        if (index != null) {
-          const newId = `${changes.id}_${pointer[index].value.length}`;
-          this._modelParser.index(changes.data, newId);
-          pointer[index].value.push(changes.data);
-
-          // enable-next-line: костыль
-          if (changes.data.key) { changes.data.key = changes.data.key + newId.split('_').join(''); }
-        } else {
-          const newId = `_${pointer.length}`;
-          this._modelParser.index(changes.data, newId);
-          pointer.push(changes.data);
-
-          // enable-next-line: костыль
-          if (changes.data.key) { changes.data.key = changes.data.key + newId.split('_').join(''); }
+        if (!changes.data) {
+          console.log(pointer);
+          
         }
+        break;
+
+      case ChangeType.CHANGE_STRUCT:
+        pointer[index].key = undefined;
+        pointer[index].value = undefined;
+        pointer[index] = this._filterObject({
+          ...pointer[index],
+          ...changes.data
+        });
         break;
 
       case ChangeType.REMOVE:
         pointer.splice(index, 1);
+        if (!pointer.length) { /**/ }
         break;
     }
+  }
+
+  private _filterObject(obj: any): any {
+    const filtred = {};
+    for (const field in obj) {
+      if (obj.hasOwnProperty(field) && obj[field] != null) {
+        filtred[field] = obj[field]
+      }
+    }
+    return filtred;
   }
 
   updateFile(file: IConfigFile<IKeyValue<string>[]>): void {

@@ -1,23 +1,23 @@
-<div class="wr">
-  <div *ngIf="form">
-    <input *ngIf="form.key" [formControl]="form.key">
-    <button *ngIf="form.key && isArray()" (click)="remove()">x</button>
+<div class="wr" *ngIf="form">
+  
+  <input *ngIf="form.key" [formControl]="form.key">
+  <button *ngIf="form.key && isArray()" (click)="remove()">×</button>
 
-    <div *ngIf="isArray(); else control">
-      <app-editor-element (changed)="changeIndentedElement($event)" *ngFor="let element of form.value" [form]="element">
-      </app-editor-element>
-      <select class="add-button" #selectType>
-        <option value="0" selected>Свойство объекта</option>
-        <option value="1">Элемент массива</option>
-        <option value="2">Объект</option>
-        <option value="3">Массив</option>
-      </select>
-      <button (click)="add(selectType.value)">+</button>
-    </div>
-    <ng-template #control>
-      <input *ngIf="form.value" [formControl]="form.value">
-      <button *ngIf="form.value" (click)="remove()">x</button>
-    </ng-template>
-
+  <div *ngIf="isArray(); else value">
+    <app-editor-element (changed)="changeIndentedElement($event)" *ngFor="let element of form.value" [form]="element">
+    </app-editor-element>
   </div>
+
+  <ng-template #value>
+    <ng-container *ngIf="form.value">
+      <input [formControl]="form.value">
+      <button (click)="remove()">×</button>
+      <button *ngIf="form.key" (click)="breakLeft()">←</button>
+      <button *ngIf="!form.key" (click)="breakRight()">→</button>
+      <button (click)="breakDown()">↴</button>
+    </ng-container>
+  </ng-template>
+
+  <button class="add-button" (click)="add()">+</button>
+
 </div>

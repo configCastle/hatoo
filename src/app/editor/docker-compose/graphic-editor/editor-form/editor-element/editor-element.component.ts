@@ -64,12 +64,55 @@ export class EditorElementComponent extends EditorFormComponent implements OnDes
     });
   }
 
-  add(type: number) {
+  breakLeft() {
+    const changedElement = {
+      ...this.form,
+      key: undefined,
+      value: this.form.key.value
+    }
+    this.changed.emit({
+      id: this.form.id,
+      type: ChangeType.CHANGE_STRUCT,
+      data: changedElement
+    })
+  }
+
+  breakRight() {
+    const changedElement = {
+      ...this.form,
+      key: this.form.value.value,
+      value: 'value'
+    }
+    this.changed.emit({
+      id: this.form.id,
+      type: ChangeType.CHANGE_STRUCT,
+      data: changedElement
+    })
+  }
+
+  breakDown() {
+    const newId = `${this.form.id}_0`;
+    const changedElement = {
+      ...this.form,
+      key: this.form.key ? this.form.key.value : this.form.value.value,
+      value: [{
+        id: newId,
+        value: 'value'
+      }]
+    }
+    this.changed.emit({
+      id: this.form.id,
+      type: ChangeType.CHANGE_STRUCT,
+      data: changedElement
+    })
+  }
+
+  add(data?: IKeyValue<string>) {
     if (!this.isArray()) { return; }
     this.changed.emit({
       id: this.form.id,
       type: ChangeType.ADD,
-      data: JSON.parse(this.defaultElementsDefs[type])
+      data
     });
   }
 

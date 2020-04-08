@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { IKeyValue } from 'src/app/sets-service/sets.service';
 
 export interface IChangeList {
   id: string;
@@ -17,7 +18,8 @@ export enum defaultElementTypes {
 export enum ChangeType {
   UPDATE = 0,
   ADD = 1,
-  REMOVE = 2
+  REMOVE = 2,
+  CHANGE_STRUCT = 3
 }
 
 @Component({
@@ -29,25 +31,16 @@ export class EditorFormComponent {
   @Input() form: any;
   @Output() changed = new EventEmitter<IChangeList>();
 
-  protected defaultElementsDefs = {
-    [defaultElementTypes.OBJECT_FIELD]: JSON.stringify({ key: 'key', value: 'value' }),
-    [defaultElementTypes.ARRAY_ELEMENT]: JSON.stringify({ value: '' }),
-    [defaultElementTypes.OBJECT]: JSON.stringify({ key: 'key', value: [{ key: 'key', value: 'value' }] }),
-    [defaultElementTypes.ARRAY]: JSON.stringify({ key: 'key', value: [{ value: 'value' }] }),
-  };
-
-  
-
   change(value: any) {
     this.changed.emit(value);
   }
 
-  add(type: number) {
+  add(data?: IKeyValue<string>) {
     if (!Array.isArray(this.form)) { return; }
     this.changed.emit({
       id: null,
       type: ChangeType.ADD,
-      data: JSON.parse(this.defaultElementsDefs[type])
+      data: {key: 'foo', value: 'bar'}
     });
   }
 }
