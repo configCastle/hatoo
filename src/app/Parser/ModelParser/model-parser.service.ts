@@ -10,9 +10,9 @@ export class ModelParserService {
   }
 
   plainObjectToModel(object: any): IKeyValue<string>[] {
-    const model = this._toKeyValue(object, null);
+    const model = this._toKeyValue(object);
     model.forEach((e, i) => {
-      this.index(e, `_${i}`)
+      this.index(e, `_${i}`, null)
     })
     return model;
   }
@@ -39,14 +39,14 @@ export class ModelParserService {
     return model;
   }
 
-  private _toKeyValue(object: any, parent: IKeyValue<string>) {
+  private _toKeyValue(object: any) {
     const type = new Object(object).constructor.name;
     if (type === 'Object') {
       const result = new Array<IKeyValue<string>>();
       for (const key in object) {
         if (object.hasOwnProperty(key)) {
-          const newElement: IKeyValue<string> = { key, parent }
-          newElement.value = this._toKeyValue(object[key], newElement)
+          const newElement: IKeyValue<string> = { key }
+          newElement.value = this._toKeyValue(object[key])
           result.push(newElement);
         }
       }
@@ -59,15 +59,15 @@ export class ModelParserService {
         if (type === 'Object') {
           for (const key in e) {
             if (e.hasOwnProperty(key)) {
-              const newElement: IKeyValue<string> = { key, parent }
-              newElement.value = this._toKeyValue(e[key], newElement)
+              const newElement: IKeyValue<string> = { key }
+              newElement.value = this._toKeyValue(e[key])
               return newElement;
             }
           }
           return '';
         }
-        const newElement: IKeyValue<string> = { parent }
-        newElement.value = this._toKeyValue(e, newElement)
+        const newElement: IKeyValue<string> = { }
+        newElement.value = this._toKeyValue(e)
         return newElement;
       });
       return result.length ? result : '';
@@ -76,12 +76,13 @@ export class ModelParserService {
     return object;
   }
 
-  index(model: IKeyValue<string | FormControl>, firstIndex: string) {
+  index(model: IKeyValue<string | FormControl>, firstIndex: string, parent: IKeyValue<string | FormControl>) {
     model.id = firstIndex;
+    model.parent = parent;
     if (Array.isArray(model.value)) {
       for (let i = 0; i < model.value.length; i++) {
         const index = `${firstIndex}_${i}`;
-        this.index(model.value[i], index);
+        this.index(model.value[i], index, model);
       }
     }
   }

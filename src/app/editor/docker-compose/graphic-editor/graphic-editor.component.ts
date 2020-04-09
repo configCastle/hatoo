@@ -32,7 +32,7 @@ export class GraphicEditorComponent implements OnDestroy {
   }
 
   change(id: number, value: IChangeList) {
-    this._editorService.changeFileData(id, value);
+    this._editorService.changeFileData(value);
   }
 
   ngOnDestroy() {

@@ -34,51 +34,72 @@ export class EditorService {
     ).pipe(map(([i, s]) => s.config_files[i]));
   }
 
-  changeFileData(id: number, changes: IChangeList) {
+  changeFileData(changes: IChangeList, id?: number) {
+    const fileId = id || this._selectedIndexSubject.value;
     const set = this._setSubject.value;
-    const index = set.config_files.findIndex(f => f.id === id);
-    if (index > -1) {
-      this._makeChange(changes, set.config_files[index].data);
+    const file = set.config_files.find(f => f.id === fileId);
+    if (file) {
+      this._makeChange(changes, file.data);
       this._setSubject.next(set);
     }
   }
 
+  private _findNode(data: IKeyValue<string>[], id: string): IKeyValue<string> | undefined {
+    const devider = '_';
+    const indexesList = id.split(devider).slice(1);
+    let currentIndex = '';
+    let currentNode: IKeyValue<string> = { value: data };
+
+    indexesList.some(e => {
+      currentIndex = `${currentIndex}${devider}${e}`;
+      currentNode = currentNode.value.find(e => e.id === currentIndex);
+      if (!currentNode || !Array.isArray(currentNode.value)) { return true; }
+    })
+
+    return currentNode;
+  }
+
   private _makeChange(changes: IChangeList, data: IKeyValue<string>[]) {
-    let pointer = data;
-    let index: number;
-    if (changes.id) {
-      while (changes.subtree && Array.isArray(pointer)) {
-        pointer = pointer.find(e => e.id === changes.id).value;
-        changes = changes.subtree as IChangeList;
+    const targetElement = this._findNode(data, changes.id);
+    const parentElement = targetElement.parent;
+    if (parentElement) {
+      const index = parentElement.value.findIndex(e => e === targetElement);
+
+      switch (changes.type) {
+        case ChangeType.UPDATE:
+          parentElement.value[index] = { ...parentElement.value[index], ...changes.data };
+          break;
+
+        case ChangeType.ADD:
+          if (!changes.data) {
+            const newElement: IKeyValue<string> = { }
+            if (targetElement.key) { newElement.key = 'key' }
+            if (targetElement.value) { newElement.value = 'value' }
+            parentElement.value.splice(index + 1, 0, newElement)
+            this._modelParser.index(parentElement, parentElement.id, parentElement.parent)
+          } else {
+            // TODO: here must be appended custom additional element  
+            console.log(changes.data);
+          }
+          break;
+
+        case ChangeType.CHANGE_STRUCT:
+          targetElement.key = undefined;
+          targetElement.value = undefined;
+          parentElement.value[index] = this._filterObject({
+            ...targetElement,
+            ...changes.data
+          });
+          this._modelParser.index(parentElement, parentElement.id, parentElement.parent)
+          break;
+
+        case ChangeType.REMOVE:
+          parentElement.value.splice(index, 1);
+          if (!parentElement.value.length) {
+            parentElement.value = 'value'
+          }
+          break;
       }
-      index = pointer.findIndex(e => e.id === changes.id);
-    }
-
-    switch (changes.type) {
-      case ChangeType.UPDATE:
-        pointer[index] = { ...pointer[index], ...changes.data };
-        break;
-
-      case ChangeType.ADD:
-        if (!changes.data) {
-          console.log(pointer);
-          
-        }
-        break;
-
-      case ChangeType.CHANGE_STRUCT:
-        pointer[index].key = undefined;
-        pointer[index].value = undefined;
-        pointer[index] = this._filterObject({
-          ...pointer[index],
-          ...changes.data
-        });
-        break;
-
-      case ChangeType.REMOVE:
-        pointer.splice(index, 1);
-        if (!pointer.length) { /**/ }
-        break;
     }
   }
 

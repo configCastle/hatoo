@@ -16,11 +16,11 @@ export class GraphicEditorService {
     );
   }
 
-  changeFileData(id: number, change: IChangeList) {
+  changeFileData(change: IChangeList) {
     if (change.type === ChangeType.UPDATE) {
       this._skip = true;
     }
-    this._editorService.changeFileData(id, change);
+    this._editorService.changeFileData(change);
   }
 
 }
