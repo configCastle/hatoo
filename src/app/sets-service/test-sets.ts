@@ -10,7 +10,7 @@ export const testSets: ISet<IKeyValue<string>[]>[] = [
     config_files: [
       {
         id: 0,
-        type: 1,
+        configType: 1,
         name: 'some name',
         // data: []
         data: new ModelParserService().plainObjectToModel({

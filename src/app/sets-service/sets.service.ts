@@ -28,7 +28,7 @@ export enum FileTypes {
 export interface IConfigFile<T> {
   id: number;
   name: string;
-  type: FileTypes;
+  configType: FileTypes;
   data: T;
 }
 

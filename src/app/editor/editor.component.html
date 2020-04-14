@@ -1,4 +1,4 @@
-<ng-container *ngIf="setName$ | async as name; else noSet">
+<ng-container *ngIf="fileName$ | async as name; else noSet">
   <h2>{{ name }}</h2>  
   <div class="grid">
     <app-graphic-editor class="graphic-editor"></app-graphic-editor>    
@@ -7,5 +7,5 @@
 </ng-container>
 
 <ng-template #noSet>
-  No chosen set
+  Не удалось загрузиьт этот файл
 </ng-template>

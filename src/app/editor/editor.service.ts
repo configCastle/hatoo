@@ -1,54 +1,56 @@
 import { Injectable } from '@angular/core';
-import { SetsService, ISet, IConfigFile, IKeyValue } from 'src/app/sets-service/sets.service';
-import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
+import { SetsService, ISet, IConfigFile, IKeyValue, FileTypes } from 'src/app/sets-service/sets.service';
+import { Observable, BehaviorSubject, combineLatest, of, ReplaySubject } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { map } from 'rxjs/operators';
+import { map, tap, switchMap, mapTo } from 'rxjs/operators';
 import { IChangeList, ChangeType } from './docker-compose/graphic-editor/editor-form/editor-form.component';
 import { ModelParserService } from '../Parser/ModelParser/model-parser.service';
+import { FilesService } from '../files-service/files.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EditorService {
-  private _selectedIndexSubject = new BehaviorSubject<number>(0);
-  private _setSubject: BehaviorSubject<ISet<IKeyValue<string>[]> | undefined>;
+  private readonly _fileSubject = new ReplaySubject<IConfigFile<IKeyValue<string>[]>>(1);
+  private _file;
   private readonly _zeroElement: IKeyValue<string> = {
     id: '_0',
     key: 'key',
     value: 'value'
   }
 
-  set$: Observable<ISet<IKeyValue<string>[]>>;
-  index$: Observable<number>;
-  file$: Observable<IConfigFile<IKeyValue<string>[]>>;
+  file$: Observable<IConfigFile<IKeyValue<string>[]> | undefined>;
 
   constructor(
-    _setsService: SetsService,
+    _filesService: FilesService,
     _route: ActivatedRoute,
     private _modelParser: ModelParserService
   ) {
-    const id = +_route.snapshot.params.id;
-    const set = _setsService.getById(id);
-    this._setSubject = new BehaviorSubject(set);
+    const fileId = +_route.snapshot.queryParams.fileId;
+    this.file$ = this._fileSubject.asObservable();
 
-    this.set$ = this._setSubject.asObservable();
-    this.index$ = this._selectedIndexSubject.asObservable();
-    this.file$ = combineLatest(
-      this.index$,
-      this.set$
-    ).pipe(map(([i, s]) => s.config_files[i]));
+    _filesService.getFileById$(fileId).pipe(
+      map(e => {
+        if (e == null) { return; }
+        const data = JSON.parse(e.data);
+        data.forEach((e, i) => {
+          _modelParser.index(e, `_${i}`, null)
+        });
+        return { ...e, data }
+      })
+    ).subscribe(e => {
+      this._file = e;
+      this._fileSubject.next(e);
+    })
   }
 
-  changeFileData(changes: IChangeList, id?: number) {
-    const fileId = id || this._selectedIndexSubject.value;
-    const set = this._setSubject.value;
-    const file = set.config_files.find(f => f.id === fileId);
-    if (file) {
-      this._makeChange(changes, file.data);
-      if (!file.data.length) {
-        file.data.push(this._zeroElement)
+  changeFileData(changes: IChangeList) {
+    if (this._file) {
+      this._makeChange(changes, this._file.data);
+      if (!this._file.data.length) {
+        this._file.data.push(this._zeroElement)
       }
-      this._setSubject.next(set);
+      this._fileSubject.next(this._file);
     }
   }
 
@@ -120,18 +122,11 @@ export class EditorService {
   }
 
   updateFile(file: IConfigFile<IKeyValue<string>[]>): void {
-    const set = this._setSubject.value;
-    const index = set.config_files.findIndex(f => f.id === file.id);
-    if (index > -1) {
-      if (!file.data.length) {
-        file.data.push(this._zeroElement)
-      }
-      set.config_files[index] = file;
-      this._setSubject.next(set);
+    if (!file.data.length) {
+      file.data.push(this._zeroElement);
     }
+    this._file = file;
+    this._fileSubject.next(file);
   }
 
-  selectFileIndex(index: number): void {
-    this._selectedIndexSubject.next(index);
-  }
 }

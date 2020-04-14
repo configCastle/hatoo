@@ -26,7 +26,7 @@ export class TextEditorComponent implements OnDestroy {
     if (data) {
       this._editorService.updateFile({
         id: this._file.id,
-        type: FileTypes.DOCKER_COMPOSE,
+        configType: FileTypes.DOCKER_COMPOSE,
         name: this._file.name,
         data
       });

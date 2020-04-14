@@ -9,11 +9,11 @@ import { map } from 'rxjs/operators';
   styleUrls: ['editor.component.scss']
 })
 export class EditorComponent {
-  setName$: Observable<string>;
-  
-	constructor(_editorService: EditorService) {
-    this.setName$ = _editorService.set$
-      .pipe(map(s => s.name));
-	}
+  fileName$: Observable<string>;
+
+  constructor(_editorService: EditorService) {
+    this.fileName$ = _editorService.file$
+      .pipe(map(s => s ? s.name : ''));
+  }
 
 }

@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
+import { map } from 'rxjs/operators';
+import { IConfigFile } from '../sets-service/sets.service';
 
 @Injectable({ providedIn: 'root' })
 export class DataService {
@@ -32,7 +34,7 @@ export class DataService {
   }
 
   getFileById$(id: number) {
-    return this._graphql.query({
+    return this._graphql.query<{file: IConfigFile<string>}>({
       query: gql`query service($id: Int!) {
         file(id: $id) {
           id
@@ -46,7 +48,7 @@ export class DataService {
   }
 
   getFiles$() {
-    return this._graphql.query({
+    return this._graphql.query<{files: IConfigFile<string>[]}>({
       query: gql`{
         files {
           id
