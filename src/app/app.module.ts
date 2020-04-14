@@ -7,6 +7,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DataService } from './data-service/data.service';
 import { GraphQLModule } from './graphql.module';
 import { HttpClientModule } from '@angular/common/http';
+import { SetsService } from './sets-service/sets.service';
+import { FilesService } from './files-service/files.service';
 
 @NgModule({
   declarations: [
@@ -20,7 +22,11 @@ import { HttpClientModule } from '@angular/common/http';
     GraphQLModule,
     HttpClientModule
   ],
-  providers: [DataService],
+  providers: [
+    DataService,
+    SetsService,
+    FilesService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

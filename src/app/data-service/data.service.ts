@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
-import { map } from 'rxjs/operators';
 import { IConfigFile } from '../sets-service/sets.service';
+import { IDCService } from '../editor/docker-compose/services.service';
 
 @Injectable({ providedIn: 'root' })
 export class DataService {
   constructor(private _graphql: Apollo) {}
 
   getServiceById$(id: number) {
-    return this._graphql.query({
+    return this._graphql.query<{ service: IDCService}>({
       query: gql`query service($id: Int!) {
         service(id: $id) {
           id
@@ -22,7 +22,7 @@ export class DataService {
   }
 
   getServices$() {
-    return this._graphql.query({
+    return this._graphql.query<{ services: IDCService[]}>({
       query: gql`{
         services {
           id

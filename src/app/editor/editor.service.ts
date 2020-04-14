@@ -6,6 +6,7 @@ import { map, tap, switchMap, mapTo } from 'rxjs/operators';
 import { IChangeList, ChangeType } from './docker-compose/graphic-editor/editor-form/editor-form.component';
 import { ModelParserService } from '../Parser/ModelParser/model-parser.service';
 import { FilesService } from '../files-service/files.service';
+import { DCMetaDataService } from './docker-compose/dc-meta-data.service';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,7 @@ export class EditorService {
   constructor(
     _filesService: FilesService,
     _route: ActivatedRoute,
+    _metaDataService: DCMetaDataService,
     private _modelParser: ModelParserService
   ) {
     const fileId = +_route.snapshot.queryParams.fileId;
@@ -35,6 +37,7 @@ export class EditorService {
         const data = JSON.parse(e.data);
         data.forEach((e, i) => {
           _modelParser.index(e, `_${i}`, null)
+          _metaDataService.setMetaData(e);
         });
         return { ...e, data }
       })

@@ -5,6 +5,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { IKeyValue } from 'src/app/sets-service/sets.service';
 import { GraphicEditorService } from 'src/app/editor/graphic-editor.service';
+import { ServicesService } from '../../../services.service';
 
 @Component({
   selector: 'app-editor-element',
@@ -36,7 +37,10 @@ export class EditorElementComponent implements OnDestroy {
     return this._form;
   }
 
-  constructor(private _graphicEditorService: GraphicEditorService) { }
+  constructor(
+    private _graphicEditorService: GraphicEditorService,
+    private _servicesService: ServicesService
+  ) { }
 
   isArray(): boolean {
     return Array.isArray(this.form.value);
@@ -98,6 +102,12 @@ export class EditorElementComponent implements OnDestroy {
       id: this.form.id,
       type: ChangeType.CHANGE_STRUCT,
       data: changedElement
+    })
+  }
+
+  addService() {
+    this._servicesService.getServices$().subscribe(e => {
+      console.log('Received services list: ', e)
     })
   }
 

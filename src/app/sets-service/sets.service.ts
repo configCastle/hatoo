@@ -14,6 +14,7 @@ export interface IKeyValue<T> {
   required?: boolean;
   type?: InputTypes;
   parent?: IKeyValue<T>;
+  data?: any;
 }
 
 export type IModel = IKeyValue<string> | IKeyValue<string>[];

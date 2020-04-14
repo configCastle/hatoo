@@ -19,5 +19,6 @@
   </ng-template>
 
   <button (click)="add()">+</button>
+  <button class="add-external" *ngIf="form.data?.isService" (click)="addService()">Add service</button>
 
 </div>

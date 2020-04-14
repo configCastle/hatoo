@@ -8,6 +8,8 @@ import { DCFormParserService } from './dc-form-parser.service';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MonacoEditorModule } from 'ngx-monaco-editor';
+import { DCMetaDataService } from './dc-meta-data.service';
+import { ServicesService } from './services.service';
 
 @NgModule({
   imports: [
@@ -30,7 +32,9 @@ import { MonacoEditorModule } from 'ngx-monaco-editor';
   ],
   providers: [
     DCTextParserService,
-    DCFormParserService
+    DCFormParserService,
+    DCMetaDataService,
+    ServicesService
   ],
 })
 export class DockerComposeModule { }
