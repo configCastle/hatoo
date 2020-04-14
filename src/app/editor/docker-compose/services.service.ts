@@ -19,7 +19,7 @@ export class ServicesService {
     );
   }
   
-  getServiceById(id: number) {
+  getServiceById$(id: number) {
     return this._dataService.getServiceById$(id).pipe(
       map(e => e.data.service)
     );

@@ -1,16 +1,14 @@
 import { Injectable } from '@angular/core';
-import { SetsService, ISet, IConfigFile, IKeyValue, FileTypes } from 'src/app/sets-service/sets.service';
-import { Observable, BehaviorSubject, combineLatest, of, ReplaySubject } from 'rxjs';
+import { IConfigFile, IKeyValue } from 'src/app/sets-service/sets.service';
+import { Observable, ReplaySubject } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { map, tap, switchMap, mapTo } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { IChangeList, ChangeType } from './docker-compose/graphic-editor/editor-form/editor-form.component';
 import { ModelParserService } from '../Parser/ModelParser/model-parser.service';
 import { FilesService } from '../files-service/files.service';
 import { DCMetaDataService } from './docker-compose/dc-meta-data.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class EditorService {
   private readonly _fileSubject = new ReplaySubject<IConfigFile<IKeyValue<string>[]>>(1);
   private _file;
@@ -25,7 +23,7 @@ export class EditorService {
   constructor(
     _filesService: FilesService,
     _route: ActivatedRoute,
-    _metaDataService: DCMetaDataService,
+    private _metaDataService: DCMetaDataService,
     private _modelParser: ModelParserService
   ) {
     const fileId = +_route.snapshot.queryParams.fileId;
@@ -53,6 +51,7 @@ export class EditorService {
       if (!this._file.data.length) {
         this._file.data.push(this._zeroElement)
       }
+      this._file.data.forEach(e => this._metaDataService.setMetaData(e))
       this._fileSubject.next(this._file);
     }
   }
@@ -88,11 +87,11 @@ export class EditorService {
           if (targetElement.key) { newElement.key = 'key' }
           if (targetElement.value) { newElement.value = 'value' }
           parentElement.value.splice(index + 1, 0, newElement)
-          this._modelParser.index(parentElement, parentElement.id, parentElement.parent)
         } else {
-          // TODO: here must be appended custom additional element  
-          console.log(changes.data);
+          parentElement.value.splice(index + 1, 0, changes.data)
         }
+        this._modelParser.index(parentElement, parentElement.id, parentElement.parent)
+
         break;
 
       case ChangeType.CHANGE_STRUCT:
@@ -129,6 +128,7 @@ export class EditorService {
       file.data.push(this._zeroElement);
     }
     this._file = file;
+    this._file.data.forEach(e => this._metaDataService.setMetaData(e))
     this._fileSubject.next(file);
   }
 

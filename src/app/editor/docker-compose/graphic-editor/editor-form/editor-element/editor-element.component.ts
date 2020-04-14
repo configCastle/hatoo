@@ -6,6 +6,8 @@ import { Subject } from 'rxjs';
 import { IKeyValue } from 'src/app/sets-service/sets.service';
 import { GraphicEditorService } from 'src/app/editor/graphic-editor.service';
 import { ServicesService } from '../../../services.service';
+import { MatBottomSheet } from '@angular/material';
+import { ServicesSelectSheetComponent } from '../../../services-select-sheet/services-select-sheet.component';
 
 @Component({
   selector: 'app-editor-element',
@@ -39,7 +41,8 @@ export class EditorElementComponent implements OnDestroy {
 
   constructor(
     private _graphicEditorService: GraphicEditorService,
-    private _servicesService: ServicesService
+    private _servicesService: ServicesService,
+    private _bottomSheet: MatBottomSheet
   ) { }
 
   isArray(): boolean {
@@ -107,7 +110,18 @@ export class EditorElementComponent implements OnDestroy {
 
   addService() {
     this._servicesService.getServices$().subscribe(e => {
-      console.log('Received services list: ', e)
+      this._bottomSheet.open(ServicesSelectSheetComponent, {
+        data: e
+      })
+        .afterDismissed()
+        .subscribe(e => {
+          if (e == null) { return; }
+          this._servicesService.getServiceById$(e)
+            .subscribe(e => {
+              if (e == null) { return; }
+              this.add(JSON.parse(e.data as string))
+            })
+        })
     })
   }
 
