@@ -12,6 +12,11 @@ import { ModelParserService } from '../Parser/ModelParser/model-parser.service';
 export class EditorService {
   private _selectedIndexSubject = new BehaviorSubject<number>(0);
   private _setSubject: BehaviorSubject<ISet<IKeyValue<string>[]> | undefined>;
+  private readonly _zeroElement: IKeyValue<string> = {
+    id: '_0',
+    key: 'key',
+    value: 'value'
+  }
 
   set$: Observable<ISet<IKeyValue<string>[]>>;
   index$: Observable<number>;
@@ -40,6 +45,9 @@ export class EditorService {
     const file = set.config_files.find(f => f.id === fileId);
     if (file) {
       this._makeChange(changes, file.data);
+      if (!file.data.length) {
+        file.data.push(this._zeroElement)
+      }
       this._setSubject.next(set);
     }
   }
@@ -61,45 +69,43 @@ export class EditorService {
 
   private _makeChange(changes: IChangeList, data: IKeyValue<string>[]) {
     const targetElement = this._findNode(data, changes.id);
-    const parentElement = targetElement.parent;
-    if (parentElement) {
-      const index = parentElement.value.findIndex(e => e === targetElement);
+    const parentElement = targetElement.parent || { value: data };
+    const index = parentElement.value.findIndex(e => e === targetElement);
 
-      switch (changes.type) {
-        case ChangeType.UPDATE:
-          parentElement.value[index] = { ...parentElement.value[index], ...changes.data };
-          break;
+    switch (changes.type) {
+      case ChangeType.UPDATE:
+        parentElement.value[index] = { ...parentElement.value[index], ...changes.data };
+        break;
 
-        case ChangeType.ADD:
-          if (!changes.data) {
-            const newElement: IKeyValue<string> = { }
-            if (targetElement.key) { newElement.key = 'key' }
-            if (targetElement.value) { newElement.value = 'value' }
-            parentElement.value.splice(index + 1, 0, newElement)
-            this._modelParser.index(parentElement, parentElement.id, parentElement.parent)
-          } else {
-            // TODO: here must be appended custom additional element  
-            console.log(changes.data);
-          }
-          break;
-
-        case ChangeType.CHANGE_STRUCT:
-          targetElement.key = undefined;
-          targetElement.value = undefined;
-          parentElement.value[index] = this._filterObject({
-            ...targetElement,
-            ...changes.data
-          });
+      case ChangeType.ADD:
+        if (!changes.data) {
+          const newElement: IKeyValue<string> = {}
+          if (targetElement.key) { newElement.key = 'key' }
+          if (targetElement.value) { newElement.value = 'value' }
+          parentElement.value.splice(index + 1, 0, newElement)
           this._modelParser.index(parentElement, parentElement.id, parentElement.parent)
-          break;
+        } else {
+          // TODO: here must be appended custom additional element  
+          console.log(changes.data);
+        }
+        break;
 
-        case ChangeType.REMOVE:
-          parentElement.value.splice(index, 1);
-          if (!parentElement.value.length) {
-            parentElement.value = 'value'
-          }
-          break;
-      }
+      case ChangeType.CHANGE_STRUCT:
+        targetElement.key = undefined;
+        targetElement.value = undefined;
+        parentElement.value[index] = this._filterObject({
+          ...targetElement,
+          ...changes.data
+        });
+        this._modelParser.index(parentElement, parentElement.id, parentElement.parent)
+        break;
+
+      case ChangeType.REMOVE:
+        parentElement.value.splice(index, 1);
+        if (!parentElement.value.length) {
+          parentElement.value = this._zeroElement.value
+        }
+        break;
     }
   }
 
@@ -117,6 +123,9 @@ export class EditorService {
     const set = this._setSubject.value;
     const index = set.config_files.findIndex(f => f.id === file.id);
     if (index > -1) {
+      if (!file.data.length) {
+        file.data.push(this._zeroElement)
+      }
       set.config_files[index] = file;
       this._setSubject.next(set);
     }

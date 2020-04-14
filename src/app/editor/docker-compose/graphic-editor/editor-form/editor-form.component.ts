@@ -1,9 +1,9 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { IKeyValue } from 'src/app/sets-service/sets.service';
+import { FormControl } from '@angular/forms';
 
 export interface IChangeList {
   id: string;
-  subtree?: IChangeList;
   data?: { key?: any; value?: any };
   type: ChangeType;
 }
@@ -28,19 +28,5 @@ export enum ChangeType {
   styleUrls: ['editor-form.component.scss']
 })
 export class EditorFormComponent {
-  @Input() form: any;
-  @Output() changed = new EventEmitter<IChangeList>();
-
-  change(value: any) {
-    this.changed.emit(value);
-  }
-
-  add(data?: IKeyValue<string>) {
-    if (!Array.isArray(this.form)) { return; }
-    this.changed.emit({
-      id: null,
-      type: ChangeType.ADD,
-      data: {key: 'foo', value: 'bar'}
-    });
-  }
+  @Input() form: IKeyValue<FormControl>[];
 }

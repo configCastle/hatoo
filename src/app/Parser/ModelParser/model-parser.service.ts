@@ -40,6 +40,7 @@ export class ModelParserService {
   }
 
   private _toKeyValue(object: any) {
+    if (object == null) { return object; }
     const type = new Object(object).constructor.name;
     if (type === 'Object') {
       const result = new Array<IKeyValue<string>>();
@@ -56,7 +57,7 @@ export class ModelParserService {
     if (type === 'Array') {
       const result = object.map(e => {
         const type = new Object(e).constructor.name;
-        if (type === 'Object') {
+        if (e && type === 'Object') {
           for (const key in e) {
             if (e.hasOwnProperty(key)) {
               const newElement: IKeyValue<string> = { key }
@@ -77,11 +78,11 @@ export class ModelParserService {
   }
 
   index(model: IKeyValue<string | FormControl>, firstIndex: string, parent: IKeyValue<string | FormControl>) {
-    model.id = firstIndex;
-    model.parent = parent;
+    model.id = firstIndex || '';
+    model.parent = parent || null;
     if (Array.isArray(model.value)) {
       for (let i = 0; i < model.value.length; i++) {
-        const index = `${firstIndex}_${i}`;
+        const index = `${firstIndex || ''}_${i}`;
         this.index(model.value[i], index, model);
       }
     }

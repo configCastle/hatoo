@@ -4,7 +4,7 @@
   <button *ngIf="form.key && isArray()" (click)="remove()">×</button>
 
   <div *ngIf="isArray(); else value">
-    <app-editor-element (changed)="changeIndentedElement($event)" *ngFor="let element of form.value" [form]="element">
+    <app-editor-element *ngFor="let element of form.value" [form]="element">
     </app-editor-element>
   </div>
 

@@ -1,10 +1,5 @@
 <ng-container *ngIf="file$ | async as file; else noFile">
-  <!-- <h3>Global</h3>
-  <app-editor-form [form]="file.global"></app-editor-form>
-  <h3>Services</h3> -->
-
-  <app-editor-form (changed)="change(file.id, $event)" [form]="file.data"></app-editor-form>
-
+  <app-editor-form [form]="file.data"></app-editor-form>
 </ng-container>
 
 <ng-template #noFile>

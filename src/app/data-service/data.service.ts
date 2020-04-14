@@ -31,4 +31,31 @@ export class DataService {
     });
   }
 
+  getFileById$(id: number) {
+    return this._graphql.query({
+      query: gql`query service($id: Int!) {
+        file(id: $id) {
+          id
+          name
+          configType
+          data
+        }
+      }`,
+      variables: { id }
+    });
+  }
+
+  getFiles$() {
+    return this._graphql.query({
+      query: gql`{
+        files {
+          id
+          name
+          configType
+          data
+        }
+      }`
+    });
+  }
+
 }

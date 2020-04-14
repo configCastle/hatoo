@@ -54,6 +54,15 @@ export class SetsService {
   }
 
   getServiceById$(id: number) {
-    return this._dataService.getServices$();
+    return this._dataService.getServiceById$(id);
   }
+
+  getFiles$() {
+    return this._dataService.getFiles$();
+  }
+
+  getFileById$(id: number) {
+    return this._dataService.getFileById$(id);
+  }
+
 }

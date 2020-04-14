@@ -1,5 +1,5 @@
-import { Component, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { IChangeList, ChangeType, EditorFormComponent } from '../editor-form.component';
+import { Component, Input, OnDestroy } from '@angular/core';
+import { IChangeList, ChangeType } from '../editor-form.component';
 import { FormControl } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -11,10 +11,11 @@ import { GraphicEditorService } from 'src/app/editor/graphic-editor.service';
   templateUrl: 'editor-element.component.html',
   styleUrls: ['editor-element.component.scss']
 })
-export class EditorElementComponent extends EditorFormComponent implements OnDestroy {
+export class EditorElementComponent implements OnDestroy {
 
   private _stopSubject = new Subject<void>();
   private _form: IKeyValue<FormControl>;
+  
   @Input()
   set form(value: IKeyValue<FormControl>) {
     if (this._form === value) { return; }
@@ -35,14 +36,14 @@ export class EditorElementComponent extends EditorFormComponent implements OnDes
     return this._form;
   }
 
-  constructor(private _editorService: GraphicEditorService) { super(); }
+  constructor(private _graphicEditorService: GraphicEditorService) { }
 
   isArray(): boolean {
     return Array.isArray(this.form.value);
   }
 
   changeKey(value: string) {
-    this._editorService.changeFileData({
+    this._graphicEditorService.changeFileData({
       id: this.form.id,
       data: { key: value },
       type: ChangeType.UPDATE
@@ -50,18 +51,10 @@ export class EditorElementComponent extends EditorFormComponent implements OnDes
   }
 
   changeValue(value: any) {
-    this._editorService.changeFileData({
+    this._graphicEditorService.changeFileData({
       id: this.form.id,
       data: { value },
       type: ChangeType.UPDATE
-    });
-  }
-
-  changeIndentedElement(value: IChangeList) {
-    this._editorService.changeFileData({
-      id: this.form.id,
-      subtree: value,
-      type: value.type
     });
   }
 
@@ -71,7 +64,7 @@ export class EditorElementComponent extends EditorFormComponent implements OnDes
       key: undefined,
       value: this.form.key.value
     }
-    this._editorService.changeFileData({
+    this._graphicEditorService.changeFileData({
       id: this.form.id,
       type: ChangeType.CHANGE_STRUCT,
       data: changedElement
@@ -84,7 +77,7 @@ export class EditorElementComponent extends EditorFormComponent implements OnDes
       key: this.form.value.value,
       value: 'value'
     }
-    this._editorService.changeFileData({
+    this._graphicEditorService.changeFileData({
       id: this.form.id,
       type: ChangeType.CHANGE_STRUCT,
       data: changedElement
@@ -101,7 +94,7 @@ export class EditorElementComponent extends EditorFormComponent implements OnDes
         value: 'value'
       }]
     }
-    this._editorService.changeFileData({
+    this._graphicEditorService.changeFileData({
       id: this.form.id,
       type: ChangeType.CHANGE_STRUCT,
       data: changedElement
@@ -109,7 +102,7 @@ export class EditorElementComponent extends EditorFormComponent implements OnDes
   }
 
   add(data?: IKeyValue<string>) {
-    this._editorService.changeFileData({
+    this._graphicEditorService.changeFileData({
       id: this.form.id,
       type: ChangeType.ADD,
       data
@@ -117,7 +110,7 @@ export class EditorElementComponent extends EditorFormComponent implements OnDes
   }
 
   remove() {
-    this._editorService.changeFileData({
+    this._graphicEditorService.changeFileData({
       id: this.form.id,
       type: ChangeType.REMOVE
     });
