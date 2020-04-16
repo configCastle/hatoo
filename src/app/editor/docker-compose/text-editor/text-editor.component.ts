@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, debounceTime } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { IConfigFile, FileTypes } from 'src/app/sets-service/sets.service';
 import { TextEditorService } from '../../text-editor.service';
@@ -10,6 +10,7 @@ import { DCTextParserService } from '../dc-text-parser.service';
   templateUrl: './text-ditor.component.html'
 })
 export class TextEditorComponent implements OnDestroy {
+  private _updateSubject = new Subject<string>();
   private _destroySubject = new Subject<void>();
   private _code = '';
   private _file: IConfigFile<any>;
@@ -21,16 +22,7 @@ export class TextEditorComponent implements OnDestroy {
   set code(value: string) {
     if (this._code === value) { return; }
     this._code = value;
-
-    const data = this._dockerComposeParserService.stringToModel(value);
-    if (data) {
-      this._editorService.updateFile({
-        id: this._file.id,
-        configType: FileTypes.DOCKER_COMPOSE,
-        name: this._file.name,
-        data
-      });
-    }
+    this._updateSubject.next(value);
   }
 
   readonly editorOptions = {
@@ -40,9 +32,23 @@ export class TextEditorComponent implements OnDestroy {
   };
 
   constructor(
-    private _editorService: TextEditorService,
-    private _dockerComposeParserService: DCTextParserService
+    _editorService: TextEditorService,
+    _dockerComposeParserService: DCTextParserService
   ) {
+    this._updateSubject.pipe(
+      takeUntil(this._destroySubject),
+      debounceTime(200)
+    ).subscribe(e => {
+      const data = _dockerComposeParserService.stringToModel(e);
+      if (data) {
+        _editorService.updateFile({
+          id: this._file.id,
+          configType: FileTypes.DOCKER_COMPOSE,
+          name: this._file.name,
+          data
+        });
+      }
+    })
     _editorService.file$
       .pipe(takeUntil(this._destroySubject))
       .subscribe(file => {
