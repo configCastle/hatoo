@@ -1,9 +1,12 @@
 @import "@angular/material/prebuilt-themes/pink-bluegrey.css";
+@import './variables';
 
 html,
 body {
-  height: 100%;
-  overflow: hidden;
+  overflow-x: hidden;
+  width: 100%;
+  color: $font-color;
+  background-color: $background;
 }
 body {
   margin: 0;

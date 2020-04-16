@@ -1,8 +1,32 @@
-.wr {
-  padding-left: 20px;
+@import '~src/variables';
+
+.wrapper {
+  padding-left: 15px;
+  border-left: 1px solid $outline-color;
+  font-size: 12px;
+  padding-bottom: 5px;
+  position: relative;
+  
+  &:hover {
+    border-left-color: $accent;
+  }
 }
 
-.add-external {
-  padding: 2px 5px;
-  border: 1px solid rgb(179, 125, 64)
+::ng-deep {
+  .mat-form-field-appearance-outline .mat-form-field-infix {
+    padding: 10px 0;
+  }
+  .mat-form-field-wrapper {
+    padding: 3px 0;
+}
+}
+
+input {
+  font-family: monospace;
+}
+
+.colon {
+  font-size: 16px;
+  font-weight: bolder;
+  padding: 0 5px;
 }

@@ -1,7 +1,13 @@
-<div class="wr" *ngIf="form">
-  
-  <input *ngIf="form.key" [formControl]="form.key">
-  <button *ngIf="form.key && isArray()" (click)="remove()">×</button>
+<div class="wrapper" *ngIf="form">
+
+  <mat-form-field appearance="outline" *ngIf="form.key">
+    <mat-label>Key</mat-label>
+    <input matInput [formControl]="form.key">
+  </mat-form-field>
+  <button mat-icon-button *ngIf="form.key && isArray()" (click)="remove()">
+    <fa-icon [icon]="icons.faTimes"></fa-icon>
+  </button>
+  <span class="colon" *ngIf="form.key && !isArray()">:</span>
 
   <div *ngIf="isArray(); else value">
     <app-editor-element *ngFor="let element of form.value" [form]="element">
@@ -10,15 +16,31 @@
 
   <ng-template #value>
     <ng-container *ngIf="form.value">
-      <input [formControl]="form.value">
-      <button (click)="remove()">×</button>
-      <button *ngIf="form.key" (click)="breakLeft()">←</button>
-      <button *ngIf="!form.key" (click)="breakRight()">→</button>
-      <button (click)="breakDown()">↴</button>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Value</mat-label>
+        <input matInput [formControl]="form.value">
+      </mat-form-field>
+      <button mat-icon-button (click)="remove()">
+        <fa-icon [icon]="icons.faTimes"></fa-icon>
+      </button>
+
+      <button mat-icon-button *ngIf="form.key" (click)="breakLeft()">
+        <fa-icon [icon]="icons.faAngleDoubleLeft"></fa-icon>
+      </button>
+      <button mat-icon-button *ngIf="!form.key" (click)="breakRight()">
+        <fa-icon [icon]="icons.faAngleDoubleRight"></fa-icon>
+      </button>
+      <button mat-icon-button (click)="breakDown()">
+        <fa-icon [icon]="icons.faLevelDownAlt"></fa-icon>
+      </button>
     </ng-container>
   </ng-template>
 
-  <button (click)="add()">+</button>
-  <button class="add-external" *ngIf="form.data?.isService" (click)="addService()">Add service</button>
+  <button class="add-button" mat-icon-button (click)="add()">
+    <fa-icon [icon]="icons.faPlus"></fa-icon>
+  </button>
+  <button mat-button class="add-external" *ngIf="form.data?.isService" (click)="addService()">Add
+    service</button>
 
 </div>

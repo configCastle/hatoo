@@ -8,6 +8,13 @@ import { GraphicEditorService } from 'src/app/editor/graphic-editor.service';
 import { ServicesService } from '../../../services.service';
 import { MatBottomSheet } from '@angular/material';
 import { ServicesSelectSheetComponent } from '../../../services-select-sheet/services-select-sheet.component';
+import {
+  faPlus,
+  faAngleDoubleRight,
+  faAngleDoubleLeft,
+  faLevelDownAlt,
+  faTimes
+} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-editor-element',
@@ -19,6 +26,14 @@ export class EditorElementComponent implements OnDestroy {
   private _stopSubject = new Subject<void>();
   private _form: IKeyValue<FormControl>;
   
+  icons = {
+    faPlus,
+    faAngleDoubleRight,
+    faAngleDoubleLeft,
+    faLevelDownAlt,
+    faTimes
+  }
+
   @Input()
   set form(value: IKeyValue<FormControl>) {
     if (this._form === value) { return; }

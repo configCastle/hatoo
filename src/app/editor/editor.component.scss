@@ -1,12 +1,36 @@
+.editor-layout {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.file-name {
+  margin: 0;
+  padding: 30px 15px 20px 15px;
+}
+
+.grid-wrapper {
+  display: flex;
+  flex: 1;
+  height: 100%;
+}
+
 .grid {
-	display: flex;
+  flex: 1;
+  display: flex;
+  height: 100%;
+  overflow: auto;
+  padding: 0 15px;
 
 	.graphic-editor {
-		flex-basis: 50%;
+    height: 100%;
+    overflow: auto;
+		flex-basis: 60%;
 	}
-
+  
 	.text-editor {
-		flex-basis: 50%;
+    height: 100%;
+		flex-basis: 40%;
 		height: 500px;
 	}
 }

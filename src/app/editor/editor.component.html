@@ -1,8 +1,12 @@
 <ng-container *ngIf="fileName$ | async as name; else noSet">
-  <h2>{{ name }}</h2>  
-  <div class="grid">
-    <app-graphic-editor class="graphic-editor"></app-graphic-editor>    
-    <app-text-editor class="text-editor"></app-text-editor>
+  <div class="editor-layout">
+    <h2 class="file-name">{{ name }}</h2>
+    <div class="grid-wrapper">
+      <div class="grid">
+        <app-graphic-editor class="graphic-editor"></app-graphic-editor>
+        <app-text-editor class="text-editor"></app-text-editor>
+      </div>
+    </div>
   </div>
 </ng-container>
 
