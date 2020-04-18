@@ -1,10 +1,12 @@
 import { NgModule } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule, MatButtonModule } from '@angular/material';
+import { MatSelectModule } from '@angular/material';
+import { MatBottomSheetModule } from '@angular/material';
 import { CommonModule } from '@angular/common';
 import { DataService } from './data-service/data.service';
 import { FormsModule } from '@angular/forms';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   imports: [
@@ -12,14 +14,20 @@ import { FormsModule } from '@angular/forms';
     FormsModule,
     MatCardModule,
     MatInputModule,
-    MatSelectModule
+    MatSelectModule,
+    MatBottomSheetModule,
+    MatButtonModule,
+    FontAwesomeModule
   ],
   exports: [
     CommonModule,
     FormsModule,
     MatCardModule,
     MatInputModule,
-    MatSelectModule
+    MatSelectModule,
+    MatBottomSheetModule,
+    MatButtonModule,
+    FontAwesomeModule
   ],
   providers: [DataService]
 })

@@ -1,4 +1,5 @@
 import { ISet, IKeyValue } from './sets.service';
+import { ModelParserService } from '../Parser/ModelParser/model-parser.service';
 
 export const testSets: ISet<IKeyValue<string>[]>[] = [
   {
@@ -9,58 +10,22 @@ export const testSets: ISet<IKeyValue<string>[]>[] = [
     config_files: [
       {
         id: 0,
-        type: 1,
+        configType: 1,
         name: 'some name',
-        data: [
-          {
-            id: '_0',
-            key: 'version',
-            value: 3,
-            required: true
-          },
-          {
-            id: '_1',
-            key: 'services',
-            value: [
-              {
-                id: '_1_0',
-                key: 'redis',
-                value: [
-                  {
-                    id: '_1_0_0',
-                    key: 'build',
-                    value: '.'
-                  },
-                  {
-                    id: '_1_0_1',
-                    key: 'port',
-                    value: 8080
-                  }
-                ]
-              },
-              {
-                id: '_1_1',
-                key: 'mongo',
-                value: [
-                  {
-                    id: '_1_1_0',
-                    key: 'user',
-                    value: [
-                      { id: '_1_1_0_0', value: 'l' },
-                      { id: '_1_0_0_1', value: 'o' },
-                      { id: '_1_0_0_2', value: 'l' },
-                    ]
-                  },
-                  {
-                    id: '_1_1_1',
-                    key: 'pass',
-                    value: 'kek'
-                  }
-                ]
-              }
-            ]
+        // data: []
+        data: new ModelParserService().plainObjectToModel({
+          version: 3,
+          services: {
+            redis: {
+              build: '.',
+              port: 8080
+            },
+            mongo: {
+              user: ['l', 'o', 'l'],
+              password: 'kek'
+            }
           }
-        ]
+        })
       }
     ]
   }
