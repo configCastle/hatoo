@@ -1,0 +1,9 @@
+@import '~@angular/material/theming';
+@include mat-core();
+
+$editor-font-size: 12px;
+
+$background: map-get($mat-grey, 800);
+$accent: map-get($mat-pink, 500);
+$font-color: map-get($mat-grey, 100);
+$outline-color: map-get($mat-grey, 700);

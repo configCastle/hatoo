@@ -1,13 +1,14 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { IKeyValue } from 'src/app/sets-service/sets.service';
+import { FormControl } from '@angular/forms';
 
 export interface IChangeList {
   id: string;
-  subtree?: IChangeList;
   data?: { key?: any; value?: any };
   type: ChangeType;
 }
 
-export enum objectTypes {
+export enum defaultElementTypes {
   OBJECT_FIELD = 0,
   ARRAY_ELEMENT = 1,
   OBJECT = 2,
@@ -17,7 +18,8 @@ export enum objectTypes {
 export enum ChangeType {
   UPDATE = 0,
   ADD = 1,
-  REMOVE = 2
+  REMOVE = 2,
+  CHANGE_STRUCT = 3
 }
 
 @Component({
@@ -26,26 +28,5 @@ export enum ChangeType {
   styleUrls: ['editor-form.component.scss']
 })
 export class EditorFormComponent {
-  @Input() form: any;
-  @Output() changed = new EventEmitter<IChangeList>();
-
-  protected objectTypeDefs = {
-    [objectTypes.OBJECT_FIELD]: JSON.stringify({ key: 'key', value: 'value' }),
-    [objectTypes.ARRAY_ELEMENT]: JSON.stringify({ value: '' }),
-    [objectTypes.OBJECT]: JSON.stringify({ key: 'key', value: [{ key: 'key', value: 'value' }] }),
-    [objectTypes.ARRAY]: JSON.stringify({ key: 'key', value: [{ value: 'value' }] }),
-  };
-
-  change(value: any) {
-    this.changed.emit(value);
-  }
-
-  add(type: number) {
-    if (!Array.isArray(this.form)) { return; }
-    this.changed.emit({
-      id: null,
-      type: ChangeType.ADD,
-      data: JSON.parse(this.objectTypeDefs[type])
-    });
-  }
+  @Input() form: IKeyValue<FormControl>[];
 }

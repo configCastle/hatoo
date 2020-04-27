@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { testSets } from './test-sets';
+import { DataService } from '../data-service/data.service';
 
 export enum InputTypes {
   TEXT = 0,
@@ -12,6 +13,8 @@ export interface IKeyValue<T> {
   value?: any;
   required?: boolean;
   type?: InputTypes;
+  parent?: IKeyValue<T>;
+  data?: any;
 }
 
 export type IModel = IKeyValue<string> | IKeyValue<string>[];
@@ -26,7 +29,7 @@ export enum FileTypes {
 export interface IConfigFile<T> {
   id: number;
   name: string;
-  type: FileTypes;
+  configType: FileTypes;
   data: T;
 }
 
@@ -42,7 +45,25 @@ export interface ISet<T> {
   providedIn: 'root'
 })
 export class SetsService {
+  constructor(private _dataService: DataService) { }
   getById(id: number): ISet<IKeyValue<string>[]> | undefined {
     return testSets[0];
   }
+
+  getServices() {
+    return this._dataService.getServices$();
+  }
+
+  getServiceById$(id: number) {
+    return this._dataService.getServiceById$(id);
+  }
+
+  getFiles$() {
+    return this._dataService.getFiles$();
+  }
+
+  getFileById$(id: number) {
+    return this._dataService.getFileById$(id);
+  }
+
 }

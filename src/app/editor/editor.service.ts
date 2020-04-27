@@ -1,99 +1,135 @@
 import { Injectable } from '@angular/core';
-import { SetsService, ISet, IConfigFile, IKeyValue } from 'src/app/sets-service/sets.service';
-import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
+import { IConfigFile, IKeyValue } from 'src/app/sets-service/sets.service';
+import { Observable, ReplaySubject } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { IChangeList, ChangeType } from './docker-compose/graphic-editor/editor-form/editor-form.component';
 import { ModelParserService } from '../Parser/ModelParser/model-parser.service';
+import { FilesService } from '../files-service/files.service';
+import { DCMetaDataService } from './docker-compose/dc-meta-data.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class EditorService {
-  private _selectedIndexSubject = new BehaviorSubject<number>(0);
-  private _setSubject: BehaviorSubject<ISet<IKeyValue<string>[]> | undefined>;
-
-  set$: Observable<ISet<IKeyValue<string>[]>>;
-  index$: Observable<number>;
-  file$: Observable<IConfigFile<IKeyValue<string>[]>>;
-
-  constructor(
-    _setsService: SetsService,
-    _route: ActivatedRoute,
-    private _modelParser: ModelParserService
-  ) {
-    const id = +_route.snapshot.params.id;
-    const set = _setsService.getById(id);
-    this._setSubject = new BehaviorSubject(set);
-
-    this.set$ = this._setSubject.asObservable();
-    this.index$ = this._selectedIndexSubject.asObservable();
-    this.file$ = combineLatest(
-      this.index$,
-      this.set$
-    ).pipe(map(([i, s]) => s.config_files[i]));
+  private readonly _fileSubject = new ReplaySubject<IConfigFile<IKeyValue<string>[]>>(1);
+  private _file;
+  private readonly _zeroElement: IKeyValue<string> = {
+    id: '_0',
+    key: 'key',
+    value: 'value'
   }
 
-  changeFileData(id: number, changes: IChangeList) {
-    const set = this._setSubject.value;
-    const index = set.config_files.findIndex(f => f.id === id);
-    if (index > -1) {
-      this._makeChange(changes, set.config_files[index].data);
-      this._setSubject.next(set);
+  file$: Observable<IConfigFile<IKeyValue<string>[]> | undefined>;
+
+  constructor(
+    _filesService: FilesService,
+    _route: ActivatedRoute,
+    private _metaDataService: DCMetaDataService,
+    private _modelParser: ModelParserService
+  ) {
+    const fileId = +_route.snapshot.queryParams.fileId;
+    this.file$ = this._fileSubject.asObservable();
+
+    _filesService.getFileById$(fileId).pipe(
+      map(e => {
+        if (e == null) { return; }
+        const data = JSON.parse(e.data);
+        data.forEach((e, i) => {
+          _modelParser.index(e, `_${i}`, null)
+          _metaDataService.setMetaData(e);
+        });
+        return { ...e, data }
+      })
+    ).subscribe(e => {
+      this._file = e;
+      this._fileSubject.next(e);
+    })
+  }
+
+  changeFileData(changes: IChangeList) {
+    if (this._file) {
+      this._makeChange(changes, this._file.data);
+      if (!this._file.data.length) {
+        this._file.data.push(this._zeroElement)
+      }
+      this._file.data.forEach(e => this._metaDataService.setMetaData(e))
+      this._fileSubject.next(this._file);
     }
+  }
+
+  private _findNode(data: IKeyValue<string>[], id: string): IKeyValue<string> | undefined {
+    const devider = '_';
+    const indexesList = id.split(devider).slice(1);
+    let currentIndex = '';
+    let currentNode: IKeyValue<string> = { value: data };
+
+    indexesList.some(e => {
+      currentIndex = `${currentIndex}${devider}${e}`;
+      currentNode = currentNode.value.find(e => e.id === currentIndex);
+      if (!currentNode || !Array.isArray(currentNode.value)) { return true; }
+    })
+
+    return currentNode;
   }
 
   private _makeChange(changes: IChangeList, data: IKeyValue<string>[]) {
-    let pointer = data;
-    let index: number;
-    if (changes.id) {
-      while (changes.subtree && Array.isArray(pointer)) {
-        pointer = pointer.find(e => e.id === changes.id).value;
-        changes = changes.subtree as IChangeList;
-      }
-      index = pointer.findIndex(e => e.id === changes.id);
-    }
-
+    const targetElement = this._findNode(data, changes.id);
+    const parentElement = targetElement.parent || { value: data };
+    const index = parentElement.value.findIndex(e => e === targetElement);
 
     switch (changes.type) {
       case ChangeType.UPDATE:
-        pointer[index] = { ...pointer[index], ...changes.data };
+        parentElement.value[index] = { ...parentElement.value[index], ...changes.data };
         break;
 
       case ChangeType.ADD:
-        if (index != null) {
-          const newId = `${changes.id}_${pointer[index].value.length}`;
-          this._modelParser.index(changes.data, newId);
-          pointer[index].value.push(changes.data);
-
-          // enable-next-line: костыль
-          if (changes.data.key) { changes.data.key = changes.data.key + newId.split('_').join(''); }
+        if (!changes.data) {
+          const newElement: IKeyValue<string> = {}
+          if (targetElement.key) { newElement.key = 'key' }
+          if (targetElement.value) { newElement.value = 'value' }
+          parentElement.value.splice(index + 1, 0, newElement)
         } else {
-          const newId = `_${pointer.length}`;
-          this._modelParser.index(changes.data, newId);
-          pointer.push(changes.data);
-
-          // enable-next-line: костыль
-          if (changes.data.key) { changes.data.key = changes.data.key + newId.split('_').join(''); }
+          parentElement.value.splice(index + 1, 0, changes.data)
         }
+        this._modelParser.index(parentElement, parentElement.id, parentElement.parent)
+
+        break;
+
+      case ChangeType.CHANGE_STRUCT:
+        targetElement.key = undefined;
+        targetElement.value = undefined;
+        parentElement.value[index] = this._filterObject({
+          ...targetElement,
+          ...changes.data
+        });
+        this._modelParser.index(parentElement, parentElement.id, parentElement.parent)
         break;
 
       case ChangeType.REMOVE:
-        pointer.splice(index, 1);
+        parentElement.value.splice(index, 1);
+        if (!parentElement.value.length) {
+          parentElement.value = this._zeroElement.value
+        }
         break;
     }
   }
 
-  updateFile(file: IConfigFile<IKeyValue<string>[]>): void {
-    const set = this._setSubject.value;
-    const index = set.config_files.findIndex(f => f.id === file.id);
-    if (index > -1) {
-      set.config_files[index] = file;
-      this._setSubject.next(set);
+  private _filterObject(obj: any): any {
+    const filtred = {};
+    for (const field in obj) {
+      if (obj.hasOwnProperty(field) && obj[field] != null) {
+        filtred[field] = obj[field]
+      }
     }
+    return filtred;
   }
 
-  selectFileIndex(index: number): void {
-    this._selectedIndexSubject.next(index);
+  updateFile(file: IConfigFile<IKeyValue<string>[]>): void {
+    if (!file.data.length) {
+      file.data.push(this._zeroElement);
+    }
+    this._file = file;
+    this._file.data.forEach(e => this._metaDataService.setMetaData(e))
+    this._fileSubject.next(file);
   }
+
 }

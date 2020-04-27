@@ -10,7 +10,11 @@ export class ModelParserService {
   }
 
   plainObjectToModel(object: any): IKeyValue<string>[] {
-    return this._toKeyValue(object, '');
+    const model = this._toKeyValue(object);
+    model.forEach((e, i) => {
+      this.index(e, `_${i}`, null)
+    })
+    return model;
   }
 
   private _toPlainObject(model: any): any {
@@ -35,45 +39,37 @@ export class ModelParserService {
     return model;
   }
 
-  private _toKeyValue(object: any, indentKey: string) {
+  private _toKeyValue(object: any) {
+    if (object == null) { return object; }
     const type = new Object(object).constructor.name;
     if (type === 'Object') {
       const result = new Array<IKeyValue<string>>();
-      let i = 0;
       for (const key in object) {
         if (object.hasOwnProperty(key)) {
-          const index = `${indentKey}_${i}`;
-          result.push({
-            id: index,
-            key,
-            value: this._toKeyValue(object[key], index)
-          });
-          i++;
+          const newElement: IKeyValue<string> = { key }
+          newElement.value = this._toKeyValue(object[key])
+          result.push(newElement);
         }
       }
       return result.length ? result : '';
     }
 
     if (type === 'Array') {
-      const result = object.map((e, i) => {
-        const index = `${indentKey}_${i}`;
+      const result = object.map(e => {
         const type = new Object(e).constructor.name;
-        if (type === 'Object') {
+        if (e && type === 'Object') {
           for (const key in e) {
             if (e.hasOwnProperty(key)) {
-              return {
-                id: index,
-                key,
-                value: this._toKeyValue(e[key], index)
-              }
+              const newElement: IKeyValue<string> = { key }
+              newElement.value = this._toKeyValue(e[key])
+              return newElement;
             }
           }
           return '';
         }
-        return {
-          id: index,
-          value: this._toKeyValue(e, index)
-        };
+        const newElement: IKeyValue<string> = { }
+        newElement.value = this._toKeyValue(e)
+        return newElement;
       });
       return result.length ? result : '';
     }
@@ -81,12 +77,13 @@ export class ModelParserService {
     return object;
   }
 
-  index(model: IKeyValue<string | FormControl>, firstIndex: string) {
-    model.id = firstIndex;
+  index(model: IKeyValue<string | FormControl>, firstIndex: string, parent: IKeyValue<string | FormControl>) {
+    model.id = firstIndex || '';
+    model.parent = parent || null;
     if (Array.isArray(model.value)) {
       for (let i = 0; i < model.value.length; i++) {
-        const index = `${firstIndex}_${i}`;
-        this.index(model.value[i], index);
+        const index = `${firstIndex || ''}_${i}`;
+        this.index(model.value[i], index, model);
       }
     }
   }

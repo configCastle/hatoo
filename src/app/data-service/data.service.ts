@@ -1,37 +1,63 @@
 import { Injectable } from '@angular/core';
-import { ajax } from 'rxjs/ajax';
+import { Apollo } from 'apollo-angular';
+import gql from 'graphql-tag';
+import { IConfigFile } from '../sets-service/sets.service';
+import { IDCService } from '../editor/docker-compose/services.service';
 
 @Injectable({ providedIn: 'root' })
 export class DataService {
-  private _base = 'http://10.61.4.134:8000/api/';
-  constructor() { }
+  constructor(private _graphql: Apollo) {}
 
-  getSet$(id: string) {
-    return ajax({
-      url: this._base + 'set/' + id,
-      method: 'GET'
-    })
-  }
-  
-  getSets$() {
-    return ajax({
-      url: this._base + 'set',
-      method: 'GET'
-    })
-  }
-  
-  getComponent$(id: string) {
-    return ajax({
-      url: this._base + 'component/' + id,
-      method: 'GET'
-    })
+  getServiceById$(id: number) {
+    return this._graphql.query<{ service: IDCService}>({
+      query: gql`query service($id: Int!) {
+        service(id: $id) {
+          id
+          name
+          data
+        }
+      }`,
+      variables: { id }
+    });
   }
 
-  getComponents$() {
-    return ajax({
-      url: this._base + 'component',
-      method: 'GET'
-    })
+  getServices$() {
+    return this._graphql.query<{ services: IDCService[]}>({
+      query: gql`{
+        services {
+          id
+          name
+          data
+        }
+      }`
+    });
+  }
+
+  getFileById$(id: number) {
+    return this._graphql.query<{file: IConfigFile<string>}>({
+      query: gql`query service($id: Int!) {
+        file(id: $id) {
+          id
+          name
+          configType
+          data
+        }
+      }`,
+      variables: { id }
+    });
+  }
+
+  getFiles$() {
+    return this._graphql.query<{files: IConfigFile<string>[]}>({
+      query: gql`{
+        files {
+          id
+          name
+          configType
+          data
+        }
+      }`
+    });
   }
 
 }

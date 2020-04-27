@@ -33,7 +33,7 @@
               }
             ],
             "styles": [
-              "./node_modules/@angular/material/prebuilt-themes/pink-bluegrey.css",
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.scss"
             ],
             "scripts": []
@@ -100,7 +100,7 @@
               "src/assets"
             ],
             "styles": [
-              "./node_modules/@angular/material/prebuilt-themes/pink-bluegrey.css",
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.scss"
             ],
             "scripts": []
@@ -134,5 +134,8 @@
       }
     }
   },
-  "defaultProject": "config-castle"
+  "defaultProject": "config-castle",
+  "cli": {
+    "analytics": "5316a2ba-ea3e-4259-8617-701848a819e1"
+  }
 }
