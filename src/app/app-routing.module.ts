@@ -1,26 +1,17 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { EditorComponent } from './editor/editor.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 
 const routes: Routes = [
   {
     path: '',
-    component: EditorComponent
+    component: DashboardComponent
   },
   {
-    path: 'editor',
+    path: ':file',
     component: EditorComponent,
-    // children: [
-    //   {
-    //     path: '',
-    //     redirectTo: '1'
-    //   },
-    //   {
-    //     path: ':id',
-    //     component: EditorComponent
-    //   }
-    // ]
   }
 ];
 

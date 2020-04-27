@@ -5,7 +5,7 @@ import { filter } from 'rxjs/operators';
 import { EditorService } from './editor.service';
 import { IChangeList, ChangeType } from './docker-compose/graphic-editor/editor-form/editor-form.component';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class GraphicEditorService {
   private _skip: boolean;
   file$: Observable<IConfigFile<IKeyValue<string>[]>>;

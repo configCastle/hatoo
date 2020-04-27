@@ -9,6 +9,7 @@ import { GraphQLModule } from './graphql.module';
 import { HttpClientModule } from '@angular/common/http';
 import { SetsService } from './sets-service/sets.service';
 import { FilesService } from './files-service/files.service';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { FilesService } from './files-service/files.service';
   ],
   imports: [
     EditorModule,
+    DashboardModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,

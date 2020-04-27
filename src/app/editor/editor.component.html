@@ -1,15 +1,21 @@
-<ng-container *ngIf="fileName$ | async as name; else noSet">
-  <div class="editor-layout">
-    <h2 class="file-name">{{ name }}</h2>
-    <div class="grid-wrapper">
-      <div class="grid">
-        <app-graphic-editor class="graphic-editor"></app-graphic-editor>
-        <app-text-editor [style.width.px]="textEditorWidth" class="text-editor"></app-text-editor>
+<ng-container *ngIf="loading$ | async; else loaded">
+  <p>Загрузка...</p>
+</ng-container>
+<ng-template #loaded>
+  <ng-container *ngIf="file$ | async as file; else noFile">
+    <div class="editor-layout">
+      <h2 class="file-name">{{ file.name }}</h2>
+      <div class="grid-wrapper">
+        <div class="grid">
+          <app-graphic-editor class="graphic-editor"></app-graphic-editor>
+          <app-text-editor [style.width.px]="textEditorWidth" class="text-editor"></app-text-editor>
+        </div>
       </div>
     </div>
-  </div>
-</ng-container>
+  </ng-container>
+</ng-template>
 
-<ng-template #noSet>
-  Не удалось загрузиьт этот файл
+
+<ng-template #noFile>
+  <p>Не удалось загрузиьт этот файл</p>
 </ng-template>
