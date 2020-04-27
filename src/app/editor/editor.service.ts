@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
 import { IConfigFile, IKeyValue } from 'src/app/sets-service/sets.service';
 import { Observable, ReplaySubject } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { IChangeList, ChangeType } from './docker-compose/graphic-editor/editor-form/editor-form.component';
 import { ModelParserService } from '../Parser/ModelParser/model-parser.service';
 import { FilesService } from '../files-service/files.service';
 import { DCMetaDataService } from './docker-compose/dc-meta-data.service';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class EditorService {
-  private readonly _fileSubject = new ReplaySubject<IConfigFile<IKeyValue<string>[]>>(1);
+  private readonly _fileSubject = new ReplaySubject<IConfigFile<IKeyValue<string>[]> | undefined>(1);
   private _file;
   private readonly _zeroElement: IKeyValue<string> = {
     id: '_0',
@@ -21,25 +20,25 @@ export class EditorService {
   file$: Observable<IConfigFile<IKeyValue<string>[]> | undefined>;
 
   constructor(
-    _filesService: FilesService,
-    _route: ActivatedRoute,
+    private _filesService: FilesService,
     private _metaDataService: DCMetaDataService,
     private _modelParser: ModelParserService
   ) {
-    const fileId = +_route.snapshot.queryParams.fileId;
     this.file$ = this._fileSubject.asObservable();
+  }
 
-    _filesService.getFileById$(fileId).pipe(
+  selectFile(id: number) {
+    this._filesService.getFileById$(id).pipe(
       map(e => {
         if (e == null) { return; }
         const data = JSON.parse(e.data);
         data.forEach((e, i) => {
-          _modelParser.index(e, `_${i}`, null)
-          _metaDataService.setMetaData(e);
+          this._modelParser.index(e, `_${i}`, null)
+          this._metaDataService.setMetaData(e);
         });
         return { ...e, data }
       })
-    ).subscribe(e => {
+    ).subscribe((e: IConfigFile<IKeyValue<string>[]> | undefined) => {
       this._file = e;
       this._fileSubject.next(e);
     })

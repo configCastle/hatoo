@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { EditorService } from './editor.service';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class TextEditorService {
   private _skip: boolean;
   file$: Observable<IConfigFile<any>>;
