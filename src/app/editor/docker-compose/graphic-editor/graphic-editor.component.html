@@ -1,7 +1,3 @@
-<ng-container *ngIf="file$ | async as file; else noFile">
+<ng-container *ngIf="file$ | async as file">
   <app-editor-form [form]="file.data"></app-editor-form>
 </ng-container>
-
-<ng-template #noFile>
-  No file selected
-</ng-template>

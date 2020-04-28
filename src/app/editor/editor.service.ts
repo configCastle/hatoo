@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { IConfigFile, IKeyValue } from 'src/app/sets-service/sets.service';
 import { Observable, ReplaySubject } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -6,9 +6,13 @@ import { IChangeList, ChangeType } from './docker-compose/graphic-editor/editor-
 import { ModelParserService } from '../Parser/ModelParser/model-parser.service';
 import { FilesService } from '../files-service/files.service';
 import { DCMetaDataService } from './docker-compose/dc-meta-data.service';
+import { SavingService } from './sving.service';
+import { YAMLParserService } from '../Parser/YAMLParser/yaml-parser.service';
+import { DOCUMENT } from '@angular/common';
 
 @Injectable()
 export class EditorService {
+
   private readonly _fileSubject = new ReplaySubject<IConfigFile<IKeyValue<string>[]> | undefined>(1);
   private _file;
   private readonly _zeroElement: IKeyValue<string> = {
@@ -22,9 +26,16 @@ export class EditorService {
   constructor(
     private _filesService: FilesService,
     private _metaDataService: DCMetaDataService,
-    private _modelParser: ModelParserService
+    private _modelParser: ModelParserService,
+    private _savingService: SavingService,
+    private _yamlParsr: YAMLParserService,
+    @Inject(DOCUMENT) private _document: Document
   ) {
     this.file$ = this._fileSubject.asObservable();
+  }
+
+  saveFileData(file: IConfigFile<IKeyValue<string>[]>): Observable<IConfigFile<string>> {
+    return this._savingService.saveFileData(file);
   }
 
   selectFile(id: number) {
@@ -38,10 +49,13 @@ export class EditorService {
         });
         return { ...e, data }
       })
-    ).subscribe((e: IConfigFile<IKeyValue<string>[]> | undefined) => {
-      this._file = e;
-      this._fileSubject.next(e);
-    })
+    ).subscribe(
+      (e: IConfigFile<IKeyValue<string>[]> | undefined) => {
+        this._file = e;
+        this._fileSubject.next(e);
+      },
+      () => this._fileSubject.next(undefined)
+    )
   }
 
   changeFileData(changes: IChangeList) {
@@ -50,7 +64,7 @@ export class EditorService {
       if (!this._file.data.length) {
         this._file.data.push(this._zeroElement)
       }
-      this._file.data.forEach(e => this._metaDataService.setMetaData(e))
+      this._file.data.forEach(e => this._metaDataService.setMetaData(e));
       this._fileSubject.next(this._file);
     }
   }
@@ -127,8 +141,37 @@ export class EditorService {
       file.data.push(this._zeroElement);
     }
     this._file = file;
-    this._file.data.forEach(e => this._metaDataService.setMetaData(e))
+    this._file.data.forEach(e => this._metaDataService.setMetaData(e));
     this._fileSubject.next(file);
+  }
+
+  downloadFile(file: IConfigFile<IKeyValue<string>[]>) {
+    const fileData = file.data;
+    const plainObjectData = this._modelParser.modelToPlainObject(fileData);
+    const stringData = this._yamlParsr.objectToYAML(plainObjectData);
+    const blobData = new Blob([stringData], { type: 'text/x-yaml' });
+
+    const extension = '.yaml';
+    let filename =  file.name;
+    const index = filename.lastIndexOf(extension)
+    if (index < 0 || index !== (filename.length - extension.length)) {
+      filename += extension;
+    }
+
+    if (window.navigator.msSaveOrOpenBlob) // IE10+
+      window.navigator.msSaveOrOpenBlob(blobData, filename);
+    else {
+      const link = this._document.createElement("a");
+      const url = URL.createObjectURL(blobData);
+      link.href = url;
+      link.download = filename;
+      this._document.body.appendChild(link);
+      link.click();
+      setTimeout(() => {
+        this._document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      }, 0);
+    }
   }
 
 }

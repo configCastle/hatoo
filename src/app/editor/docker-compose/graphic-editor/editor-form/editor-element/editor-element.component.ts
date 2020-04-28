@@ -7,7 +7,7 @@ import { IKeyValue } from 'src/app/sets-service/sets.service';
 import { GraphicEditorService } from 'src/app/editor/graphic-editor.service';
 import { ServicesService } from '../../../services.service';
 import { MatBottomSheet } from '@angular/material';
-import { ServicesSelectSheetComponent } from '../../../services-select-sheet/services-select-sheet.component';
+import { ServicesSelectSheetComponent } from '../../services-select-sheet/services-select-sheet.component';
 import {
   faPlus,
   faAngleDoubleRight,

@@ -11,7 +11,7 @@ import { MonacoEditorModule } from 'ngx-monaco-editor';
 import { DCMetaDataService } from './dc-meta-data.service';
 import { ServicesService } from './services.service';
 import { UIModule } from 'src/app/ui.module';
-import { ServicesSelectSheetComponent } from './services-select-sheet/services-select-sheet.component';
+import { ServicesSelectSheetComponent } from './graphic-editor/services-select-sheet/services-select-sheet.component';
 
 @NgModule({
   imports: [

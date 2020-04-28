@@ -1,13 +1,16 @@
-<div class="files" *ngIf="files$ | async as files; else noFiles">
-  <div class="grid" *ngIf="files.length; else noFiles">
-    <div class="file" [routerLink]="['/', file.id]" *ngFor="let file of files">
-      <span class="file-name" [title]="file.name">{{ file.name }}</span>
-    </div>
-    <div class="create-file" (click)="createFile()">
-      <fa-icon [icon]="icons.faPlus"></fa-icon>
+<mat-progress-bar *ngIf="loading$ | async; else loaded" mode="indeterminate"></mat-progress-bar>
+<ng-template #loaded>
+  <div class="files" *ngIf="files$ | async as files; else noFiles">
+    <div class="grid" *ngIf="files.length; else noFiles">
+      <mat-card matRipple class="file mat-elevation-z3" [routerLink]="['/', file.id]" *ngFor="let file of files">
+        <span class="file-name" [title]="file.name">{{ file.name }}</span>
+      </mat-card>
+      <div class="create-file" (click)="createFile()">
+        <fa-icon [icon]="icons.faPlus"></fa-icon>
+      </div>
     </div>
   </div>
-</div>
+</ng-template>
 <ng-template #noFiles>
   <div class="no-files">
     <p>Can not load files.</p>
