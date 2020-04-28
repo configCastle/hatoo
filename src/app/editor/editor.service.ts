@@ -11,7 +11,7 @@ import { SavingService } from './sving.service';
 
 @Injectable()
 export class EditorService {
-  
+
   private readonly _fileSubject = new ReplaySubject<IConfigFile<IKeyValue<string>[]> | undefined>(1);
   private _file;
   private readonly _zeroElement: IKeyValue<string> = {
@@ -46,10 +46,13 @@ export class EditorService {
         });
         return { ...e, data }
       })
-    ).subscribe((e: IConfigFile<IKeyValue<string>[]> | undefined) => {
-      this._file = e;
-      this._fileSubject.next(e);
-    })
+    ).subscribe(
+      (e: IConfigFile<IKeyValue<string>[]> | undefined) => {
+        this._file = e;
+        this._fileSubject.next(e);
+      },
+      () => this._fileSubject.next(undefined)
+    )
   }
 
   changeFileData(changes: IChangeList) {

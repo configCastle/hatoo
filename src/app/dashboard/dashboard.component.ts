@@ -14,21 +14,27 @@ import { CreateFileFormComponent } from './add-file-form/create-file-form.compon
 export class DashboardComponent {
   private readonly _loadingSbject = new BehaviorSubject<boolean>(true);
   private readonly _filesSubject = new BehaviorSubject<IConfigFile<string>[]>([]);
-  
+
   loading$: Observable<boolean>;
   icons = { faPlus, faTimes };
   files$: Observable<IConfigFile<string>[]>;
-  
+
   constructor(
     private _filesService: FilesService,
     private _bottomSheet: MatBottomSheet
-    ) {
+  ) {
     this.loading$ = this._loadingSbject.asObservable();
     this.files$ = this._filesSubject.asObservable();
-    _filesService.getFiles$().subscribe(e => {
-      this._loadingSbject.next(false);
-      this._filesSubject.next(e);
-    });
+    _filesService.getFiles$().subscribe(
+      e => {
+        this._loadingSbject.next(false);
+        this._filesSubject.next(e);
+      },
+      err => {
+        console.log('Ощибочка хэз акьюред');
+        this._loadingSbject.next(false);
+      }
+    );
   }
 
   createFile() {
@@ -47,6 +53,6 @@ export class DashboardComponent {
             this._filesSubject.next(this._filesSubject.value);
           })
       })
-    
+
   }
 }

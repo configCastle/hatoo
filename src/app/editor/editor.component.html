@@ -1,16 +1,17 @@
-<ng-container *ngIf="loading$ | async; else loaded">
-  <p>Загрузка...</p>
-</ng-container>
+<mat-progress-bar *ngIf="loading$ | async; else loaded" mode="indeterminate"></mat-progress-bar>
 <ng-template #loaded>
   <ng-container *ngIf="file$ | async as file; else noFile">
     <div class="editor-layout">
       <div class="tools">
-        
+
         <div class="saving-status">
-          <fa-icon matTooltip="Изменения сохранены" class="saved" *ngIf="saved$ | async; else unsaved" [icon]="icons.faCheckCircle"></fa-icon>
+          <fa-icon matTooltip="Изменения сохранены" class="saved" *ngIf="saved$ | async; else unsaved"
+            [icon]="icons.faCheckCircle"></fa-icon>
           <ng-template #unsaved>
-            <fa-icon *ngIf="autosave" matTooltip="Сохранения изменений" class="unsaved" [icon]="icons.faCloudUploadAlt"></fa-icon>
-            <fa-icon *ngIf="!autosave" matTooltip="Изменения не сохранены" class="manually-saving" [icon]="icons.faCloud"></fa-icon>
+            <fa-icon *ngIf="autosave" matTooltip="Сохранения изменений" class="unsaved" [icon]="icons.faCloudUploadAlt">
+            </fa-icon>
+            <fa-icon *ngIf="!autosave" matTooltip="Изменения не сохранены" class="manually-saving"
+              [icon]="icons.faCloud"></fa-icon>
           </ng-template>
         </div>
 

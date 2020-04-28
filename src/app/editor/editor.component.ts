@@ -33,30 +33,33 @@ export class EditorComponent {
     private _editorService: EditorService,
     _activatedRoute: ActivatedRoute
   ) {
-    this.textEditorWidth = window.innerWidth * 0.4 - 10;
-
     this.loading$ = this._loadingSbject.asObservable();
     this.saved$ = this._savedSubject.asObservable();
+    this.file$ = _editorService.file$;
+    
+    this.textEditorWidth = window.innerWidth * 0.4 - 10;
 
     const fileId = +_activatedRoute.snapshot.params.file;
-    this.file$ = _editorService.file$
-      .pipe(
-        tap(() => this._loadingSbject.next(false))
-      );
+    this.file$.pipe(
+      tap(() => this._loadingSbject.next(false))
+    ).subscribe();
     _editorService.selectFile(fileId);
 
     this.file$.pipe(
       skip(1),
       tap(() => this._savedSubject.next(false)),
-      filter(e => this.autosave),
+      filter(() => this.autosave),
       sampleTime(1000)
-    ).subscribe(e => {
-      _editorService.saveFileData(e)
-        .subscribe(e => {
-          console.log('Saved');
-          this._savedSubject.next(true);
-        });
-    });
+    ).subscribe(
+      e => {
+        _editorService.saveFileData(e)
+          .subscribe(e => {
+            console.log('Saved');
+            this._savedSubject.next(true);
+          });
+      },
+      () => this._loadingSbject.next(false)
+    );
   }
 
   save(event: MouseEvent) {

@@ -8,11 +8,15 @@
 }
 
 .file {
-  border: 1px solid $outline-color;
-  border-radius: 4px;
-  padding: 10px;
-  box-sizing: border-box;
+  // border: 1px solid $outline-color;
+  // border-radius: 4px;
+  // padding: 10px;
+  // box-sizing: border-box;
   cursor: pointer;
+
+  &:focus {
+    outline: none
+  }
   
   .file-name {
     // font-family: 'Courier New', Courier, monospace;
