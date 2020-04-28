@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import { MatInputModule, MatButtonModule, MatMenuModule } from '@angular/material';
+import { MatInputModule, MatButtonModule, MatMenuModule, MatTooltipModule, MatCheckboxModule } from '@angular/material';
 import { MatSelectModule } from '@angular/material';
 import { MatBottomSheetModule } from '@angular/material';
 import { CommonModule } from '@angular/common';
@@ -17,7 +17,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     MatSelectModule,
     MatBottomSheetModule,
     MatButtonModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    MatTooltipModule,
+    MatCheckboxModule
   ],
   exports: [
     CommonModule,
@@ -27,7 +29,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     MatSelectModule,
     MatBottomSheetModule,
     MatButtonModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    MatTooltipModule,
+    MatCheckboxModule
   ],
   providers: [DataService]
 })

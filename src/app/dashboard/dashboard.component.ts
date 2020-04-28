@@ -12,16 +12,23 @@ import { CreateFileFormComponent } from './add-file-form/create-file-form.compon
   styleUrls: ['dashboard.component.scss']
 })
 export class DashboardComponent {
+  private readonly _loadingSbject = new BehaviorSubject<boolean>(true);
   private readonly _filesSubject = new BehaviorSubject<IConfigFile<string>[]>([]);
+  
+  loading$: Observable<boolean>;
   icons = { faPlus, faTimes };
   files$: Observable<IConfigFile<string>[]>;
   
   constructor(
     private _filesService: FilesService,
     private _bottomSheet: MatBottomSheet
-  ) {
+    ) {
+    this.loading$ = this._loadingSbject.asObservable();
     this.files$ = this._filesSubject.asObservable();
-    _filesService.getFiles$().subscribe(e => this._filesSubject.next(e));
+    _filesService.getFiles$().subscribe(e => {
+      this._loadingSbject.next(false);
+      this._filesSubject.next(e);
+    });
   }
 
   createFile() {

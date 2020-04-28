@@ -4,6 +4,25 @@
 <ng-template #loaded>
   <ng-container *ngIf="file$ | async as file; else noFile">
     <div class="editor-layout">
+      <div class="tools">
+        
+        <div class="saving-status">
+          <fa-icon matTooltip="Изменения сохранены" class="saved" *ngIf="saved$ | async; else unsaved" [icon]="icons.faCheckCircle"></fa-icon>
+          <ng-template #unsaved>
+            <fa-icon *ngIf="autosave" matTooltip="Сохранения изменений" class="unsaved" [icon]="icons.faCloudUploadAlt"></fa-icon>
+            <fa-icon *ngIf="!autosave" matTooltip="Изменения не сохранены" class="manually-saving" [icon]="icons.faCloud"></fa-icon>
+          </ng-template>
+        </div>
+
+        <div class="autosave">
+          <mat-checkbox matTooltip="Автосохранение" [(ngModel)]="autosave"></mat-checkbox>
+        </div>
+
+        <div class="save">
+          <a href="" (click)="save($event)" [class.disabled]="saved$ | async">Сохранить</a>
+        </div>
+
+      </div>
       <h2 class="file-name">{{ file.name }}</h2>
       <div class="grid-wrapper">
         <div class="grid">

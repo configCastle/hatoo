@@ -1,6 +1,6 @@
 import { Component, Inject } from "@angular/core";
 import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material';
-import { IDCService } from '../services.service';
+import { IDCService } from '../../services.service';
 
 @Component({
   selector: 'dc-services-select-sheet',

@@ -1,7 +1,41 @@
+@import "~src/variables";
+
 .editor-layout {
   height: 100%;
   display: flex;
   flex-direction: column;
+}
+
+.tools {
+  display: flex;
+  background-color: $outline-color;
+  padding: 10px 15px;
+
+  > div:not(:last-child) {
+    margin-right: 20px;
+  }
+
+  .saving-status {
+    .saved {
+      color: $success;
+    }
+    .unsaved {
+      color: $warning;
+    }
+    .manually-saving {
+      color: $error;
+    }
+  }
+
+  .save {
+    a {
+      &.disabled {
+        pointer-events: none;
+        cursor: default;
+        opacity: 0.5;
+      }
+    }
+  }
 }
 
 .file-name {
@@ -22,15 +56,15 @@
   height: 100%;
   padding: 0 15px;
 
-	.graphic-editor {
+  .graphic-editor {
     height: 98%;
     overflow: auto;
     flex-basis: 60%;
     margin-right: 10px;
-	}
-  
-	.text-editor {
+  }
+
+  .text-editor {
     height: 100%;
-		flex-basis: 40%;
-	}
+    flex-basis: 40%;
+  }
 }
