@@ -2,25 +2,39 @@
 <ng-template #loaded>
   <ng-container *ngIf="file$ | async as file; else noFile">
     <div class="editor-layout">
-      <div class="tools">
+      <div class="tools mat-elevation-z3">
+        <div class="left">
+          <div class="tools-item saving-status">
+            <fa-icon matTooltip="Изменения сохранены" class="saved" *ngIf="saved$ | async; else unsaved"
+              [icon]="icons.faCheckCircle"></fa-icon>
+            <ng-template #unsaved>
+              <fa-icon *ngIf="autosave" matTooltip="Сохранения изменений" class="unsaved"
+                [icon]="icons.faCloudUploadAlt">
+              </fa-icon>
+              <fa-icon *ngIf="!autosave" matTooltip="Изменения не сохранены" class="manually-saving"
+                [icon]="icons.faCloud"></fa-icon>
+            </ng-template>
+          </div>
 
-        <div class="saving-status">
-          <fa-icon matTooltip="Изменения сохранены" class="saved" *ngIf="saved$ | async; else unsaved"
-            [icon]="icons.faCheckCircle"></fa-icon>
-          <ng-template #unsaved>
-            <fa-icon *ngIf="autosave" matTooltip="Сохранения изменений" class="unsaved" [icon]="icons.faCloudUploadAlt">
-            </fa-icon>
-            <fa-icon *ngIf="!autosave" matTooltip="Изменения не сохранены" class="manually-saving"
-              [icon]="icons.faCloud"></fa-icon>
-          </ng-template>
+          <div class="tools-item autosave">
+            <mat-checkbox matTooltip="Автосохранение" [(ngModel)]="autosave"></mat-checkbox>
+          </div>
+
+          <div class="tools-item save">
+            <a href="" (click)="save($event)" class="tools-link" [class.disabled]="saved$ | async">
+              <fa-icon [icon]="icons.faSave"></fa-icon>
+              Сохранить
+            </a>
+          </div>
         </div>
 
-        <div class="autosave">
-          <mat-checkbox matTooltip="Автосохранение" [(ngModel)]="autosave"></mat-checkbox>
-        </div>
-
-        <div class="save">
-          <a href="" (click)="save($event)" [class.disabled]="saved$ | async">Сохранить</a>
+        <div class="right">
+          <div class="tools-item download">
+            <a href="" (click)="downloadFile($event)" class="tools-link">
+              <fa-icon [icon]="icons.faDownload"></fa-icon>
+              Скачать
+            </a>
+          </div>
         </div>
 
       </div>

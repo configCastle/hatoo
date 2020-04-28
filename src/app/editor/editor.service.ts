@@ -1,13 +1,14 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { IConfigFile, IKeyValue } from 'src/app/sets-service/sets.service';
-import { Observable, ReplaySubject, BehaviorSubject } from 'rxjs';
-import { map, debounceTime, tap, skip } from 'rxjs/operators';
+import { Observable, ReplaySubject } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { IChangeList, ChangeType } from './docker-compose/graphic-editor/editor-form/editor-form.component';
 import { ModelParserService } from '../Parser/ModelParser/model-parser.service';
 import { FilesService } from '../files-service/files.service';
 import { DCMetaDataService } from './docker-compose/dc-meta-data.service';
-import { IUpdateFileData } from '../data-service/data.service';
 import { SavingService } from './sving.service';
+import { YAMLParserService } from '../Parser/YAMLParser/yaml-parser.service';
+import { DOCUMENT } from '@angular/common';
 
 @Injectable()
 export class EditorService {
@@ -26,7 +27,9 @@ export class EditorService {
     private _filesService: FilesService,
     private _metaDataService: DCMetaDataService,
     private _modelParser: ModelParserService,
-    private _savingService: SavingService
+    private _savingService: SavingService,
+    private _yamlParsr: YAMLParserService,
+    @Inject(DOCUMENT) private _document: Document
   ) {
     this.file$ = this._fileSubject.asObservable();
   }
@@ -140,6 +143,35 @@ export class EditorService {
     this._file = file;
     this._file.data.forEach(e => this._metaDataService.setMetaData(e));
     this._fileSubject.next(file);
+  }
+
+  downloadFile(file: IConfigFile<IKeyValue<string>[]>) {
+    const fileData = file.data;
+    const plainObjectData = this._modelParser.modelToPlainObject(fileData);
+    const stringData = this._yamlParsr.objectToYAML(plainObjectData);
+    const blobData = new Blob([stringData], { type: 'text/x-yaml' });
+
+    const extension = '.yaml';
+    let filename =  file.name;
+    const index = filename.lastIndexOf(extension)
+    if (index < 0 || index !== (filename.length - extension.length)) {
+      filename += extension;
+    }
+
+    if (window.navigator.msSaveOrOpenBlob) // IE10+
+      window.navigator.msSaveOrOpenBlob(blobData, filename);
+    else {
+      const link = this._document.createElement("a");
+      const url = URL.createObjectURL(blobData);
+      link.href = url;
+      link.download = filename;
+      this._document.body.appendChild(link);
+      link.click();
+      setTimeout(() => {
+        this._document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      }, 0);
+    }
   }
 
 }

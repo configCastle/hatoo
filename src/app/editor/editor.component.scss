@@ -8,14 +8,24 @@
 
 .tools {
   display: flex;
-  background-color: $outline-color;
+  justify-content: space-between;
+  align-items: center;
   padding: 10px 15px;
 
-  > div:not(:last-child) {
-    margin-right: 20px;
+  .left {
+    display: flex;
+  }
+  .right {
+    display: flex;
+  }
+
+  .tools-item:not(:last-child) {
+    margin-right: 15px;
   }
 
   .saving-status {
+    width: 20px;
+
     .saved {
       color: $success;
     }
@@ -27,20 +37,28 @@
     }
   }
 
-  .save {
-    a {
-      &.disabled {
-        pointer-events: none;
-        cursor: default;
-        opacity: 0.5;
-      }
+  .autosave {
+    margin-top: -2px;
+  }
+
+  .tools-link {
+    font-size: .9rem;
+    padding: 1px 7px;
+    border: 1px solid $outline-color;
+    border-radius: 2px;
+
+    &.disabled {
+      pointer-events: none;
+      cursor: default;
+      opacity: 0.5;
     }
   }
+
 }
 
 .file-name {
   margin: 0;
-  padding: 30px 15px 20px 15px;
+  padding: 20px 15px;
 }
 
 .grid-wrapper {

@@ -4,7 +4,7 @@ import { Observable, observable, BehaviorSubject } from 'rxjs';
 import { map, tap, take, skip, debounceTime, sampleTime, filter, switchMap } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { IConfigFile, IKeyValue } from '../sets-service/sets.service';
-import { faCloudUploadAlt, faCheckCircle, faCloud } from '@fortawesome/free-solid-svg-icons';
+import { faCloudUploadAlt, faCheckCircle, faCloud, faSave, faDownload } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-editor',
@@ -21,7 +21,9 @@ export class EditorComponent {
   icons = {
     faCloudUploadAlt,
     faCloud,
-    faCheckCircle
+    faCheckCircle,
+    faSave,
+    faDownload
   }
   autosave = true;
   loading$: Observable<boolean>;
@@ -36,7 +38,7 @@ export class EditorComponent {
     this.loading$ = this._loadingSbject.asObservable();
     this.saved$ = this._savedSubject.asObservable();
     this.file$ = _editorService.file$;
-    
+
     this.textEditorWidth = window.innerWidth * 0.4 - 10;
 
     const fileId = +_activatedRoute.snapshot.params.file;
@@ -60,6 +62,13 @@ export class EditorComponent {
       },
       () => this._loadingSbject.next(false)
     );
+  }
+
+  downloadFile(event: MouseEvent) {
+    event.preventDefault();
+    this.file$.pipe(take(1)).subscribe(e => {
+      this._editorService.downloadFile(e);
+    });
   }
 
   save(event: MouseEvent) {

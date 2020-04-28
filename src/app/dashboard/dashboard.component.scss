@@ -34,17 +34,17 @@
 }
 
 .create-file {
-  border: 1px dashed transparentize($outline-color, .5);
+  background-color: transparentize($outline-color, .5);
   color: transparentize($font-color, .5);
   border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  padding: 20px;
+  padding: 26px;
   
   &:hover {
     color: $font-color;
-    border-color: $outline-color;
+    background-color: $outline-color;
   }
 }
