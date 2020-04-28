@@ -7,3 +7,8 @@ $background: map-get($mat-grey, 800);
 $accent: map-get($mat-pink, 500);
 $font-color: map-get($mat-grey, 100);
 $outline-color: map-get($mat-grey, 700);
+
+$error: map-get($mat-deep-orange, 500);
+$warning: map-get($mat-amber, 500);
+$info: map-get($mat-grey, 800);
+$success: map-get($mat-light-green, 500);

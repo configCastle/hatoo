@@ -1,12 +1,64 @@
+@import "~src/variables";
+
 .editor-layout {
   height: 100%;
   display: flex;
   flex-direction: column;
 }
 
+.tools {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+
+  .left {
+    display: flex;
+  }
+  .right {
+    display: flex;
+  }
+
+  .tools-item:not(:last-child) {
+    margin-right: 15px;
+  }
+
+  .saving-status {
+    width: 20px;
+
+    .saved {
+      color: $success;
+    }
+    .unsaved {
+      color: $warning;
+    }
+    .manually-saving {
+      color: $error;
+    }
+  }
+
+  .autosave {
+    margin-top: -2px;
+  }
+
+  .tools-link {
+    font-size: .9rem;
+    padding: 1px 7px;
+    border: 1px solid $outline-color;
+    border-radius: 2px;
+
+    &.disabled {
+      pointer-events: none;
+      cursor: default;
+      opacity: 0.5;
+    }
+  }
+
+}
+
 .file-name {
   margin: 0;
-  padding: 30px 15px 20px 15px;
+  padding: 20px 15px;
 }
 
 .grid-wrapper {
@@ -22,15 +74,15 @@
   height: 100%;
   padding: 0 15px;
 
-	.graphic-editor {
+  .graphic-editor {
     height: 98%;
     overflow: auto;
     flex-basis: 60%;
     margin-right: 10px;
-	}
-  
-	.text-editor {
+  }
+
+  .text-editor {
     height: 100%;
-		flex-basis: 40%;
-	}
+    flex-basis: 40%;
+  }
 }
