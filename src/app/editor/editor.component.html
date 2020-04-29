@@ -29,6 +29,12 @@
         </div>
 
         <div class="right">
+          <div class="tools-item remove">
+            <a href="" (click)="removeFile($event)" class="tools-link">
+              <fa-icon [icon]="icons.faTrashAlt"></fa-icon>
+              Удалить файл
+            </a>
+          </div>
           <div class="tools-item download">
             <a href="" (click)="downloadFile($event)" class="tools-link">
               <fa-icon [icon]="icons.faDownload"></fa-icon>

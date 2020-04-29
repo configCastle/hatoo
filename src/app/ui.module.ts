@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import { MatInputModule, MatButtonModule, MatTooltipModule, MatCheckboxModule, MatProgressBarModule, MatRippleModule } from '@angular/material';
+import { MatInputModule, MatButtonModule, MatTooltipModule, MatCheckboxModule, MatProgressBarModule, MatRippleModule, MatSnackBarModule } from '@angular/material';
 import { MatSelectModule } from '@angular/material';
 import { MatBottomSheetModule } from '@angular/material';
 import { CommonModule } from '@angular/common';
@@ -21,7 +21,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     MatTooltipModule,
     MatCheckboxModule,
     MatProgressBarModule,
-    MatRippleModule
+    MatRippleModule,
+    MatSnackBarModule
   ],
   exports: [
     CommonModule,
@@ -35,7 +36,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     MatTooltipModule,
     MatCheckboxModule,
     MatProgressBarModule,
-    MatRippleModule
+    MatRippleModule,
+    MatSnackBarModule
   ],
   providers: [DataService]
 })

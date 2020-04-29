@@ -34,8 +34,12 @@ export class EditorService {
     this.file$ = this._fileSubject.asObservable();
   }
 
-  saveFileData(file: IConfigFile<IKeyValue<string>[]>): Observable<IConfigFile<string>> {
-    return this._savingService.saveFileData(file);
+  saveFileData$(file: IConfigFile<IKeyValue<string>[]>): Observable<IConfigFile<string>> {
+    return this._savingService.saveFileData$(file);
+  }
+
+  removeFile$(id: number): Observable<IConfigFile<string>> {
+    return this._filesService.removeFile$(id);
   }
 
   selectFile(id: number) {
@@ -150,14 +154,7 @@ export class EditorService {
     const plainObjectData = this._modelParser.modelToPlainObject(fileData);
     const stringData = this._yamlParsr.objectToYAML(plainObjectData);
     const blobData = new Blob([stringData], { type: 'text/x-yaml' });
-
-    const extension = '.yaml';
-    let filename =  file.name;
-    const index = filename.lastIndexOf(extension)
-    if (index < 0 || index !== (filename.length - extension.length)) {
-      filename += extension;
-    }
-
+    let filename = 'docker-compose.yaml';
     if (window.navigator.msSaveOrOpenBlob) // IE10+
       window.navigator.msSaveOrOpenBlob(blobData, filename);
     else {

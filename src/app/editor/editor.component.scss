@@ -12,6 +12,19 @@
   align-items: center;
   padding: 10px 15px;
 
+  .tools-link {
+    font-size: .9rem;
+    padding: 1px 7px;
+    border: 1px solid $outline-color;
+    border-radius: 2px;
+
+    &.disabled {
+      pointer-events: none;
+      cursor: default;
+      opacity: 0.5;
+    }
+  }
+
   .left {
     display: flex;
   }
@@ -41,16 +54,10 @@
     margin-top: -2px;
   }
 
-  .tools-link {
-    font-size: .9rem;
-    padding: 1px 7px;
-    border: 1px solid $outline-color;
-    border-radius: 2px;
-
-    &.disabled {
-      pointer-events: none;
-      cursor: default;
-      opacity: 0.5;
+  .remove {
+    .tools-link {
+      color: $error;
+      border-color: $error;
     }
   }
 
