@@ -91,11 +91,7 @@ export class DataService {
           data: result
         });
       }
-    }).pipe(
-      tap(e => {
-        console.log(e);
-      })
-    );
+    })
   }
 
 }

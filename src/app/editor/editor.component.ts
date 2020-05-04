@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IConfigFile, IKeyValue } from '../sets-service/sets.service';
 import { faCloudUploadAlt, faCheckCircle, faCloud, faSave, faDownload, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { MatSnackBar, MatBottomSheet } from '@angular/material';
+import { DeleteFileConfirmComponent } from './delete-confirm/delete-file-confirm.component';
 
 @Component({
   selector: 'app-editor',
@@ -90,7 +91,7 @@ export class EditorComponent {
         this._savedSubject.next(true);
       },
       err => {
-        this._snackBar.open('Не удалось созранить изменения', null, { duration: 2000 });
+        this._snackBar.open('Не удалось сохранить изменения', null, { duration: 2000 });
         this._savedSubject.next(false);
       }
     );
@@ -100,11 +101,23 @@ export class EditorComponent {
     event.preventDefault();
     this.file$.pipe(
       take(1),
-      switchMap(e => this._editorService.removeFile$(e.id))
+      switchMap(file => {
+        return this._bottomSheetService.open(DeleteFileConfirmComponent)
+          .afterDismissed()
+          .pipe(
+            switchMap(e => {
+              if (e) {
+                return this._editorService.removeFile$(file.id);
+              }
+            })
+          )
+      })
     ).subscribe(
       e => {
-        this._snackBar.open('Файл удалён', null, { duration: 2000 });
-        this._router.navigate(['/']);
+        if (e) {
+          this._snackBar.open('Файл удалён', null, { duration: 2000 });
+          this._router.navigate(['/']);
+        }
       },
       err => {
         this._snackBar.open('Не удалось удалить файл', null, { duration: 2000 });

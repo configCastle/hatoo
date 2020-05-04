@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@angular/core';
 import { IConfigFile, IKeyValue } from 'src/app/sets-service/sets.service';
-import { Observable, ReplaySubject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, ReplaySubject, throwError } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { IChangeList, ChangeType } from './docker-compose/graphic-editor/editor-form/editor-form.component';
 import { ModelParserService } from '../Parser/ModelParser/model-parser.service';
 import { FilesService } from '../files-service/files.service';
@@ -9,6 +9,8 @@ import { DCMetaDataService } from './docker-compose/dc-meta-data.service';
 import { SavingService } from './sving.service';
 import { YAMLParserService } from '../Parser/YAMLParser/yaml-parser.service';
 import { DOCUMENT } from '@angular/common';
+import { MatBottomSheet } from '@angular/material';
+import { DeleteFileConfirmComponent } from './delete-confirm/delete-file-confirm.component';
 
 @Injectable()
 export class EditorService {
@@ -24,12 +26,12 @@ export class EditorService {
   file$: Observable<IConfigFile<IKeyValue<string>[]> | undefined>;
 
   constructor(
+    @Inject(DOCUMENT) private _document: Document,
     private _filesService: FilesService,
     private _metaDataService: DCMetaDataService,
     private _modelParser: ModelParserService,
     private _savingService: SavingService,
-    private _yamlParsr: YAMLParserService,
-    @Inject(DOCUMENT) private _document: Document
+    private _yamlParsr: YAMLParserService
   ) {
     this.file$ = this._fileSubject.asObservable();
   }
@@ -40,6 +42,7 @@ export class EditorService {
 
   removeFile$(id: number): Observable<IConfigFile<string>> {
     return this._filesService.removeFile$(id);
+    
   }
 
   selectFile(id: number) {
@@ -155,6 +158,7 @@ export class EditorService {
     const stringData = this._yamlParsr.objectToYAML(plainObjectData);
     const blobData = new Blob([stringData], { type: 'text/x-yaml' });
     let filename = 'docker-compose.yaml';
+
     if (window.navigator.msSaveOrOpenBlob) // IE10+
       window.navigator.msSaveOrOpenBlob(blobData, filename);
     else {
