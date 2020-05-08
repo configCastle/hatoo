@@ -8,6 +8,7 @@ import { EditorService } from './editor.service';
 import { TextEditorService } from './text-editor.service';
 import { GraphicEditorService } from './graphic-editor.service';
 import { DockerComposeModule } from './docker-compose/docker-compose.module';
+import { DeleteFileConfirmComponent } from './delete-confirm/delete-file-confirm.component';
 
 @NgModule({
   imports: [
@@ -16,7 +17,11 @@ import { DockerComposeModule } from './docker-compose/docker-compose.module';
     UIModule,
   ],
   declarations: [
-    EditorComponent
+    EditorComponent,
+    DeleteFileConfirmComponent
+  ],
+  entryComponents: [
+    DeleteFileConfirmComponent
   ],
   providers: [
     YAMLParserService,

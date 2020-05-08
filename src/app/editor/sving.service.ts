@@ -14,7 +14,7 @@ export interface IPlainKeyValue {
 export class SavingService {
   constructor(private _filesService: FilesService) { }
 
-  saveFileData(file: IConfigFile<IKeyValue<string>[]>): Observable<IConfigFile<string>> {
+  saveFileData$(file: IConfigFile<IKeyValue<string>[]>): Observable<IConfigFile<string>> {
     const plainKeyValue = this.removeMetaData(file.data);
     const preparedData = JSON.stringify(plainKeyValue);
     const updateData: IUpdateFileData = {
