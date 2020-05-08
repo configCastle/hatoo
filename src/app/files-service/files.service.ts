@@ -35,5 +35,12 @@ export class FilesService {
       map(e => e.data.updateFile)
     )
   }
+  
+  removeFile$(id: number): Observable<IConfigFile<string>> {
+    return this._dataService.deleteFile$(+id).pipe(
+      take(1),
+      map(e => e.data.deleteFile)
+    )
+  }
 
 }

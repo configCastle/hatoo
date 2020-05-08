@@ -2,9 +2,11 @@ import { Component, HostListener } from '@angular/core';
 import { EditorService } from './editor.service';
 import { Observable, observable, BehaviorSubject } from 'rxjs';
 import { map, tap, take, skip, debounceTime, sampleTime, filter, switchMap } from 'rxjs/operators';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IConfigFile, IKeyValue } from '../sets-service/sets.service';
-import { faCloudUploadAlt, faCheckCircle, faCloud, faSave, faDownload } from '@fortawesome/free-solid-svg-icons';
+import { faCloudUploadAlt, faCheckCircle, faCloud, faSave, faDownload, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { MatSnackBar, MatBottomSheet } from '@angular/material';
+import { DeleteFileConfirmComponent } from './delete-confirm/delete-file-confirm.component';
 
 @Component({
   selector: 'app-editor',
@@ -23,7 +25,8 @@ export class EditorComponent {
     faCloud,
     faCheckCircle,
     faSave,
-    faDownload
+    faDownload,
+    faTrashAlt
   }
   autosave = true;
   loading$: Observable<boolean>;
@@ -33,7 +36,10 @@ export class EditorComponent {
 
   constructor(
     private _editorService: EditorService,
-    _activatedRoute: ActivatedRoute
+    _activatedRoute: ActivatedRoute,
+    private _router: Router,
+    private _snackBar: MatSnackBar,
+    private _bottomSheetService: MatBottomSheet
   ) {
     this.loading$ = this._loadingSbject.asObservable();
     this.saved$ = this._savedSubject.asObservable();
@@ -54,13 +60,16 @@ export class EditorComponent {
       sampleTime(1000)
     ).subscribe(
       e => {
-        _editorService.saveFileData(e)
+        _editorService.saveFileData$(e)
           .subscribe(e => {
             console.log('Saved');
             this._savedSubject.next(true);
           });
       },
-      () => this._loadingSbject.next(false)
+      err => {
+        this._snackBar.open('Не удалось автоматически сохранить изменения', null, { duration: 2000 });
+        this._loadingSbject.next(false)
+      }
     );
   }
 
@@ -75,11 +84,45 @@ export class EditorComponent {
     event.preventDefault();
     this.file$.pipe(
       take(1),
-      switchMap(e => this._editorService.saveFileData(e))
-    ).subscribe(e => {
-      console.log('Saved');
-      this._savedSubject.next(true);
-    });
+      switchMap(e => this._editorService.saveFileData$(e))
+    ).subscribe(
+      e => {
+        this._snackBar.open('Изменения сохранены', null, { duration: 2000 });
+        this._savedSubject.next(true);
+      },
+      err => {
+        this._snackBar.open('Не удалось сохранить изменения', null, { duration: 2000 });
+        this._savedSubject.next(false);
+      }
+    );
+  }
+
+  removeFile(event: MouseEvent) {
+    event.preventDefault();
+    this.file$.pipe(
+      take(1),
+      switchMap(file => {
+        return this._bottomSheetService.open(DeleteFileConfirmComponent)
+          .afterDismissed()
+          .pipe(
+            switchMap(e => {
+              if (e) {
+                return this._editorService.removeFile$(file.id);
+              }
+            })
+          )
+      })
+    ).subscribe(
+      e => {
+        if (e) {
+          this._snackBar.open('Файл удалён', null, { duration: 2000 });
+          this._router.navigate(['/']);
+        }
+      },
+      err => {
+        this._snackBar.open('Не удалось удалить файл', null, { duration: 2000 });
+      }
+    );
   }
 
 }

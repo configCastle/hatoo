@@ -3,8 +3,9 @@ import { IConfigFile } from '../sets-service/sets.service';
 import { FilesService } from '../files-service/files.service';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { MatBottomSheet } from '@angular/material';
+import { MatBottomSheet, MatSnackBar } from '@angular/material';
 import { CreateFileFormComponent } from './add-file-form/create-file-form.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,17 +22,20 @@ export class DashboardComponent {
 
   constructor(
     private _filesService: FilesService,
-    private _bottomSheet: MatBottomSheet
+    private _bottomSheet: MatBottomSheet,
+    private _snackBar: MatSnackBar,
+    private _router: Router
   ) {
     this.loading$ = this._loadingSbject.asObservable();
     this.files$ = this._filesSubject.asObservable();
     _filesService.getFiles$().subscribe(
       e => {
+        this._snackBar.open('Список файлов обновлён', null, { duration: 2000 });
         this._loadingSbject.next(false);
         this._filesSubject.next(e);
       },
       err => {
-        console.log('Ощибочка хэз акьюред');
+        this._snackBar.open('Не удалось загрузить файлы', null, { duration: 2000 });
         this._loadingSbject.next(false);
       }
     );
@@ -47,11 +51,18 @@ export class DashboardComponent {
           configType: 'DOCKER_COMPOSE',
           data: '[]'
         })
-          .subscribe(e => {
-            if (e == null) { return; }
-            this._filesSubject.value.push(e);
-            this._filesSubject.next(this._filesSubject.value);
-          })
+          .subscribe(
+            e => {
+              if (e == null) {
+                this._snackBar.open('Не удалось создать файл', null, { duration: 2000 });
+              } else {
+                this._router.navigate(['/', e.id])
+              }
+            },
+            err => {
+              this._snackBar.open('Не удалось создать файл', null, { duration: 2000 });
+            }
+          )
       })
 
   }
