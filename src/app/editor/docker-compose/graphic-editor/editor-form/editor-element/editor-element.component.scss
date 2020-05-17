@@ -6,6 +6,7 @@
   font-size: 12px;
   padding-bottom: 5px;
   position: relative;
+  white-space: nowrap;
   
   &:hover {
     border-left-color: $accent;
@@ -18,7 +19,7 @@
   }
   .mat-form-field-wrapper {
     padding: 3px 0;
-}
+  }
 }
 
 input {
