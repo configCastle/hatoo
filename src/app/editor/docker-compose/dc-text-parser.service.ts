@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { YAMLParserService } from 'src/app/Parser/YAMLParser/yaml-parser.service';
 import { IKeyValue } from 'src/app/sets-service/sets.service';
 import { ModelParserService } from 'src/app/Parser/ModelParser/model-parser.service';
+import { ErrorsService } from '../errors-service/errors.service';
 
 @Injectable({ providedIn: 'root' })
 export class DCTextParserService {
@@ -10,7 +11,8 @@ export class DCTextParserService {
 
   constructor(
     private _yamlParser: YAMLParserService,
-    private _modelParser: ModelParserService
+    private _modelParser: ModelParserService,
+    private _errorsService: ErrorsService
   ) { }
 
   stringToModel(yaml: string): IKeyValue<string>[] {
@@ -18,7 +20,8 @@ export class DCTextParserService {
     try {
       plainObject = this._yamlParser.parse(yaml);
     } catch (err) {
-      console.error('Invalid YAML has been inserted');
+      console.warn('Invalid YAML has been inserted');
+      this._errorsService.showError('Введён невалидный YAML')
       return this._cachedModel;
       // TODO: we must somehow display to user status "INVALID"
     }
@@ -28,6 +31,7 @@ export class DCTextParserService {
       this._cachedModel = result;
       return result;
     } else {
+      this._errorsService.showError('Некорректный ввод')
       return this._cachedModel;
     }
   }
