@@ -9,6 +9,7 @@ import { TextEditorService } from './text-editor.service';
 import { GraphicEditorService } from './graphic-editor.service';
 import { DockerComposeModule } from './docker-compose/docker-compose.module';
 import { DeleteFileConfirmComponent } from './delete-confirm/delete-file-confirm.component';
+import { ErrorsService } from './errors-service/errors.service';
 
 @NgModule({
   imports: [
@@ -28,7 +29,8 @@ import { DeleteFileConfirmComponent } from './delete-confirm/delete-file-confirm
     FormGroupParserService,
     EditorService,
     GraphicEditorService,
-    TextEditorService
+    TextEditorService,
+    ErrorsService
   ]
 })
 export class EditorModule { }
