@@ -1,6 +1,26 @@
 @import "@angular/material/prebuilt-themes/pink-bluegrey.css";
 @import './variables';
 
+*::-webkit-scrollbar-track {
+  border-radius: 2px;
+  background-color: transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+  background-color: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 2px;
+  background-color: $outline-color;
+}
+
+*::-webkit-scrollbar-corner {
+  background-color: transparentize($outline-color, .5);
+}
+
 html,
 body {
   overflow-x: hidden;
