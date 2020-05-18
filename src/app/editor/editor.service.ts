@@ -50,6 +50,9 @@ export class EditorService {
       map(e => {
         if (e == null) { return; }
         const data = JSON.parse(e.data);
+        if (!data.length) {
+          data.push(this._zeroElement)
+        }
         data.forEach((e, i) => {
           this._modelParser.index(e, `_${i}`, null)
           this._metaDataService.setMetaData(e);
