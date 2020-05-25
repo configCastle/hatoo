@@ -14,7 +14,6 @@ import {
   updateFileMutation,
   deleteFileMutation
 } from './queries';
-import { tap } from 'rxjs/operators';
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 type excludedIdAndConfigType<T> = Omit<IConfigFile<T>, 'id' | 'configType'>;
