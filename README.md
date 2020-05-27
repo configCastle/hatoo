@@ -5,7 +5,7 @@ This is a frontend for [configCastle](https://configcastle-82569.firebaseapp.com
 
 To set up locally you need [node.js](https://nodejs.org/) to be installed on your PC. After install do next:
 
-1. Clone the repository from https://github.com/configCastle/hatoo.git
+1. Clone the repository by running `git clone https://github.com/configCastle/hatoo.git`
 2. Run `cd hatoo`
 3. Run `npm install` to install all the dependencies
 
