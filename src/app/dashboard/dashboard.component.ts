@@ -34,7 +34,7 @@ export class DashboardComponent {
         this._loadingSbject.next(false);
         this._filesSubject.next(e);
       },
-      err => {
+      () => {
         this._snackBar.open('Не удалось загрузить файлы', null, { duration: 2000 });
         this._loadingSbject.next(false);
       }
@@ -59,7 +59,7 @@ export class DashboardComponent {
                 this._router.navigate(['/', e.id])
               }
             },
-            err => {
+            () => {
               this._snackBar.open('Не удалось создать файл', null, { duration: 2000 });
             }
           )
