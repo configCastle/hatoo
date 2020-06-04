@@ -8,7 +8,7 @@
             <fa-icon matTooltip="Изменения сохранены" class="saved" *ngIf="saved$ | async; else unsaved"
               [icon]="icons.faCheckCircle"></fa-icon>
             <ng-template #unsaved>
-              <fa-icon *ngIf="autosave" matTooltip="Сохранения изменений" class="unsaved"
+              <fa-icon *ngIf="autosave" matTooltip="Сохранение изменений" class="unsaved"
                 [icon]="icons.faCloudUploadAlt">
               </fa-icon>
               <fa-icon *ngIf="!autosave" matTooltip="Изменения не сохранены" class="manually-saving"
