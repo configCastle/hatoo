@@ -1,0 +1,16 @@
+.logo {
+  height: 37px;
+  display: flex;
+  align-items: flex-end;
+
+  p {
+    margin: 0;
+    margin-left: 10px;
+  }
+}
+
+.header-controls {
+  button:not(:last-child) {
+    margin-right: 10px;
+  }
+}
