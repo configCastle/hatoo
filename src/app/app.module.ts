@@ -10,6 +10,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { SetsService } from './sets-service/sets.service';
 import { FilesService } from './files-service/files.service';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { RESTDataService } from './rest-data-service/rest-data.service';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
   ],
   providers: [
     DataService,
+    RESTDataService,
     SetsService,
     FilesService
   ],

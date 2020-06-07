@@ -1,0 +1,13 @@
+<div [formGroup]="form">
+  <h2>Авторизация</h2>
+  <p class="error" *ngIf="error">{{ error.message }}</p>
+  <mat-form-field>
+    <input mat-input type="text" name="login" formControlName="login" placeholder="Логин">
+  </mat-form-field>
+  <mat-form-field>
+    <input mat-input type="password" name="password" formControlName="password" placeholder="Пароль">
+  </mat-form-field>
+  <div class="controls">
+    <button mat-stroked-button (click)="logIn()">Войти</button>
+  </div>
+</div>

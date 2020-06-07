@@ -1,0 +1,14 @@
+<div [formGroup]="form">
+  <h2>Регистрация</h2>
+  <p class="error" *ngIf="error">{{ error.message }}</p>
+  <mat-form-field>
+    <input mat-input type="text" name="login" formControlName="login" placeholder="Логин" autocomplete="new-password">
+  </mat-form-field>
+  <mat-form-field>
+    <input mat-input type="password" name="password" formControlName="password" placeholder="Пароль"
+      autocomplete="new-password">
+  </mat-form-field>
+  <div class="controls">
+    <button mat-stroked-button (click)="signUp()">Подписаться</button>
+  </div>
+</div>
