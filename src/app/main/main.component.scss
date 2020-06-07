@@ -1,3 +1,5 @@
+@import "src/variables";
+
 .logo {
   height: 37px;
   display: flex;
@@ -13,4 +15,40 @@
   button:not(:last-child) {
     margin-right: 10px;
   }
+}
+
+.grid {
+  padding: 30px 15px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 15px;
+
+  .screenshot-container {
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+
+    img {
+      display: block;
+      width: 100%;
+    }
+
+    .cover {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #00000077;
+      box-sizing: border-box;
+      padding: 15px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+    }
+  }
+}
+
+.hilight {
+  color: $accent;
 }
