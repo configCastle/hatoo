@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
-export class AuthGuard implements CanActivate {
+export class MainPageGuard implements CanActivate {
 
   constructor(
     private _router: Router,
@@ -11,10 +11,10 @@ export class AuthGuard implements CanActivate {
   ) { }
 
   canActivate(): boolean {
-    if (!this._authService.isLoggedIn) {
-      this._router.navigate(['/'])
+    if (this._authService.isLoggedIn) {
+      this._router.navigate(['/dashboard'])
     }
-    return this._authService.isLoggedIn;
+    return !this._authService.isLoggedIn;
   }
   
 }

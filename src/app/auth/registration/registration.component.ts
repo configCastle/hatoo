@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../auth.service';
+import { AuthService, IAuthError } from '../auth.service';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatBottomSheet } from '@angular/material';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-registration',
@@ -10,11 +12,15 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 })
 
 export class RegistrationComponent {
+  private _errorSubject = new Subject<IAuthError | undefined>();
+  
   form: FormGroup;
-  error: any;
+  error$ = this._errorSubject.asObservable();
+  
   constructor(
     private _authService: AuthService,
-    private _router: Router
+    private _router: Router,
+    private _borromSheet: MatBottomSheet
   ) {
     this.form = new FormGroup({
       login: new FormControl('', [Validators.required]),
@@ -29,11 +35,12 @@ export class RegistrationComponent {
         controls.login.value,
         controls.password.value
       ).subscribe(e => {
-        if (e) {
-          this.error = false;
+        if (e === true) {
+          this._errorSubject.next(undefined);
           this._router.navigate(['/dashboard']);
+          this._borromSheet.dismiss();
         } else {
-          this.error = { message: 'Registration error. Please try again.' }
+          this._errorSubject.next(e);
         }
       })
     }

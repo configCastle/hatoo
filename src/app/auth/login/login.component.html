@@ -1,11 +1,13 @@
 <div [formGroup]="form">
   <h2>Авторизация</h2>
-  <p class="error" *ngIf="error">{{ error.message }}</p>
+  <p class="error" *ngIf="error$ | async as error">{{ error.message }}</p>
   <mat-form-field>
-    <input mat-input type="text" name="login" formControlName="login" placeholder="Логин">
+    <mat-label>Логин</mat-label>
+    <input matInput type="text" name="login" formControlName="login">
   </mat-form-field>
   <mat-form-field>
-    <input mat-input type="password" name="password" formControlName="password" placeholder="Пароль">
+    <mat-label>Пароль</mat-label>
+    <input matInput type="password" name="password" formControlName="password">
   </mat-form-field>
   <div class="controls">
     <button mat-stroked-button (click)="logIn()">Войти</button>

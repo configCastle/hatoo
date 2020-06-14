@@ -7,7 +7,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DataService } from './data-service/data.service';
 import { GraphQLModule } from './graphql.module';
 import { HttpClientModule } from '@angular/common/http';
-import { SetsService } from './sets-service/sets.service';
 import { FilesService } from './files-service/files.service';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { RESTDataService } from './rest-data-service/rest-data.service';
@@ -28,7 +27,6 @@ import { RESTDataService } from './rest-data-service/rest-data.service';
   providers: [
     DataService,
     RESTDataService,
-    SetsService,
     FilesService
   ],
   bootstrap: [AppComponent]

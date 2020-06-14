@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { AuthService } from '../auth.service';
+import { AuthService, IAuthError } from '../auth.service';
 import { Router } from '@angular/router';
+import { MatBottomSheet } from '@angular/material';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -11,12 +13,15 @@ import { Router } from '@angular/router';
 
 export class LoginComponent {
 
+  private _errorSubject = new Subject<IAuthError | undefined>();
+  
   form: FormGroup;
-  error: any;
+  error$ = this._errorSubject.asObservable();
 
   constructor(
     private _authService: AuthService,
-    private _router: Router
+    private _router: Router,
+    private _borromSheet: MatBottomSheet
   ) {
     this.form = new FormGroup({
       login: new FormControl('', [Validators.required]),
@@ -31,11 +36,12 @@ export class LoginComponent {
         controls.login.value,
         controls.password.value
       ).subscribe(e => {
-        if (e) {
-          this.error = false;
+        if (e === true) {
+          this._errorSubject.next(undefined);
           this._router.navigate(['/dashboard']);
+          this._borromSheet.dismiss();
         } else {
-          this.error = { message: 'Incorrect login or password.' }
+          this._errorSubject.next(e);
         }
       })
     }

@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { MatBottomSheet } from '@angular/material';
+import { LoginComponent } from '../auth/login/login.component';
+import { RegistrationComponent } from '../auth/registration/registration.component';
 
 @Component({
   selector: 'app-main',
@@ -7,5 +10,27 @@ import { Component } from '@angular/core';
 })
 
 export class MainComponent {
-  constructor() { }
+  constructor(
+    private _bottomSheet: MatBottomSheet
+  ) { }
+
+  openLogInForm() {
+    this._bottomSheet.open(LoginComponent)
+      .afterDismissed()
+      .subscribe(e => {
+        if (e == null) { return; }
+        console.log(e);
+        
+      })
+  }
+
+  openSignUpForm() {
+    this._bottomSheet.open(RegistrationComponent)
+      .afterDismissed()
+      .subscribe(e => {
+        if (e == null) { return; }
+        console.log(e);
+        
+      })
+  }
 }

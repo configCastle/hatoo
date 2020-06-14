@@ -12,4 +12,7 @@ export class LocalStorageService {
       console.log(err);
     }
   }
+  remove(key: string) {
+    localStorage.removeItem(key);
+  }
 }

@@ -8,20 +8,20 @@ import { CreateFileFormComponent } from './add-file-form/create-file-form.compon
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        UIModule,
-        RouterModule,
-        ReactiveFormsModule
-    ],
-    exports: [
-        DashboardComponent
-    ],
-    declarations: [
-        DashboardComponent,
-        CreateFileFormComponent
-    ],
-    entryComponents: [CreateFileFormComponent],
-    providers: [FilesService],
+  imports: [
+    CommonModule,
+    UIModule,
+    RouterModule,
+    ReactiveFormsModule
+  ],
+  exports: [
+    DashboardComponent
+  ],
+  declarations: [
+    DashboardComponent,
+    CreateFileFormComponent
+  ],
+  entryComponents: [CreateFileFormComponent],
+  providers: [FilesService],
 })
 export class DashboardModule { }

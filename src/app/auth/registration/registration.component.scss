@@ -1,3 +1,4 @@
+mat-form-field,
 input {
   width: 100%;
 }
@@ -9,5 +10,5 @@ input {
 
 .controls {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
 }
