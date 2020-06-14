@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subject, ReplaySubject } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
 import { LocalStorageService } from '../local-storage.service';
 import { Router } from '@angular/router';
@@ -18,12 +18,12 @@ export interface IAuthError {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private _loggedInSubject = new ReplaySubject<boolean>();
 
   private _user: IUser;
   get user() { return { ...this._user } }
 
-  private _isLoggedIn = false;
-  get isLoggedIn() { return this._isLoggedIn; }
+  isLoggedIn$ = this._loggedInSubject.asObservable();
 
   readonly lsKey = 'auth-storage-key';
 
@@ -32,7 +32,11 @@ export class AuthService {
     private _localStorageService: LocalStorageService,
     private _router: Router
   ) {
-    this._refresh$().subscribe();
+    this._refresh$().subscribe(e => {
+      if (e.error) {
+        this.signOut();
+      }
+    });
   }
 
   logIn$(
@@ -42,17 +46,16 @@ export class AuthService {
     return this._restData.logIn$(login, password)
       .pipe(
         catchError(err => {
-          console.error(err);
           return of(err);
         }),
         map(res => {
-          if (res.error) {
-
-            // TODO: Process the different errors
-
+          if (!res.ok) {
+            if (res.status === 401) {
+              return { message: "Неверный логин или пароль." };
+            }
             return { message: "При входе в систему возникла ошибка. Попробуйте ещё раз." };
           }
-          this._processResponse(res);
+          this._processResponse(res.body);
           return true;
         })
       )
@@ -65,21 +68,19 @@ export class AuthService {
     return this._restData.signUp$(login, password)
       .pipe(
         catchError(err => {
-          console.error(err);
           return of(err);
         }),
         map(res => {
-          console.log(res);
-          if (res.error) {
-            if (res.error.error === "User already exist") {
+          if (!res.ok) {
+            if (res.status === 401) {
               return { message: "Этот логин занят другим пользователем." };
             }
-            if (res.error.error === "Password is to short") {
+            if (res.status === 400) {
               return { message: "Пароль должен содержать не менее 8-ми символов." };
             }
             return { message: "При оформлении подписки возникла ошибка. Попробуйте ещё раз." };
           }
-          this._processResponse(res);
+          this._processResponse(res.body);
           return true;
         })
       )
@@ -87,7 +88,7 @@ export class AuthService {
 
   signOut() {
     this._user = undefined;
-    this._isLoggedIn = false;
+    this._loggedInSubject.next(false);
     this._localStorageService.remove(this.lsKey);
     this._router.navigate(['/']);
   }
@@ -110,7 +111,7 @@ export class AuthService {
   }
 
   private _refresh$() {
-    const userFromLS = this._localStorageService.get(this.lsKey)
+    const userFromLS = this._localStorageService.get(this.lsKey);
     if (userFromLS) {
       const parsedUser = JSON.parse(userFromLS);
       if (parsedUser.refreshToken) {
@@ -135,8 +136,6 @@ export class AuthService {
   private _checkExirationTS(ts: number): boolean {
     const currentDate = new Date().getTime();
     const normalizedExpTS = ts * 1000;
-    console.log('current: ', currentDate);
-    console.log('expiration: ', normalizedExpTS);
     return normalizedExpTS > currentDate;
   }
 
@@ -147,13 +146,15 @@ export class AuthService {
       accessToken: res.accessToken,
       expiresIn: res.expires_in
     }
-    this._isLoggedIn = true;
     const userToStore = {
       id: res.id,
       login: res.login,
       refreshToken: res.refreshToken
     }
     this._localStorageService.set(this.lsKey, JSON.stringify(userToStore))
+    this._loggedInSubject.next(true);
+    console.log('set auth to TRUE');
+    
   }
 
 }

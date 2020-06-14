@@ -12,19 +12,21 @@ export class RESTDataService {
   logIn$(login: string, password: string) {
     return this._http.post(
       `${baseURL}auth`,
-      { login, password }
+      { login, password },
+      { observe: 'response' }
     )
   }
 
   signUp$(login: string, password: string) {
     return this._http.post(
       `${baseURL}signup`,
-      { login, password }
+      { login, password },
+      { observe: 'response' }
     )
   }
 
   refresh$(refreshToken: string) {
-    console.log('refresh');
+    console.log('refresh request');
     return this._http.post(
       `${baseURL}refresh-token`,
       { token: refreshToken }

@@ -38,6 +38,8 @@ export class RegistrationComponent {
         if (e === true) {
           this._errorSubject.next(undefined);
           this._router.navigate(['/dashboard']);
+          console.log('Navigated to dashboard');
+          
           this._borromSheet.dismiss();
         } else {
           this._errorSubject.next(e);
