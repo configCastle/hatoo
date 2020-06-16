@@ -1,3 +1,14 @@
+<app-header>
+  <app-header-left>
+    <div class="user">
+      <fa-icon [icon]="icons.faUser"></fa-icon>
+      <span class="user-login">{{ userName }}</span>
+    </div>
+  </app-header-left>
+  <app-header-right>
+    <button mat-button (click)="logOut()">Выйти</button>
+  </app-header-right>
+</app-header>
 <mat-progress-bar *ngIf="loading$ | async; else loaded" mode="indeterminate"></mat-progress-bar>
 <ng-template #loaded>
   <div class="files" *ngIf="files$ | async as files; else noFiles">

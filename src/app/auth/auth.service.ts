@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, Subject, ReplaySubject } from 'rxjs';
-import { map, catchError, tap } from 'rxjs/operators';
+import { map, catchError, tap, take } from 'rxjs/operators';
 import { LocalStorageService } from '../local-storage.service';
 import { Router } from '@angular/router';
 import { RESTDataService } from '../rest-data-service/rest-data.service';
@@ -88,9 +88,13 @@ export class AuthService {
 
   signOut() {
     this._user = undefined;
-    this._loggedInSubject.next(false);
     this._localStorageService.remove(this.lsKey);
-    this._router.navigate(['/']);
+    this._loggedInSubject.next(false);
+    this.isLoggedIn$
+      .pipe(take(1))
+      .subscribe(e => {
+        if (!e) { this._router.navigate(['/']); }
+      })
   }
 
   checkAuth$(): Observable<boolean> {
@@ -118,7 +122,6 @@ export class AuthService {
         return this._restData.refresh$(parsedUser.refreshToken)
           .pipe(
             catchError(err => {
-              console.error(err);
               return of(err);
             }),
             tap(e => {
@@ -153,8 +156,6 @@ export class AuthService {
     }
     this._localStorageService.set(this.lsKey, JSON.stringify(userToStore))
     this._loggedInSubject.next(true);
-    console.log('set auth to TRUE');
-    
   }
 
 }

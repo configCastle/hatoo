@@ -26,7 +26,6 @@ export class RESTDataService {
   }
 
   refresh$(refreshToken: string) {
-    console.log('refresh request');
     return this._http.post(
       `${baseURL}refresh-token`,
       { token: refreshToken }
