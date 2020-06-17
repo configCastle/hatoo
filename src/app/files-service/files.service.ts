@@ -8,38 +8,48 @@ import { IConfigFile } from '../sets-service/sets.service';
 export class FilesService {
   constructor(private _dataService: DataService) { }
 
-  getFiles$(): Observable<IConfigFile<string>[]> {
-    return this._dataService.getFiles$().pipe(
+  getFilesByUser$(userId: number): Observable<IConfigFile<string>[] | undefined> {
+    return this._dataService.getFilesByUser$(userId).pipe(
       take(1),
-      map(e => e.data.files)
+      map(e => {
+        if (e) { return e.data.files; }
+      })
     );
   }
 
-  getFileById$(id: number): Observable<IConfigFile<string>> {
+  getFileById$(id: number): Observable<IConfigFile<string> | undefined> {
     return this._dataService.getFileById$(id).pipe(
       take(1),
-      map(e => e.data.file)
+      map(e => {
+        if (e) { return e.data.file; }
+      })
     );
   }
 
-  createFile$(file: creatingFile<string>): Observable<IConfigFile<string>> {
+  createFile$(file: creatingFile<string>): Observable<IConfigFile<string> | undefined> {
     return this._dataService.createFile$(file).pipe(
       take(1),
-      map(e => e.data.createFile)
+      map(e => {
+        if (e) { return e.data.createFile; }
+      })
     );
   }
 
-  updateFile$(file: IUpdateFileData): Observable<IConfigFile<string>> {
+  updateFile$(file: IUpdateFileData): Observable<IConfigFile<string> | undefined> {
     return this._dataService.updateFile$(file).pipe(
       take(1),
-      map(e => e.data.updateFile)
+      map(e => {
+        if (e) { return e.data.updateFile; }
+      })
     )
   }
   
-  removeFile$(id: number): Observable<IConfigFile<string>> {
+  removeFile$(id: number): Observable<IConfigFile<string> | undefined> {
     return this._dataService.deleteFile$(+id).pipe(
       take(1),
-      map(e => e.data.deleteFile)
+      map(e => {
+        if (e) { return e.data.deleteFile; }
+      })
     )
   }
 

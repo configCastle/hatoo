@@ -62,7 +62,6 @@ export class EditorComponent {
       e => {
         _editorService.saveFileData$(e)
           .subscribe(e => {
-            console.log('Saved');
             this._savedSubject.next(true);
           });
       },
@@ -116,7 +115,7 @@ export class EditorComponent {
       e => {
         if (e) {
           this._snackBar.open('Файл удалён', null, { duration: 2000 });
-          this._router.navigate(['/']);
+          this._router.navigate(['/dashboard']);
         }
       },
       err => {
