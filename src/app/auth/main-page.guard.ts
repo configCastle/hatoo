@@ -1,8 +1,8 @@
 import { CanActivate, Router } from '@angular/router';
 import { AuthService } from './auth.service';
 import { Injectable } from '@angular/core';
-import { tap, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { map, take } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class MainPageGuard implements CanActivate {
@@ -14,11 +14,14 @@ export class MainPageGuard implements CanActivate {
 
   canActivate(): Observable<boolean> {
     return this._authService.isLoggedIn$.pipe(
-      tap(e => {
-        if (e) { this._router.navigate(['/dashboard']); }
-      }),
-      map(e => !e)
-    )
+      take(1),
+      map(e => {
+        if (e) {
+          this._router.navigate(['/dashboard'])
+        }
+        return !e
+      })
+    );
   }
   
 }
