@@ -12,7 +12,7 @@ export const testSets: ISet<IKeyValue<string>[]>[] = [
         id: 0,
         configType: 1,
         name: 'some name',
-        // data: []
+        user: 0,
         data: new ModelParserService().plainObjectToModel({
           version: 3,
           services: {

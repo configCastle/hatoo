@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 import { IConfigFile, FileTypes } from 'src/app/sets-service/sets.service';
 import { TextEditorService } from '../../text-editor.service';
 import { DCTextParserService } from '../dc-text-parser.service';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-text-editor',
@@ -33,7 +34,8 @@ export class TextEditorComponent implements OnDestroy {
 
   constructor(
     _editorService: TextEditorService,
-    _dockerComposeParserService: DCTextParserService
+    _dockerComposeParserService: DCTextParserService,
+    _authService: AuthService
   ) {
     this._updateSubject.pipe(
       takeUntil(this._destroySubject),
@@ -45,7 +47,8 @@ export class TextEditorComponent implements OnDestroy {
           id: this._file.id,
           configType: FileTypes.DOCKER_COMPOSE,
           name: this._file.name,
-          data
+          data,
+          user: _authService.user.id
         });
       }
     })

@@ -9,7 +9,7 @@ import {
   getServiceByIdQuery,
   getServicesQuery,
   getFileByIdQuery,
-  getFilesQuery,
+  getFilesByUserQuery,
   createFileMutation,
   updateFileMutation,
   deleteFileMutation
@@ -76,13 +76,14 @@ export class DataService {
       )
   }
 
-  getFiles$(): Observable<ApolloQueryResult<{ files: IConfigFile<string>[] }> | null> {
+  getFilesByUser$(userId: number): Observable<ApolloQueryResult<{ files: IConfigFile<string>[] }> | null> {
     return this._authService.checkAuth$()
       .pipe(
         switchMap(e => {
           if (e) {
             return this._graphql.query<{ files: IConfigFile<string>[] }>({
-              query: getFilesQuery
+              query: getFilesByUserQuery,
+              variables: { userId }
             });
           }
           return of(null);
@@ -101,10 +102,14 @@ export class DataService {
               mutation: createFileMutation,
               variables: { file },
               update: (store, { data: { createFile } }) => {
-                const result = store.readQuery<{ files: IConfigFile<string>[] }>({ query: getFilesQuery });
+                const result = store.readQuery<{ files: IConfigFile<string>[] }>({
+                  query: getFilesByUserQuery,
+                  variables: { userId: this._authService.user.id }
+                });
                 result.files = [...result.files, createFile];
                 store.writeQuery({
-                  query: getFilesQuery,
+                  query: getFilesByUserQuery,
+                  variables: { userId: this._authService.user.id },
                   data: result
                 });
               }
@@ -139,11 +144,15 @@ export class DataService {
               mutation: deleteFileMutation,
               variables: { id },
               update: (store, { data: { deleteFile } }) => {
-                const result = store.readQuery<{ files: IConfigFile<string>[] }>({ query: getFilesQuery });
+                const result = store.readQuery<{ files: IConfigFile<string>[] }>({
+                  query: getFilesByUserQuery,
+                  variables: { userId: this._authService.user.id }
+                });
                 const index = result.files.findIndex(f => f.id === deleteFile.id);
                 if (index >= 0) { result.files.splice(index, 1); }
                 store.writeQuery({
-                  query: getFilesQuery,
+                  query: getFilesByUserQuery,
+                  variables: { userId: this._authService.user.id },
                   data: result
                 });
               }

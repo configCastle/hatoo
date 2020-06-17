@@ -21,16 +21,18 @@ export const getFileByIdQuery = gql`query service($id: Int!) {
     id
     name
     configType
-    data
+    data,
+    user
   }
 }`;
 
-export const getFilesQuery = gql`{
-  files {
+export const getFilesByUserQuery = gql`query files($userId: Int!) {
+  files(user: $userId) {
     id
     name
     configType
-    data
+    data,
+    user
   }
 }`;
 
@@ -40,7 +42,8 @@ export const createFileMutation = gql`
       id,
       name,
       configType,
-      data
+      data,
+      user
     }
   }
 `;
@@ -62,7 +65,8 @@ export const deleteFileMutation = gql`
       id,
       name,
       data,
-      configType
+      configType,
+      user
     }
   }
 `;
