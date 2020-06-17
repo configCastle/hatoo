@@ -5,6 +5,9 @@ import { LocalStorageService } from '../local-storage.service';
 import { Router } from '@angular/router';
 import { RESTDataService } from '../rest-data-service/rest-data.service';
 
+const HTTP_UNAUTHORIZED = 401;
+const HTTP_BAD_REQUEST = 400;
+
 export interface IUser {
   id: number;
   login: string;
@@ -50,7 +53,7 @@ export class AuthService {
         }),
         map(res => {
           if (!res.ok) {
-            if (res.status === 401) {
+            if (res.status === HTTP_UNAUTHORIZED) {
               return { message: "Неверный логин или пароль." };
             }
             return { message: "При входе в систему возникла ошибка. Попробуйте ещё раз." };
@@ -72,10 +75,10 @@ export class AuthService {
         }),
         map(res => {
           if (!res.ok) {
-            if (res.status === 401) {
+            if (res.status === HTTP_UNAUTHORIZED) {
               return { message: "Этот логин занят другим пользователем." };
             }
-            if (res.status === 400) {
+            if (res.status === HTTP_BAD_REQUEST) {
               return { message: "Пароль должен содержать не менее 8-ми символов." };
             }
             return { message: "При оформлении подписки возникла ошибка. Попробуйте ещё раз." };
@@ -89,12 +92,15 @@ export class AuthService {
   signOut() {
     this._user = undefined;
     this._localStorageService.remove(this.lsKey);
-    this._loggedInSubject.next(false);
     this.isLoggedIn$
       .pipe(take(1))
       .subscribe(e => {
-        if (!e) { this._router.navigate(['/']); }
+        if (!e) {
+          console.log(e);
+          this._router.navigate(['/']);
+        }
       })
+    this._loggedInSubject.next(false);
   }
 
   checkAuth$(): Observable<boolean> {
