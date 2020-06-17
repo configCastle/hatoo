@@ -31,6 +31,7 @@ export interface IConfigFile<T> {
   name: string;
   configType: FileTypes;
   data: T;
+  user: number;
 }
 
 export interface ISet<T> {
@@ -59,7 +60,7 @@ export class SetsService {
   }
 
   getFiles$() {
-    return this._dataService.getFiles$();
+    return this._dataService.getFilesByUser$(1);
   }
 
   getFileById$(id: number) {

@@ -8,8 +8,8 @@ import { IConfigFile } from '../sets-service/sets.service';
 export class FilesService {
   constructor(private _dataService: DataService) { }
 
-  getFiles$(): Observable<IConfigFile<string>[] | undefined> {
-    return this._dataService.getFiles$().pipe(
+  getFilesByUser$(userId: number): Observable<IConfigFile<string>[] | undefined> {
+    return this._dataService.getFilesByUser$(userId).pipe(
       take(1),
       map(e => {
         if (e) { return e.data.files; }

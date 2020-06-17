@@ -32,7 +32,7 @@ export class DashboardComponent {
     this.userName = _authService.user.login;
     this.loading$ = this._loadingSbject.asObservable();
     this.files$ = this._filesSubject.asObservable();
-    _filesService.getFiles$().subscribe(
+    _filesService.getFilesByUser$(this._authService.user.id).subscribe(
       e => {
         this._snackBar.open('Список файлов обновлён', null, { duration: 2000 });
         this._loadingSbject.next(false);
@@ -53,7 +53,8 @@ export class DashboardComponent {
         this._filesService.createFile$({
           name: e,
           configType: 'DOCKER_COMPOSE',
-          data: '[]'
+          data: '[]',
+          user: this._authService.user.id
         })
           .subscribe(
             e => {
