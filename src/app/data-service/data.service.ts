@@ -39,7 +39,10 @@ export class DataService {
           if (e) {
             return this._graphql.query<{ service: IDCService }>({
               query: getServiceByIdQuery,
-              variables: { id }
+              variables: { id },
+              context: {
+                token: this._authService.user.accessToken
+              }
             });
           }
           return of(null);
@@ -53,7 +56,10 @@ export class DataService {
         switchMap(e => {
           if (e) {
             return this._graphql.query<{ services: IDCService[] }>({
-              query: getServicesQuery
+              query: getServicesQuery,
+              context: {
+                token: this._authService.user.accessToken
+              }
             });
           }
           return of(null);
@@ -68,7 +74,10 @@ export class DataService {
           if (e) {
             return this._graphql.query<{ file: IConfigFile<string> }>({
               query: getFileByIdQuery,
-              variables: { id }
+              variables: { id },
+              context: {
+                token: this._authService.user.accessToken
+              }
             });
           }
           return of(null);
@@ -83,7 +92,10 @@ export class DataService {
           if (e) {
             return this._graphql.query<{ files: IConfigFile<string>[] }>({
               query: getFilesByUserQuery,
-              variables: { userId }
+              variables: { userId },
+              context: {
+                token: this._authService.user.accessToken
+              }
             });
           }
           return of(null);
@@ -101,6 +113,9 @@ export class DataService {
             return this._graphql.mutate<{ createFile: IConfigFile<string> }>({
               mutation: createFileMutation,
               variables: { file },
+              context: {
+                token: this._authService.user.accessToken
+              },
               update: (store, { data: { createFile } }) => {
                 const result = store.readQuery<{ files: IConfigFile<string>[] }>({
                   query: getFilesByUserQuery,
@@ -143,6 +158,9 @@ export class DataService {
             return this._graphql.mutate<{ deleteFile: IConfigFile<string> }>({
               mutation: deleteFileMutation,
               variables: { id },
+              context: {
+                token: this._authService.user.accessToken
+              },
               update: (store, { data: { deleteFile } }) => {
                 const result = store.readQuery<{ files: IConfigFile<string>[] }>({
                   query: getFilesByUserQuery,
