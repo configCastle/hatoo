@@ -2,10 +2,11 @@ import { Component } from "@angular/core";
 import { IConfigFile } from '../sets-service/sets.service';
 import { FilesService } from '../files-service/files.service';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faTimes, faUser } from '@fortawesome/free-solid-svg-icons';
 import { MatBottomSheet, MatSnackBar } from '@angular/material';
 import { CreateFileFormComponent } from './add-file-form/create-file-form.component';
 import { Router } from '@angular/router';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,15 +18,18 @@ export class DashboardComponent {
   private readonly _filesSubject = new BehaviorSubject<IConfigFile<string>[]>([]);
 
   loading$: Observable<boolean>;
-  icons = { faPlus, faTimes };
+  icons = { faPlus, faTimes, faUser };
   files$: Observable<IConfigFile<string>[]>;
+  userName: string;
 
   constructor(
+    private _authService: AuthService,
     private _filesService: FilesService,
     private _bottomSheet: MatBottomSheet,
     private _snackBar: MatSnackBar,
     private _router: Router
   ) {
+    this.userName = _authService.user.login;
     this.loading$ = this._loadingSbject.asObservable();
     this.files$ = this._filesSubject.asObservable();
     _filesService.getFiles$().subscribe(
@@ -64,6 +68,9 @@ export class DashboardComponent {
             }
           )
       })
+  }
 
+  logOut() {
+    this._authService.signOut();
   }
 }

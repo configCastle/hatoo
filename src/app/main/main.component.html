@@ -24,9 +24,9 @@
     </app-header-left>
     <app-header-right>
       <div class="header-controls">
-        <button mat-raised-button>Открыть редактор</button>
-        <button mat-stroked-button>Оформить подписку</button>
-        <button mat-button>Войти</button>
+        <button mat-stroked-button color="primary">Открыть редактор</button>
+        <button mat-stroked-button (click)="openSignUpForm()">Оформить подписку</button>
+        <button mat-button (click)="openLogInForm()">Войти</button>
       </div>
     </app-header-right>
   </app-header>
@@ -44,7 +44,7 @@
             <div class="screenshot-container mat-elevation-z1">
               <img src="assets/editor_screenshot.jpg" alt="Editor screenshot">
               <div class="cover">
-                <button mat-raised-button>Открыть редактор</button>
+                <button mat-raised-button color="primary">Открыть редактор</button>
               </div>
             </div>
           </mat-card-content>
@@ -60,7 +60,7 @@
             <div class="screenshot-container mat-elevation-z1">
               <img src="assets/editor_screenshot.jpg" alt="Editor screenshot">
               <div class="cover">
-                <button mat-stroked-button>Оформить подписку</button>
+                <button mat-stroked-button (click)="openSignUpForm()">Оформить подписку</button>
               </div>
             </div>
           </mat-card-content>

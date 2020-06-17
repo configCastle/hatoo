@@ -8,7 +8,8 @@ import {
   MatProgressBarModule,
   MatRippleModule,
   MatSnackBarModule,
-  MatToolbarModule
+  MatToolbarModule,
+  MatFormFieldModule
 } from '@angular/material';
 import { MatSelectModule } from '@angular/material';
 import { MatBottomSheetModule } from '@angular/material';
@@ -32,7 +33,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     MatProgressBarModule,
     MatRippleModule,
     MatSnackBarModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MatFormFieldModule
   ],
   exports: [
     CommonModule,
@@ -48,7 +50,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     MatProgressBarModule,
     MatRippleModule,
     MatSnackBarModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MatFormFieldModule
   ],
   providers: [DataService]
 })

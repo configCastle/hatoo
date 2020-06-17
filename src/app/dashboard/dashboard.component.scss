@@ -1,5 +1,13 @@
 @import "~src/variables";
 
+.user {
+  font-size: 1rem;
+
+  .user-login {
+    margin-left: 10px;
+  }
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -8,10 +16,6 @@
 }
 
 .file {
-  // border: 1px solid $outline-color;
-  // border-radius: 4px;
-  // padding: 10px;
-  // box-sizing: border-box;
   cursor: pointer;
 
   &:focus {
@@ -19,7 +23,6 @@
   }
   
   .file-name {
-    // font-family: 'Courier New', Courier, monospace;
     margin: 10px 0;
     display: block;
     width: 100%;
