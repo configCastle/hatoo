@@ -72,6 +72,6 @@ export class DashboardComponent {
   }
 
   logOut() {
-    this._authService.signOut();
+    this._authService.logOut();
   }
 }

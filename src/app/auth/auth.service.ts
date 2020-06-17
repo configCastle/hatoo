@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, Subject, ReplaySubject } from 'rxjs';
-import { map, catchError, tap, take } from 'rxjs/operators';
+import { Observable, of, ReplaySubject } from 'rxjs';
+import { map, catchError, tap } from 'rxjs/operators';
 import { LocalStorageService } from '../local-storage.service';
 import { Router } from '@angular/router';
 import { RESTDataService } from '../rest-data-service/rest-data.service';
@@ -21,12 +21,11 @@ export interface IAuthError {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private _loggedInSubject = new ReplaySubject<boolean>();
-
   private _user: IUser;
   get user() { return { ...this._user } }
 
-  isLoggedIn$ = this._loggedInSubject.asObservable();
+  private _loggedSubject = new ReplaySubject<boolean>(1);
+  isLoggedIn$ = this._loggedSubject.asObservable();
 
   readonly lsKey = 'auth-storage-key';
 
@@ -37,7 +36,10 @@ export class AuthService {
   ) {
     this._refresh$().subscribe(e => {
       if (e.error) {
-        this.signOut();
+        this._loggedSubject.next(false);
+        this._router.navigate(['/']);
+      } else {
+        this._loggedSubject.next(true);
       }
     });
   }
@@ -59,6 +61,8 @@ export class AuthService {
             return { message: "При входе в систему возникла ошибка. Попробуйте ещё раз." };
           }
           this._processResponse(res.body);
+          this._loggedSubject.next(true);
+          this._router.navigate(['/dashboard']);
           return true;
         })
       )
@@ -84,23 +88,18 @@ export class AuthService {
             return { message: "При оформлении подписки возникла ошибка. Попробуйте ещё раз." };
           }
           this._processResponse(res.body);
+          this._loggedSubject.next(true);
+          this._router.navigate(['/dashboard']);
           return true;
         })
       )
   }
 
-  signOut() {
+  logOut() {
     this._user = undefined;
     this._localStorageService.remove(this.lsKey);
-    this.isLoggedIn$
-      .pipe(take(1))
-      .subscribe(e => {
-        if (!e) {
-          console.log(e);
-          this._router.navigate(['/']);
-        }
-      })
-    this._loggedInSubject.next(false);
+    this._loggedSubject.next(false);
+    this._router.navigate(['/']);
   }
 
   checkAuth$(): Observable<boolean> {
@@ -111,7 +110,7 @@ export class AuthService {
         .pipe(
           map(e => {
             if (e.error) {
-              this.signOut();
+              this.logOut();
               return false
             }
             return true;
@@ -161,7 +160,6 @@ export class AuthService {
       refreshToken: res.refreshToken
     }
     this._localStorageService.set(this.lsKey, JSON.stringify(userToStore))
-    this._loggedInSubject.next(true);
   }
 
 }
