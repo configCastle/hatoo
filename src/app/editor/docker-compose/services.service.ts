@@ -17,7 +17,7 @@ export class ServicesService {
   getServices$(): Observable<IDCService[] | undefined> {
     return this._dataService.getServices$().pipe(
       map(e => {
-        if (e) {
+        if (e.data) {
           return e.data.services;
         }
       })
@@ -27,7 +27,7 @@ export class ServicesService {
   getServiceById$(id: number): Observable<IDCService | undefined> {
     return this._dataService.getServiceById$(id).pipe(
       map(e => {
-        if (e) {
+        if (e.data) {
           return e.data.service;
         }
       })

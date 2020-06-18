@@ -1,6 +1,12 @@
+@import '~src/variables';
+
 mat-form-field,
 input {
   width: 100%;
+}
+
+a {
+  color: $accent
 }
 
 .error {
@@ -9,6 +15,7 @@ input {
 }
 
 .controls {
+  margin-top: 10px;
   display: flex;
   justify-content: flex-end;
 }

@@ -1,32 +1,36 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnDestroy } from '@angular/core';
 import { EditorService } from './editor.service';
-import { Observable, observable, BehaviorSubject } from 'rxjs';
-import { map, tap, take, skip, debounceTime, sampleTime, filter, switchMap } from 'rxjs/operators';
+import { Observable, observable, BehaviorSubject, Subject } from 'rxjs';
+import { map, tap, take, skip, debounceTime, sampleTime, filter, switchMap, takeUntil } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IConfigFile, IKeyValue } from '../sets-service/sets.service';
-import { faCloudUploadAlt, faCheckCircle, faCloud, faSave, faDownload, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faCloudUploadAlt, faCheckCircle, faCloud, faSave, faDownload, faTrashAlt, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { MatSnackBar, MatBottomSheet } from '@angular/material';
 import { DeleteFileConfirmComponent } from './delete-confirm/delete-file-confirm.component';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-editor',
   templateUrl: 'editor.component.html',
   styleUrls: ['editor.component.scss']
 })
-export class EditorComponent {
+export class EditorComponent implements OnDestroy {
   @HostListener('window:resize')
   onResize() {
     this.textEditorWidth = window.innerWidth * 0.4 - 10;
   }
+  freeMode = false;
   private readonly _loadingSbject = new BehaviorSubject<boolean>(true);
   private readonly _savedSubject = new BehaviorSubject<boolean>(true);
+  private readonly _destroySubject = new Subject<void>();
   icons = {
     faCloudUploadAlt,
     faCloud,
     faCheckCircle,
     faSave,
     faDownload,
-    faTrashAlt
+    faTrashAlt,
+    faArrowLeft
   }
   autosave = true;
   loading$: Observable<boolean>;
@@ -46,17 +50,20 @@ export class EditorComponent {
     this.file$ = _editorService.file$;
 
     this.textEditorWidth = window.innerWidth * 0.4 - 10;
-
     const fileId = +_activatedRoute.snapshot.params.file;
-    this.file$.pipe(
-      tap(() => this._loadingSbject.next(false))
-    ).subscribe();
-    _editorService.selectFile(fileId);
+    if (fileId) {
+      _editorService.selectFile(fileId);
+    } else {
+      this.freeMode = true;
+      _editorService.selectFile(-1);
+    }
 
     this.file$.pipe(
+      takeUntil(this._destroySubject),
+      tap(() => { this._loadingSbject.next(false); }),
       skip(1),
-      tap(() => this._savedSubject.next(false)),
-      filter(() => this.autosave),
+      tap(() => { this._savedSubject.next(false); }),
+      filter(() => this.autosave && !this.freeMode),
       sampleTime(1000)
     ).subscribe(
       e => {
@@ -81,6 +88,7 @@ export class EditorComponent {
 
   save(event: MouseEvent) {
     event.preventDefault();
+    if (this.freeMode) { return; }
     this.file$.pipe(
       take(1),
       switchMap(e => this._editorService.saveFileData$(e))
@@ -98,6 +106,7 @@ export class EditorComponent {
 
   removeFile(event: MouseEvent) {
     event.preventDefault();
+    if (this.freeMode) { return; }
     this.file$.pipe(
       take(1),
       switchMap(file => {
@@ -108,6 +117,7 @@ export class EditorComponent {
               if (e) {
                 return this._editorService.removeFile$(file.id);
               }
+              return of(undefined);
             })
           )
       })
@@ -122,6 +132,10 @@ export class EditorComponent {
         this._snackBar.open('Не удалось удалить файл', null, { duration: 2000 });
       }
     );
+  }
+
+  ngOnDestroy() {
+    this._destroySubject.next();
   }
 
 }

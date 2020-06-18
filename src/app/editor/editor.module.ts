@@ -10,12 +10,14 @@ import { GraphicEditorService } from './graphic-editor.service';
 import { DockerComposeModule } from './docker-compose/docker-compose.module';
 import { DeleteFileConfirmComponent } from './delete-confirm/delete-file-confirm.component';
 import { ErrorsService } from './errors-service/errors.service';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   imports: [
     DockerComposeModule,
     CommonModule,
     UIModule,
+    RouterModule
   ],
   declarations: [
     EditorComponent,

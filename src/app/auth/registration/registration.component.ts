@@ -2,8 +2,9 @@ import { Component } from '@angular/core';
 import { AuthService, IAuthError } from '../auth.service';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatBottomSheet } from '@angular/material';
+import { MatBottomSheet, MatDialog } from '@angular/material';
 import { Subject } from 'rxjs';
+import { AgreementComponent } from './agreement/agreement.component';
 
 @Component({
   selector: 'app-registration',
@@ -16,11 +17,13 @@ export class RegistrationComponent {
   
   form: FormGroup;
   error$ = this._errorSubject.asObservable();
+  agree = false;
   
   constructor(
     private _authService: AuthService,
     private _router: Router,
-    private _borromSheet: MatBottomSheet
+    private _borromSheet: MatBottomSheet,
+    private _dialog: MatDialog
   ) {
     this.form = new FormGroup({
       login: new FormControl('', [Validators.required]),
@@ -28,7 +31,12 @@ export class RegistrationComponent {
     })
   }
 
+  openAgreement() {
+    this._dialog.open(AgreementComponent);
+  }
+
   signUp() {
+    if (!this.agree) { return; }
     const controls = this.form.controls;
     if (this.form.valid) {
       this._authService.signUp$(

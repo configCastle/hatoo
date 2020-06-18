@@ -32,39 +32,17 @@ export class DataService {
     private _authService: AuthService
   ) { }
 
-  getServiceById$(id: number): Observable<ApolloQueryResult<{ service: IDCService }> | null> {
-    return this._authService.checkAuth$()
-      .pipe(
-        switchMap(e => {
-          if (e) {
-            return this._graphql.query<{ service: IDCService }>({
-              query: getServiceByIdQuery,
-              variables: { id },
-              context: {
-                token: this._authService.user.accessToken
-              }
-            });
-          }
-          return of(null);
-        })
-      )
+  getServiceById$(id: number): Observable<ApolloQueryResult<{ service: IDCService }>> {
+    return this._graphql.query<{ service: IDCService }>({
+      query: getServiceByIdQuery,
+      variables: { id }
+    });
   }
 
-  getServices$(): Observable<ApolloQueryResult<{ services: IDCService[] }> | null> {
-    return this._authService.checkAuth$()
-      .pipe(
-        switchMap(e => {
-          if (e) {
-            return this._graphql.query<{ services: IDCService[] }>({
-              query: getServicesQuery,
-              context: {
-                token: this._authService.user.accessToken
-              }
-            });
-          }
-          return of(null);
-        })
-      )
+  getServices$(): Observable<ApolloQueryResult<{ services: IDCService[] }>> {
+    return this._graphql.query<{ services: IDCService[] }>({
+      query: getServicesQuery
+    });
   }
 
   getFileById$(id: number): Observable<ApolloQueryResult<{ file: IConfigFile<string> }> | null> {
@@ -142,7 +120,10 @@ export class DataService {
           if (e) {
             return this._graphql.mutate<{ updateFile: IConfigFile<string> }>({
               mutation: updateFileMutation,
-              variables: { file }
+              variables: { file },
+              context: {
+                token: this._authService.user.accessToken
+              }
             });
           }
           return of(null);

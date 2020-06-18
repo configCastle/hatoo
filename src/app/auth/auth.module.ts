@@ -6,6 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { UIModule } from '../ui.module';
+import { AgreementComponent } from './registration/agreement/agreement.component';
 
 @NgModule({
   imports: [
@@ -21,12 +22,14 @@ import { UIModule } from '../ui.module';
   ],
   declarations: [
     LoginComponent,
-    RegistrationComponent
+    RegistrationComponent,
+    AgreementComponent
   ],
   providers: [],
   entryComponents: [
     LoginComponent,
-    RegistrationComponent
+    RegistrationComponent,
+    AgreementComponent
   ]
 })
 export class AuthModule { }

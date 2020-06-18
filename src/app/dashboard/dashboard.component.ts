@@ -61,7 +61,7 @@ export class DashboardComponent {
               if (e == null) {
                 this._snackBar.open('Не удалось создать файл', null, { duration: 2000 });
               } else {
-                this._router.navigate(['/', e.id])
+                this._router.navigate(['editor', e.id])
               }
             },
             () => {

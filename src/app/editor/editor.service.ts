@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@angular/core';
-import { IConfigFile, IKeyValue } from 'src/app/sets-service/sets.service';
+import { IConfigFile, IKeyValue, FileTypes } from 'src/app/sets-service/sets.service';
 import { Observable, ReplaySubject, throwError } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { IChangeList, ChangeType } from './docker-compose/graphic-editor/editor-form/editor-form.component';
@@ -22,6 +22,13 @@ export class EditorService {
     key: 'key',
     value: 'value'
   }
+  private readonly _emptyFile: IConfigFile<IKeyValue<string>[]> = {
+    id: -1,
+    name: 'Your awesome docker-compose.yaml',
+    configType: FileTypes.DOCKER_COMPOSE,
+    data: [this._zeroElement],
+    user: -1
+  }
 
   file$: Observable<IConfigFile<IKeyValue<string>[]> | undefined>;
 
@@ -42,30 +49,35 @@ export class EditorService {
 
   removeFile$(id: number): Observable<IConfigFile<string>> {
     return this._filesService.removeFile$(id);
-    
+
   }
 
   selectFile(id: number) {
-    this._filesService.getFileById$(id).pipe(
-      map(e => {
-        if (e == null) { return; }
-        const data = JSON.parse(e.data);
-        if (!data.length) {
-          data.push(this._zeroElement)
-        }
-        data.forEach((e, i) => {
-          this._modelParser.index(e, `_${i}`, null)
-          this._metaDataService.setMetaData(e);
-        });
-        return { ...e, data }
-      })
-    ).subscribe(
-      (e: IConfigFile<IKeyValue<string>[]> | undefined) => {
-        this._file = e;
-        this._fileSubject.next(e);
-      },
-      () => this._fileSubject.next(undefined)
-    )
+    if (id === -1) {
+      this._file = this._emptyFile;
+      this._fileSubject.next(this._emptyFile);
+    } else {
+      this._filesService.getFileById$(id).pipe(
+        map(e => {
+          if (e == null) { return; }
+          const data = JSON.parse(e.data);
+          if (!data.length) {
+            data.push(this._zeroElement)
+          }
+          data.forEach((e, i) => {
+            this._modelParser.index(e, `_${i}`, null)
+            this._metaDataService.setMetaData(e);
+          });
+          return { ...e, data }
+        })
+      ).subscribe(
+        (e: IConfigFile<IKeyValue<string>[]> | undefined) => {
+          this._file = e;
+          this._fileSubject.next(e);
+        },
+        () => this._fileSubject.next(undefined)
+      )
+    }
   }
 
   changeFileData(changes: IChangeList) {
