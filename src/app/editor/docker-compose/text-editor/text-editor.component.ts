@@ -8,13 +8,17 @@ import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-text-editor',
-  templateUrl: './text-ditor.component.html'
+  templateUrl: 'text-ditor.component.html',
+  styleUrls: ['text-editor.component.scss']
 })
 export class TextEditorComponent implements OnDestroy {
   private _updateSubject = new Subject<string>();
   private _destroySubject = new Subject<void>();
   private _code = '';
   private _file: IConfigFile<any>;
+  private _editor;
+
+  inited = false;
 
   get code() {
     return this._code;
@@ -60,7 +64,15 @@ export class TextEditorComponent implements OnDestroy {
       });
   }
 
+  initHendler(e) {
+    this.inited = true;
+    this._editor = e;
+  }
+
   ngOnDestroy() {
+    if (this._editor) {
+      this._editor.dispose();
+    }
     this._destroySubject.next();
   }
 

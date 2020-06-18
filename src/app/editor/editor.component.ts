@@ -51,7 +51,7 @@ export class EditorComponent implements OnDestroy {
 
     this.textEditorWidth = window.innerWidth * 0.4 - 10;
     const fileId = +_activatedRoute.snapshot.params.file;
-    if (fileId) {
+    if (fileId === fileId) {
       _editorService.selectFile(fileId);
     } else {
       this.freeMode = true;
