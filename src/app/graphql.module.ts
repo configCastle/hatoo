@@ -5,8 +5,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloLink } from 'apollo-link';
 import { setContext } from 'apollo-link-context';
 
-// const uri = 'https://intense-sierra-39113.herokuapp.com/graphql';
-const uri = 'https://develop-algernon.herokuapp.com/graphql';
+const uri = 'https://intense-sierra-39113.herokuapp.com/graphql';
 export function createApollo(httpLink: HttpLink) {
   const link = ApolloLink.from([
     setContext((_, context) => {
