@@ -9,22 +9,27 @@ import { MainPageGuard } from './auth/main-page.guard';
 const routes: Routes = [
   {
     path: '',
-    canActivate: [ MainPageGuard ],
+    canActivate: [MainPageGuard],
     loadChildren: () => import('./main/main.module').then(m => m.MainModule)
   },
   {
     path: 'dashboard',
-    canActivate: [ AuthGuard ],
+    canActivate: [AuthGuard],
     component: DashboardComponent
   },
   {
-    path: 'fast_editor',
-    component: EditorComponent,
-  },
-  {
-    path: ':file',
-    canActivate: [ AuthGuard ],
-    component: EditorComponent,
+    path: 'editor',
+    children: [
+      {
+        path: 'free_editor',
+        component: EditorComponent,
+      },
+      {
+        path: ':file',
+        canActivate: [AuthGuard],
+        component: EditorComponent,
+      }
+    ]
   }
 ];
 
