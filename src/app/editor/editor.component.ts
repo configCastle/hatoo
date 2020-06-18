@@ -7,6 +7,7 @@ import { IConfigFile, IKeyValue } from '../sets-service/sets.service';
 import { faCloudUploadAlt, faCheckCircle, faCloud, faSave, faDownload, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { MatSnackBar, MatBottomSheet } from '@angular/material';
 import { DeleteFileConfirmComponent } from './delete-confirm/delete-file-confirm.component';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-editor',
@@ -18,6 +19,7 @@ export class EditorComponent {
   onResize() {
     this.textEditorWidth = window.innerWidth * 0.4 - 10;
   }
+  freeMode = false;
   private readonly _loadingSbject = new BehaviorSubject<boolean>(true);
   private readonly _savedSubject = new BehaviorSubject<boolean>(true);
   icons = {
@@ -46,17 +48,19 @@ export class EditorComponent {
     this.file$ = _editorService.file$;
 
     this.textEditorWidth = window.innerWidth * 0.4 - 10;
-
     const fileId = +_activatedRoute.snapshot.params.file;
-    this.file$.pipe(
-      tap(() => this._loadingSbject.next(false))
-    ).subscribe();
-    _editorService.selectFile(fileId);
+    if (fileId) {
+      _editorService.selectFile(fileId);
+    } else {
+      this.freeMode = true;
+      _editorService.selectFile(-1);
+    }
 
     this.file$.pipe(
+      tap(() => { this._loadingSbject.next(false); }),
       skip(1),
-      tap(() => this._savedSubject.next(false)),
-      filter(() => this.autosave),
+      tap(() => { this._savedSubject.next(false); }),
+      filter(() => this.autosave && !this.freeMode),
       sampleTime(1000)
     ).subscribe(
       e => {
@@ -81,6 +85,7 @@ export class EditorComponent {
 
   save(event: MouseEvent) {
     event.preventDefault();
+    if (this.freeMode) { return; }
     this.file$.pipe(
       take(1),
       switchMap(e => this._editorService.saveFileData$(e))
@@ -98,6 +103,7 @@ export class EditorComponent {
 
   removeFile(event: MouseEvent) {
     event.preventDefault();
+    if (this.freeMode) { return; }
     this.file$.pipe(
       take(1),
       switchMap(file => {
@@ -106,8 +112,10 @@ export class EditorComponent {
           .pipe(
             switchMap(e => {
               if (e) {
+                console.log(file.id);
                 return this._editorService.removeFile$(file.id);
               }
+              return of(undefined);
             })
           )
       })

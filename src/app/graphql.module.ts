@@ -9,9 +9,14 @@ import { setContext } from 'apollo-link-context';
 const uri = 'https://develop-algernon.herokuapp.com/graphql';
 export function createApollo(httpLink: HttpLink) {
   const link = ApolloLink.from([
-    setContext((_, context) => ({
-      headers: { Authorization: context.token }
-    })),
+    setContext((_, context) => {
+      if (context.token) {
+        return {
+          headers: { Authorization: context.token }
+        }
+      }
+      return {}
+    }),
     httpLink.create({
       uri,
       method: 'POST'

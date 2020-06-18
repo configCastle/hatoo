@@ -24,7 +24,7 @@
     </app-header-left>
     <app-header-right>
       <div class="header-controls">
-        <button mat-stroked-button color="primary">Открыть редактор</button>
+        <button mat-stroked-button [routerLink]="['editor', 'free_editor']" color="primary">Открыть редактор</button>
         <button mat-stroked-button (click)="openSignUpForm()">Оформить подписку</button>
         <button mat-button (click)="openLogInForm()">Войти</button>
       </div>
@@ -44,7 +44,7 @@
             <div class="screenshot-container mat-elevation-z1">
               <img src="assets/editor_screenshot.jpg" alt="Editor screenshot">
               <div class="cover">
-                <button mat-raised-button color="primary">Открыть редактор</button>
+                <button mat-raised-button [routerLink]="['editor', 'free_editor']" color="primary">Открыть редактор</button>
               </div>
             </div>
           </mat-card-content>
