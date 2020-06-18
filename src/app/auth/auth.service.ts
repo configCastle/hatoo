@@ -103,6 +103,7 @@ export class AuthService {
   }
 
   checkAuth$(): Observable<boolean> {
+    if (!this._user) { return of(false); }
     if (this._checkExirationTS(this._user.expiresIn)) {
       return of(true);
     } else {

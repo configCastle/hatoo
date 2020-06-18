@@ -1,7 +1,7 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnDestroy } from '@angular/core';
 import { EditorService } from './editor.service';
-import { Observable, observable, BehaviorSubject } from 'rxjs';
-import { map, tap, take, skip, debounceTime, sampleTime, filter, switchMap } from 'rxjs/operators';
+import { Observable, observable, BehaviorSubject, Subject } from 'rxjs';
+import { map, tap, take, skip, debounceTime, sampleTime, filter, switchMap, takeUntil } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IConfigFile, IKeyValue } from '../sets-service/sets.service';
 import { faCloudUploadAlt, faCheckCircle, faCloud, faSave, faDownload, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
@@ -14,7 +14,7 @@ import { of } from 'rxjs';
   templateUrl: 'editor.component.html',
   styleUrls: ['editor.component.scss']
 })
-export class EditorComponent {
+export class EditorComponent implements OnDestroy {
   @HostListener('window:resize')
   onResize() {
     this.textEditorWidth = window.innerWidth * 0.4 - 10;
@@ -22,6 +22,7 @@ export class EditorComponent {
   freeMode = false;
   private readonly _loadingSbject = new BehaviorSubject<boolean>(true);
   private readonly _savedSubject = new BehaviorSubject<boolean>(true);
+  private readonly _destroySubject = new Subject<void>();
   icons = {
     faCloudUploadAlt,
     faCloud,
@@ -57,6 +58,7 @@ export class EditorComponent {
     }
 
     this.file$.pipe(
+      takeUntil(this._destroySubject),
       tap(() => { this._loadingSbject.next(false); }),
       skip(1),
       tap(() => { this._savedSubject.next(false); }),
@@ -112,7 +114,6 @@ export class EditorComponent {
           .pipe(
             switchMap(e => {
               if (e) {
-                console.log(file.id);
                 return this._editorService.removeFile$(file.id);
               }
               return of(undefined);
@@ -130,6 +131,10 @@ export class EditorComponent {
         this._snackBar.open('Не удалось удалить файл', null, { duration: 2000 });
       }
     );
+  }
+
+  ngOnDestroy() {
+    this._destroySubject.next();
   }
 
 }

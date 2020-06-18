@@ -136,8 +136,6 @@ export class DataService {
       .pipe(
         switchMap(e => {
           if (e) {
-            console.log(e);
-            
             return this._graphql.mutate<{ deleteFile: IConfigFile<string> }>({
               mutation: deleteFileMutation,
               variables: { id },
