@@ -1,1 +1,4 @@
-<ngx-monaco-editor [options]="editorOptions" [(ngModel)]="code" style="height: 100%; width: 100%"></ngx-monaco-editor>
+<div class="spinner-wr">
+  <mat-spinner *ngIf="!inited" [diameter]="50"></mat-spinner>
+</div>
+<ngx-monaco-editor [options]="editorOptions" [(ngModel)]="code" (onInit)="initHendler($event)" style="height: 100%; width: 100%"></ngx-monaco-editor>

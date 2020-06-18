@@ -9,7 +9,7 @@ export class LocalStorageService {
     try {
       localStorage.setItem(key, value);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
   remove(key: string) {

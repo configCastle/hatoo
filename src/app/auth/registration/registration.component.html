@@ -1,6 +1,7 @@
-<div>
+<div class="wr">
   <h2>Подписка</h2>
   <p class="error" *ngIf="error$ | async as error">{{ error.message }}</p>
+  <mat-spinner *ngIf="loading" [diameter]="20"></mat-spinner>
   <div [formGroup]="form" class="form">
     <mat-form-field>
       <mat-label>Логин</mat-label>

@@ -19,3 +19,13 @@ a {
   display: flex;
   justify-content: flex-end;
 }
+
+.wr {
+  position: relative;
+}
+
+mat-spinner {
+  position: absolute;
+  right: 0;
+  top: 0;
+}

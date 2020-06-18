@@ -19,8 +19,6 @@ export class MainComponent {
       .afterDismissed()
       .subscribe(e => {
         if (e == null) { return; }
-        console.log(e);
-        
       })
   }
 
@@ -29,8 +27,6 @@ export class MainComponent {
       .afterDismissed()
       .subscribe(e => {
         if (e == null) { return; }
-        console.log(e);
-        
       })
   }
 }
