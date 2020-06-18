@@ -15,6 +15,7 @@ import { AgreementComponent } from './agreement/agreement.component';
 export class RegistrationComponent {
   private _errorSubject = new Subject<IAuthError | undefined>();
   
+  loading = false;
   form: FormGroup;
   error$ = this._errorSubject.asObservable();
   agree = false;
@@ -39,10 +40,12 @@ export class RegistrationComponent {
     if (!this.agree) { return; }
     const controls = this.form.controls;
     if (this.form.valid) {
+      this.loading = true;
       this._authService.signUp$(
         controls.login.value,
         controls.password.value
       ).subscribe(e => {
+        this.loading = false;
         if (e === true) {
           this._errorSubject.next(undefined);
           this._router.navigate(['/dashboard']);

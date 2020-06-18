@@ -1,6 +1,7 @@
-<div [formGroup]="form">
+<div class="wr" [formGroup]="form">
   <h2>Авторизация</h2>
   <p class="error" *ngIf="error$ | async as error">{{ error.message }}</p>
+  <mat-spinner *ngIf="loading" [diameter]="20"></mat-spinner>
   <mat-form-field>
     <mat-label>Логин</mat-label>
     <input matInput type="text" name="login" formControlName="login">
