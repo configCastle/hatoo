@@ -9,7 +9,8 @@ import {
   MatRippleModule,
   MatSnackBarModule,
   MatToolbarModule,
-  MatFormFieldModule
+  MatFormFieldModule,
+  MatDialogModule
 } from '@angular/material';
 import { MatSelectModule } from '@angular/material';
 import { MatBottomSheetModule } from '@angular/material';
@@ -34,7 +35,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     MatRippleModule,
     MatSnackBarModule,
     MatToolbarModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatCheckboxModule,
+    MatDialogModule
   ],
   exports: [
     CommonModule,
@@ -51,7 +54,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     MatRippleModule,
     MatSnackBarModule,
     MatToolbarModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatCheckboxModule,
+    MatDialogModule
   ],
   providers: [DataService]
 })

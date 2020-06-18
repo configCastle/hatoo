@@ -4,7 +4,7 @@ import { Observable, observable, BehaviorSubject, Subject } from 'rxjs';
 import { map, tap, take, skip, debounceTime, sampleTime, filter, switchMap, takeUntil } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IConfigFile, IKeyValue } from '../sets-service/sets.service';
-import { faCloudUploadAlt, faCheckCircle, faCloud, faSave, faDownload, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faCloudUploadAlt, faCheckCircle, faCloud, faSave, faDownload, faTrashAlt, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { MatSnackBar, MatBottomSheet } from '@angular/material';
 import { DeleteFileConfirmComponent } from './delete-confirm/delete-file-confirm.component';
 import { of } from 'rxjs';
@@ -29,7 +29,8 @@ export class EditorComponent implements OnDestroy {
     faCheckCircle,
     faSave,
     faDownload,
-    faTrashAlt
+    faTrashAlt,
+    faArrowLeft
   }
   autosave = true;
   loading$: Observable<boolean>;

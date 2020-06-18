@@ -8,11 +8,14 @@
   }
 }
 
+.files {
+  padding: 15px;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   grid-gap: 15px;
-  padding: 15px;
 }
 
 .file {

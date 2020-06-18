@@ -3,8 +3,20 @@
   <ng-container *ngIf="file$ | async as file; else noFile">
     <div class="editor-layout">
       <div class="tools mat-elevation-z3">
-        
+
         <div class="left">
+
+          <div class="tools-item back-btns">
+            <button *ngIf="freeMode; else toDashboard" class="back-btn" mat-icon-button [routerLink]="['/']" matTooltip="На главную">
+              <fa-icon [icon]="icons.faArrowLeft"></fa-icon>
+            </button>
+            <ng-template #toDashboard>
+              <button class="back-btn" mat-icon-button [routerLink]="['/dashboard']" matTooltip="Все файлы">
+                <fa-icon [icon]="icons.faArrowLeft"></fa-icon>
+              </button>
+            </ng-template>
+          </div>
+
           <div *ngIf="!freeMode; else freeM0deIndicator" class="tools-item saving-status">
             <fa-icon matTooltip="Изменения сохранены" class="saved" *ngIf="saved$ | async; else unsaved"
               [icon]="icons.faCheckCircle"></fa-icon>
@@ -17,9 +29,9 @@
             </ng-template>
           </div>
           <ng-template #freeM0deIndicator>
+
             <div class="tools-item saving-status">
-              <fa-icon matTooltip="Изменения не сохраняются" class="manually-saving"
-              [icon]="icons.faCloud"></fa-icon>
+              <fa-icon matTooltip="Изменения не сохраняются" class="manually-saving" [icon]="icons.faCloud"></fa-icon>
             </div>
           </ng-template>
           <div *ngIf="!freeMode" class="tools-item autosave">

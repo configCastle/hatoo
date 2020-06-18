@@ -12,11 +12,12 @@
 <mat-progress-bar *ngIf="loading$ | async; else loaded" mode="indeterminate"></mat-progress-bar>
 <ng-template #loaded>
   <div class="files" *ngIf="files$ | async as files; else noFiles">
+    <h2>Ваши файлы</h2>
     <div class="grid">
       <mat-card matRipple class="file mat-elevation-z3" [routerLink]="['../', 'editor', file.id]" *ngFor="let file of files">
         <span class="file-name" [title]="file.name">{{ file.name }}</span>
       </mat-card>
-      <div class="create-file" (click)="createFile()">
+      <div class="create-file" matTooltip="Создать новый файл" (click)="createFile()">
         <fa-icon [icon]="icons.faPlus"></fa-icon>
       </div>
     </div>
