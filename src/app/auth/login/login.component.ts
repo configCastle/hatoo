@@ -12,9 +12,9 @@ import { Subject } from 'rxjs';
 })
 
 export class LoginComponent {
-
   private _errorSubject = new Subject<IAuthError | undefined>();
-  
+
+  loading = false;
   form: FormGroup;
   error$ = this._errorSubject.asObservable();
 
@@ -32,10 +32,12 @@ export class LoginComponent {
   logIn() {
     const controls = this.form.controls;
     if (this.form.valid) {
+      this.loading = true;
       this._authService.logIn$(
         controls.login.value,
         controls.password.value
       ).subscribe(e => {
+        this.loading = false;
         if (e === true) {
           this._errorSubject.next(undefined);
           this._router.navigate(['/dashboard']);
